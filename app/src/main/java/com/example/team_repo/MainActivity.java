@@ -3,11 +3,17 @@ package com.example.team_repo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
@@ -24,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+/*        tagRecyclerView = findViewById(R.id.tagRecyclerView);
+        tagList = new ArrayList<>();
+        tagAdapter = new TagAdapter(tagList);
+        tagRecyclerView.setAdapter(tagAdapter);*/
+
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -51,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * After click on the bottom navigation bar,
+     * call this function to show the corresponding fragment
+     * @param position the position of the button clicked
+     */
     private void selectedFragment(int position) {
         // modify the fragments using FragmentTransaction
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

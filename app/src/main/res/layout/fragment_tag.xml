@@ -11,16 +11,19 @@
         android:layout_height="wrap_content"
         android:text="Tags"
         android:gravity="center"
-        android:textSize="35dp"
+        android:textSize="35sp"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/small_white_rounded_conrner"
         android:layout_height="60dp"
         android:layout_marginTop="170dp"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="horizontal">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -30,9 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginStart="30dp"
+        android:layout_marginEnd="60dp"
         android:layout_marginTop="270dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/white"
+        android:background="@drawable/white_rouned_corner"
         android:gravity="center"
         android:hint="Enter a New Tag">
 
