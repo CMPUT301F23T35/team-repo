@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "219501145772",
+    "project_id": "teamrepo-c990b",
+    "storage_bucket": "teamrepo-c990b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219501145772:android:9a637ecdbe2db74b2af909",
+        "android_client_info": {
+          "package_name": "com.example.TeamRepo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBOtHaBcoNFuVFgqU5CcEOpIXgD7uNtN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
