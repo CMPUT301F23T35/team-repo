@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/home"
-        android:title="Home"
-        android:icon="@drawable/ic_home">
+<item android:id="@+id/home"
+    android:title="Home"
+    android:icon="@drawable/ic_home">
 
-    </item>
-    <item android:id="@+id/add"
-        android:title="Add"
-        android:icon="@drawable/ic_add"
-        >
+</item>
+<item android:id="@+id/add"
+    android:title="Add"
+    android:icon="@drawable/ic_add"
+    >
 
-    </item>
-    <item android:id="@+id/camera"
-        android:title="Camera"
-        android:icon="@drawable/ic_camera">
+</item>
+<item android:id="@+id/camera"
+    android:title="Camera"
+    android:icon="@drawable/ic_camera">
 
-    </item>
-    <item android:id="@+id/tag"
-        android:title="Tag"
-        android:icon="@drawable/ic_tag"
-        >
+</item>
+<item android:id="@+id/tag"
+    android:title="Tag"
+    android:icon="@drawable/ic_tag"
+    >
 
-    </item>
-    <item android:id="@+id/profile"
-        android:title="Profile"
-        android:icon="@drawable/ic_profile">
-    </item>
+</item>
+<item android:id="@+id/profile"
+    android:title="Profile"
+    android:icon="@drawable/ic_profile">
+</item>
 
 </menu>
