@@ -31,12 +31,6 @@ public class MainActivity extends AppCompatActivity {
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-/*        tagRecyclerView = findViewById(R.id.tagRecyclerView);
-        tagList = new ArrayList<>();
-        tagAdapter = new TagAdapter(tagList);
-        tagRecyclerView.setAdapter(tagAdapter);*/
-
-
         // default selection is the Home Page
         selectedFragment(0);
 
@@ -58,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
     }
 
     /**
@@ -148,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
     /**
      * Hide all fragments

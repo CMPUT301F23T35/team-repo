@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,15 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
     // This is the adapter for the tag page
     Context context;  // the context of the tag page
     ArrayList<Tag> tagList;
+
+    /**
+     * Get the list of all tags created now
+     * @return the ArrayList<Tag>
+     */
+    public ArrayList<Tag> getTags() {
+        return tagList;
+    }
+
 
     /**
      * Constructor of the TagAdapter
@@ -52,6 +62,20 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
         Tag tag = tagList.get(position);
         holder.tvTag.setText(tag.getTagString());
 
+        holder.btnTagDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = holder.getAdapterPosition();  // get the current position
+                if (currentPosition != RecyclerView.NO_POSITION) {  // if the position is valid
+                    tagList.remove(currentPosition);  // tell the list that the item has been removed
+                    notifyItemRemoved(currentPosition);  // tell the adapter to remove the item
+                    notifyItemRangeChanged(currentPosition, tagList.size());  // tell the adapter that the item range has been removed
+                }
+
+            }
+        });
+
+
     }
 
     /**
@@ -64,12 +88,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
     }
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
-        // Currently the tag_content.xml only has a TextView
+        // Currently the tag_content.xml only has a TextView and a delete button
         public TextView tvTag;
+        public ImageButton btnTagDelete;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTag = itemView.findViewById(R.id.tv_tag_content);
+            tvTag = itemView.findViewById(R.id.tv_tag_content); // track the TextView
+            btnTagDelete = itemView.findViewById(R.id.btn_tag_delete);  // track the delete button
         }
     }
 

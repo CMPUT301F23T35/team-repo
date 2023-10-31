@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The layout of Tag fragment, do not include navigation bar -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,6 +7,7 @@
     android:background="@drawable/fragments_rounded_corner"
     tools:context=".TagFragment">
 
+    <!-- The Tile "Tags" of the title page -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +17,7 @@
         android:layout_marginTop="100dp"
         android:layout_marginBottom="16dp" />
 
+    <!-- The RecyclerView showing all added tags -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
@@ -42,6 +45,7 @@
     </EditText>
 
     <Button
+        android:id="@+id/btn_addTag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

@@ -24,6 +24,7 @@
     </TextView>
 
     <ImageButton
+        android:id="@+id/btn_tag_delete"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/btn_tag_delete"
