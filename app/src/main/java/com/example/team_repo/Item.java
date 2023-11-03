@@ -10,8 +10,9 @@ public class Item {
     //  - Add more constructors when certain arguments aren't given/are optional
     //  - Put more restrictions on getters/setters (e.g. make sure inputted value isn't negative)
     //  - Come up with method to add a new tag to the tag list
-    //  - Potentially deal with empty description/comment/make/model/etc.
+    //  - Potentially deal with empty description/comment/make/model/etc?
 
+    private String name;
     private Date purchase_date;
     private float value;
     private String description;
@@ -23,7 +24,8 @@ public class Item {
     private Image image;
 
     // Constructor (all information provided)
-    public Item(Date purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<String> tags, Image image) {
+    public Item(String name, Date purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<String> tags, Image image) {
+        this.name = name;
         this.purchase_date = purchase_date;
         this.value = value;
         this.description = description;
@@ -33,6 +35,14 @@ public class Item {
         this.comment = comment;
         this.tags = tags;
         this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getDate() {
