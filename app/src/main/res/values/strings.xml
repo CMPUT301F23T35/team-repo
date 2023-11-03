@@ -6,4 +6,10 @@
     <string name="homepageTotalValue">00.00</string>
     <string name="select_items">Select Items</string>
     <string name="sort_filter_items">Sort/Filter Items</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_detail_text">Make:\n\nValue:\n\nPurchase Date:</string>
+    <string name="make">Make</string>
+    <string name="dollar_sign">$</string>
+    <string name="item_value">0.00</string>
+    <string name="item_purchase_date">2023-11-01</string>
 </resources>
