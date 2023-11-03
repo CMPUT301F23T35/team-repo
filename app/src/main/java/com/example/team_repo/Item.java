@@ -8,9 +8,10 @@ import java.util.Date;
 public class Item {
     // TODO:
     //  - Add more constructors when certain arguments aren't given/are optional
+    //  - Make less tedious constructors??? (less arguments?)
     //  - Put more restrictions on getters/setters (e.g. make sure inputted value isn't negative)
-    //  - Come up with method to add a new tag to the tag list
-    //  - Potentially deal with empty description/comment/make/model/etc?
+    //  - Come up with method to add a new tag to the tag list???
+    //  - Potentially deal with empty description/comment/make/model/etc???
 
     private String name;
     private Date purchase_date;
@@ -35,6 +36,20 @@ public class Item {
         this.comment = comment;
         this.tags = tags;
         this.image = image;
+    }
+
+    // Constructor (without tags or image)
+    public Item(String name, Date purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
+        this.name = name;
+        this.purchase_date = purchase_date;
+        this.value = value;
+        this.description = description;
+        this.make = make;
+        this.model = model;
+        this.serial_number = serial_number;
+        this.comment = comment;
+        this.tags = null;
+        this.image = null;
     }
 
     public String getName() {

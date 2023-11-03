@@ -3,7 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="homepage_list_and_value">List of Items\nTotal value: $</string>
-    <string name="homepageTotalValue">00.00</string>
+    <string name="homepageTotalValue">0.00</string>
     <string name="select_items">Select Items</string>
     <string name="sort_filter_items">Sort/Filter Items</string>
     <string name="item_name">Item Name</string>
