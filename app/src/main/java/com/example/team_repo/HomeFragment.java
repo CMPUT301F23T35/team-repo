@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -49,6 +50,11 @@ public class HomeFragment extends Fragment {
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
+
+        // Display profile photo
+        // TODO: display non-default photo
+        ImageView profile_picture = view.findViewById(R.id.homepageProfilePicture);
+        profile_picture.setImageResource(R.drawable.default_profile_image);
 
         return view;
     }
