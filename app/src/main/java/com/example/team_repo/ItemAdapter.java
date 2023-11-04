@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,10 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         item_name.setText(item.getName());
         item_make.setText(item.getMake());
         item_value.setText(String.format("%.2f", item.getValue()));
-        item_purchase_date.setText(item.getDate().toString());
+
+        SimpleDateFormat date_format = new SimpleDateFormat("YYYY-MM-DD");
+        String date = date_format.format(item.getDate());
+        item_purchase_date.setText(date);
 
         return view;
     }

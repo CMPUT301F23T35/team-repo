@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
@@ -26,15 +27,18 @@ public class HomeFragment extends Fragment {
         item_list = new ItemList();
 
         // Test items (delete later)
-        Item item1 = new Item("name", new Date(2020, 10, 20), 12.34F, "description", "make", "model", "serial number", "comment");
+        Calendar cal1 = Calendar.getInstance();
+        cal1.set(2020, 0, 1);
+        Date date1 = cal1.getTime();
+        Item item1 = new Item("name", date1, 12.34F, "description", "make", "model", "serial number", "comment");
         item_list.add(item1);
-        Item item2 = new Item("Table", new Date(2023, 11, 3), 0F, "Table", "Table", "Table", "Table", "Table");
+        Item item2 = new Item("Table", date1, 0F, "Table", "Table", "Table", "Table", "Table");
         item_list.add(item2);
-        Item item3 = new Item("chair", new Date(2018, 8, 20), 1234.56F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        Item item3 = new Item("chair", date1, 1234.56F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         item_list.add(item3);
-        Item item4 = new Item("frog hat", new Date(2024, 1, 1), 0.01F, "This is the best hat ever", "First Edition", "First Model", "1L0V3FR0GH4T5", "");
+        Item item4 = new Item("frog hat", date1, 0.01F, "This is the best hat ever", "First Edition", "First Model", "1L0V3FR0GH4T5", "");
         item_list.add(item4);
-        Item item5 = new Item("", new Date(1, 1, 1), -2F, "", "", "", "", "");
+        Item item5 = new Item("", date1, 0F, "", "", "", "", "");
         item_list.add(item5);
 
         // Attach the items in the item list to the adapter
