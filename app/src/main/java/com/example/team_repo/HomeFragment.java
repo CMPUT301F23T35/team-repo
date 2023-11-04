@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
         item_list.add(item1);
         Item item2 = new Item("Table", date1, 0F, "Table", "Table", "Table", "Table", "Table");
         item_list.add(item2);
-        Item item3 = new Item("chair", date1, 1234.56F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        Item item3 = new Item("ABCDEFGHIJKLMNOPQRSTUVWXYZ", date1, 12345678912345678.90F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         item_list.add(item3);
         Item item4 = new Item("frog hat", date1, 0.01F, "This is the best hat ever", "First Edition", "First Model", "1L0V3FR0GH4T5", "");
         item_list.add(item4);

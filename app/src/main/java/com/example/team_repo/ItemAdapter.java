@@ -42,7 +42,14 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
 
         // Set the TextViews and ImageView views to the item's details
-        //item_image.setImage(); // TODO
+        if (item.getImage() != null) {
+            // TODO: display image
+            item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+        }
+        else {
+            item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+        }
+
         item_name.setText(item.getName());
         item_make.setText(item.getMake());
         item_value.setText(String.format("%.2f", item.getValue()));
