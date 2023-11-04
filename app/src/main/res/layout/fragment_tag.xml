@@ -21,7 +21,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
-        android:background="@drawable/small_white_rounded_conrner"
+        android:background="@drawable/small_white_rounded_corner"
         android:layout_height="60dp"
         android:layout_marginTop="170dp"
         android:gravity="center"
@@ -38,7 +38,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="60dp"
         android:layout_marginTop="270dp"
-        android:background="@drawable/white_rouned_corner"
+        android:background="@drawable/white_rounded_corner"
         android:gravity="center"
         android:hint="Enter a New Tag">
 
