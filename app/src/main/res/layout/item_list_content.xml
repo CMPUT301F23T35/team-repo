@@ -5,15 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/homepage_item_background"
-    android:backgroundTint="@color/homepage_item_background_tint">
+    android:background="@drawable/homepage_item_background">
 
     <ImageView
         android:id="@+id/itemImageView"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
@@ -22,7 +21,7 @@
         android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         android:padding="8dp"
         android:text="@string/item_name"
         android:textColor="@color/white"
@@ -34,12 +33,13 @@
         android:id="@+id/itemDetailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:text="@string/item_detail_text"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/itemImageView"
         app:layout_constraintStart_toEndOf="@+id/itemImageView"
-        app:layout_constraintTop_toTopOf="@+id/itemImageView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/itemMake"
