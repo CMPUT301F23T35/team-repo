@@ -2,6 +2,7 @@ package com.example.team_repo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,12 +27,23 @@ public class MainActivity extends AppCompatActivity {
     private TagFragment tagFragment;  // the tag page
     private ProfileFragment profileFragment;  // the profile page
     private LinearLayout toolbarLinearLayout;  // the top toolbar
+    private TextView tv_header;  // the header of the app
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // get the username, email and password from the RegisterActivity or LoginActivity
+        String username = getIntent().getStringExtra("username");
+        String email = getIntent().getStringExtra("email");
+        String password = getIntent().getStringExtra("password");
+
+        // set the header of the app
+        tv_header = findViewById(R.id.tv_header);
+        String header = "Hello, " + username + "!";
+        tv_header.setText(header);
 
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
