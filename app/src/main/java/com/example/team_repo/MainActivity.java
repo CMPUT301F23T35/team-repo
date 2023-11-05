@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private CameraFragment cameraFragment;  // the camera page
     private TagFragment tagFragment;  // the tag page
     private ProfileFragment profileFragment;  // the profile page
+    private LinearLayout toolbarLinearLayout;  // the top toolbar
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        toolbarLinearLayout = findViewById(R.id.toolbar);
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -69,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 // home page has not been defined, define it
                 homeFragment = new HomeFragment();
                 fragmentTransaction.add(R.id.fragment_container, homeFragment);
+                toolbarLinearLayout.setVisibility(View.GONE);
 
             } else {
                 // home page has been defined, show it
                 fragmentTransaction.show(homeFragment);
+                toolbarLinearLayout.setVisibility(View.GONE);
 
             }
         }
@@ -83,10 +90,12 @@ public class MainActivity extends AppCompatActivity {
                 // add page has not been defined, define it
                 addFragment = new AddFragment();
                 fragmentTransaction.add(R.id.fragment_container, addFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             } else {
                 // add page has been defined, show it
                 fragmentTransaction.show(addFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             }
         }
@@ -97,10 +106,12 @@ public class MainActivity extends AppCompatActivity {
                 // camera page has not been defined, define it
                 cameraFragment = new CameraFragment();
                 fragmentTransaction.add(R.id.fragment_container, cameraFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             } else {
                 // camera page has been defined, show it
                 fragmentTransaction.show(cameraFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             }
         }
@@ -111,10 +122,12 @@ public class MainActivity extends AppCompatActivity {
                 // tag page has not been defined, define it
                 tagFragment = new TagFragment();
                 fragmentTransaction.add(R.id.fragment_container, tagFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             } else {
                 // tag page has been defined, show it
                 fragmentTransaction.show(tagFragment);
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
 
             }
         }
@@ -125,10 +138,12 @@ public class MainActivity extends AppCompatActivity {
                 // profile page has not been defined, define it
                 profileFragment = new ProfileFragment();
                 fragmentTransaction.add(R.id.fragment_container, profileFragment);
+                toolbarLinearLayout.setVisibility(View.GONE);
 
             } else {
                 // profile page has been defined, show it
                 fragmentTransaction.show(profileFragment);
+                toolbarLinearLayout.setVisibility(View.GONE);
 
             }
         }
