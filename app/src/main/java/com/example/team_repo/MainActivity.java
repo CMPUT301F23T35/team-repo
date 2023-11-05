@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private CameraFragment cameraFragment;  // the camera page
     private TagFragment tagFragment;  // the tag page
     private ProfileFragment profileFragment;  // the profile page
+
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
