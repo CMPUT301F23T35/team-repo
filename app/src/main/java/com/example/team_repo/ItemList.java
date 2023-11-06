@@ -2,7 +2,7 @@ package com.example.team_repo;
 
 import java.util.ArrayList;
 
-public class ItemList {
+public class ItemList extends ArrayList{
     // TODO: add an edit(), sort(), and/or filter() method?
 
     private ArrayList<Item> item_list;
@@ -36,5 +36,7 @@ public class ItemList {
     public float getTotalValue() {
         return this.total_value;
     }
+
+    public Item get(int position){return this.item_list.get(position);}
 }
 
