@@ -1,6 +1,7 @@
 package com.example.team_repo;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
-
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
         item_list.add(item5);
 
         // Attach the items in the item list to the adapter
-        item_list_view = view.findViewById(R.id.homepageListView);
+        item_list_view = view.findViewById(R.id.selectPageListView);
         itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
         item_list_view.setAdapter(itemAdapter);
 
@@ -62,26 +62,14 @@ public class HomeFragment extends Fragment {
         ImageView profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
-        // Select from list
-        Button select_button = view.findViewById(R.id.selectItemsButton);
-        select_button.setOnClickListener(new View.OnClickListener() {
+        // Navigate to select activity
+        Button select = view.findViewById(R.id.selectItemsButton);
+        select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item_list_view.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
+                Intent intent = new Intent(MainActivity.this, SelectActivity.class);
+                startActivity(intent);
             }
-        });
-
-        item_list_view.setOnItemClickListener((parent, view1, position, id) ->
-
-        {
-            boolean checked = item_list.get(position).checked;
-            if (!checked) {
-                item_list.get(position).checked = true;
-            } else {
-                item_list.get(position).checked = false;
-            }
-            itemAdapter.notifyDataSetChanged();
         });
 
         return view;
