@@ -1,8 +1,12 @@
 package com.example.team_repo;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -23,6 +27,10 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -82,19 +90,64 @@ public class CameraHandler {
             }
         }, ContextCompat.getMainExecutor(context));
     }
+    public void takePicture(final ImageCapture imageCapture) {
+        final String filename = System.currentTimeMillis() + ".jpg";
+        final ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, filename);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
 
-    public void takePicture(ImageCapture imageCapture) {
-        final File file = new File(context.getExternalFilesDir(null), System.currentTimeMillis() + ".jpg");
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
+        final ContentResolver resolver = context.getContentResolver();
+        Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        if (uri == null) {
+            ((FragmentActivity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Failed to create new MediaStore record.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
+
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(new File(context.getExternalCacheDir(), filename)).build();
+
         imageCapture.takePicture(outputFileOptions, Executors.newCachedThreadPool(), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                ((FragmentActivity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "Image saved at: " + file.getPath(), Toast.LENGTH_SHORT).show();
+                File file = new File(context.getExternalCacheDir(), filename);
+                try {
+                    InputStream inputStream = new FileInputStream(file);
+                    OutputStream outputStream = resolver.openOutputStream(uri);
+
+                    if (outputStream != null) {
+                        byte[] buffer = new byte[4 * 1024];
+                        int read;
+                        while ((read = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, read);
+                        }
+                        inputStream.close();
+                        outputStream.close();
+
+                        file.delete();
+                        ((FragmentActivity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "Image saved at: " + uri.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        file.delete();
+                        ((FragmentActivity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "Failed to save image.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 startCamera();
             }
 
@@ -110,6 +163,7 @@ public class CameraHandler {
             }
         });
     }
+
 
     private int aspectRatio(int width, int height) {
         double previewRatio = (double) Math.max(width, height) / Math.min(width, height);
