@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/test" />
+                android:src="@drawable/ic_register_username" />
         </androidx.cardview.widget.CardView>
 
         <TextView
