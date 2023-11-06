@@ -1,11 +1,16 @@
 package com.example.team_repo;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +21,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
     private ItemAdapter itemAdapter;
@@ -26,12 +42,16 @@ public class HomeFragment extends Fragment {
     private ListView item_list_view;
     private TextView total_value_view;
 
+    private FirebaseFirestore db;
+    private CollectionReference itemsRef;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         item_list = new ItemList();
+
 
         // Test items (delete later)
         Calendar cal1 = Calendar.getInstance();
@@ -47,6 +67,32 @@ public class HomeFragment extends Fragment {
         item_list.add(item4);
         Item item5 = new Item("", date1, 0F, "", "", "", "", "");
         item_list.add(item5);
+
+
+        // Test firedatabase(delete later)
+        HashMap<String, ArrayList<Item>> data = new HashMap<>();
+        db = FirebaseFirestore.getInstance();
+        itemsRef = db.collection("items");
+
+        data.put("item_list", item_list.getList());
+
+        db.collection("items").document("test1")
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+
+
+
 
         // Attach the items in the item list to the adapter
         item_list_view = view.findViewById(R.id.selectPageListView);
