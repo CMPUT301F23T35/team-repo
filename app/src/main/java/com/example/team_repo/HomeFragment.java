@@ -1,9 +1,11 @@
 package com.example.team_repo;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ public class HomeFragment extends Fragment {
     private ItemList item_list;
     private ListView item_list_view;
     private TextView total_value_view;
+    private ImageView profile_picture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +55,29 @@ public class HomeFragment extends Fragment {
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
 
         // Display profile photo
-        // TODO: display non-default photo
-        ImageView profile_picture = view.findViewById(R.id.homepageProfilePicture);
+        profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
-
         return view;
+    }
+
+    public void refresh() {
+        // update header
+        updateProfilePicture();
+        // TODO: update item list
+        // TODO: update total value
+
+    }
+
+
+    private void updateProfilePicture() {
+        // Display profile photo
+        Bitmap profileBitmap = ((MainActivity) getActivity()).getBitmap_profile();
+        if (profileBitmap != null) {
+            profile_picture.setImageBitmap(profileBitmap);
+        } else {
+            Log.d("HomeFragment", "profileBitmap is null");
+
+            profile_picture.setImageResource(R.drawable.default_profile_image);
+        }
     }
 }

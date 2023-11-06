@@ -7,11 +7,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private String email;  // the email of the user
     private String password;  // the password of the user
 
+    private Bitmap bitmap_profile;  // the profile photo of the user
+    private ImageView headerPicture;  // the profile photo of the user in the header
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         toolbarLinearLayout = findViewById(R.id.toolbar);
+
+        // initialize the header picture
+        headerPicture = findViewById(R.id.headerPicture);
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -84,18 +93,28 @@ public class MainActivity extends AppCompatActivity {
         // modify the fragments using FragmentTransaction
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideAllFragment(fragmentTransaction);
+
+        // set the header of the app
+        if (bitmap_profile != null){
+            headerPicture.setImageBitmap(bitmap_profile);
+        } else {
+            headerPicture.setImageResource(R.drawable.default_profile_image);
+        }
+
         if (position == 0) {
             // show the home page
             if (homeFragment == null) {
                 // home page has not been defined, define it
                 homeFragment = new HomeFragment();
-                fragmentTransaction.add(R.id.fragment_container, homeFragment);
                 toolbarLinearLayout.setVisibility(View.GONE);
+                fragmentTransaction.add(R.id.fragment_container, homeFragment);
 
             } else {
                 // home page has been defined, show it
-                fragmentTransaction.show(homeFragment);
                 toolbarLinearLayout.setVisibility(View.GONE);
+                homeFragment.refresh();
+                fragmentTransaction.show(homeFragment);
+                Log.d("MainActivity", "selectedFragment() called, homeFragment: " + homeFragment);
 
             }
         }
@@ -105,13 +124,13 @@ public class MainActivity extends AppCompatActivity {
             if (addFragment == null) {
                 // add page has not been defined, define it
                 addFragment = new AddFragment();
-                fragmentTransaction.add(R.id.fragment_container, addFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.add(R.id.fragment_container, addFragment);
 
             } else {
                 // add page has been defined, show it
-                fragmentTransaction.show(addFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.show(addFragment);
 
             }
         }
@@ -121,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
             if (cameraFragment == null) {
                 // camera page has not been defined, define it
                 cameraFragment = new CameraFragment();
-                fragmentTransaction.add(R.id.fragment_container, cameraFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.add(R.id.fragment_container, cameraFragment);
 
             } else {
                 // camera page has been defined, show it
-                fragmentTransaction.show(cameraFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.show(cameraFragment);
 
             }
         }
@@ -137,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
             if (tagFragment == null) {
                 // tag page has not been defined, define it
                 tagFragment = new TagFragment();
-                fragmentTransaction.add(R.id.fragment_container, tagFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.add(R.id.fragment_container, tagFragment);
 
             } else {
                 // tag page has been defined, show it
-                fragmentTransaction.show(tagFragment);
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.show(tagFragment);
 
             }
         }
@@ -153,13 +172,13 @@ public class MainActivity extends AppCompatActivity {
             if (profileFragment == null) {
                 // profile page has not been defined, define it
                 profileFragment = new ProfileFragment();
-                fragmentTransaction.add(R.id.fragment_container, profileFragment);
                 toolbarLinearLayout.setVisibility(View.GONE);
+                fragmentTransaction.add(R.id.fragment_container, profileFragment);
 
             } else {
                 // profile page has been defined, show it
-                fragmentTransaction.show(profileFragment);
                 toolbarLinearLayout.setVisibility(View.GONE);
+                fragmentTransaction.show(profileFragment);
 
             }
         }
@@ -219,6 +238,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public Bitmap getBitmap_profile() {
+        return bitmap_profile;
+    }
+
+    public void setBitmap_profile(Bitmap bitmap_profile) {
+        this.bitmap_profile = bitmap_profile;
+        Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
     }
 
 
