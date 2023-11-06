@@ -18,8 +18,8 @@ public class SelectFragment extends Fragment {
     private ItemAdapter itemAdapter;
     private ItemList item_list;
     private ListView item_list_view;
-    private FirebaseFirestore db;
-    private CollectionReference citiesRef;
+    //private FirebaseFirestore db;
+    //private CollectionReference citiesRef;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
