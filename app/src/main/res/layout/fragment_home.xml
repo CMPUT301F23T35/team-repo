@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
 
     <ListView
-        android:id="@+id/homepageListView"
+        android:id="@+id/selectPageListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
