@@ -53,6 +53,6 @@ public class SelectActivity extends AppCompatActivity {
         } else {
             fragmentTransaction.show(selectFragment);
         }
-
+        fragmentTransaction.commit();
     }
 }
