@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,6 @@ import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> item_list;
@@ -40,6 +40,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_make = view.findViewById(R.id.itemMake);
         TextView item_value = view.findViewById(R.id.itemValue);
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
+        CheckBox check_box = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
         if (item.getImage() != null) {
@@ -78,6 +79,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         SimpleDateFormat date_format = new SimpleDateFormat("YYYY-MM-DD");
         String date = date_format.format(item.getDate());
         item_purchase_date.setText(date);
+
+        // Set Checkbox state
+        check_box.setChecked(item.checked);
 
         return view;
     }
