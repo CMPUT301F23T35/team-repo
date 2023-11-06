@@ -2,10 +2,13 @@ package com.example.team_repo;
 
 import static android.app.Activity.RESULT_OK;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -254,6 +257,10 @@ public class ProfileFragment extends Fragment {
                 InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
+
+                // deal with the orientation of the image
+                bitmap = rotateImageIfRequired(getContext(), bitmap, imageUri);
+
                 // update the header images (current fragment and main activity)
                 profilePagePicture.setImageBitmap(bitmap);
                 ((MainActivity)getActivity()).setBitmap_profile(bitmap);
@@ -261,6 +268,8 @@ public class ProfileFragment extends Fragment {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "Failed to get image", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         } else {
             Toast.makeText(getContext(), "Failed to get image", Toast.LENGTH_SHORT).show();
@@ -310,5 +319,51 @@ public class ProfileFragment extends Fragment {
         // REQUEST_CODE_CHOOSE is the request code for choosing photo, go to onActivityResult
 
     }
+
+    /**
+     * deal with the orientation of the image
+     * Called by handleImage()
+     * @param context the context
+     * @param img the bitmap of the image
+     * @param selectedImage the uri of the image
+     * @return the bitmap of the image after rotation
+     * @throws IOException if the uri is invalid
+     */
+    private Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+        InputStream input = context.getContentResolver().openInputStream(selectedImage);
+        ExifInterface ei;
+        ei = new ExifInterface(input);
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    /**
+     * rotate the image
+     * Called by rotateImageIfRequired()
+     * @param img the bitmap of the image
+     * @param degree the degree to rotate
+     * @return the bitmap of the image after rotation
+     */
+    private static Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
+    }
+
+
+
 
 }
