@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;  // the profile page
     private LinearLayout toolbarLinearLayout;  // the top toolbar
     private TextView tv_header;  // the header of the app
+    private String username;  // the username of the user
+    private String email;  // the email of the user
+    private String password;  // the password of the user
 
 
     @Override
@@ -36,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // get the username, email and password from the RegisterActivity or LoginActivity
-        String username = getIntent().getStringExtra("username");
-        String email = getIntent().getStringExtra("email");
-        String password = getIntent().getStringExtra("password");
+        username = getIntent().getStringExtra("username");
+        email = getIntent().getStringExtra("email");
+        password = getIntent().getStringExtra("password");
 
         // set the header of the app
         tv_header = findViewById(R.id.tv_header);
@@ -191,4 +194,33 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.hide(profileFragment);
         }
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+        tv_header.setText("Hello, " + username + "!");
+
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+
 }
