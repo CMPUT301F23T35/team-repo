@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
@@ -160,4 +161,6 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.hide(profileFragment);
         }
     }
+
+
 }
