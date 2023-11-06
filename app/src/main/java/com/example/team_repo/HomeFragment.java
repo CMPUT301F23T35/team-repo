@@ -1,5 +1,6 @@
 package com.example.team_repo;
 
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,9 +8,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+
 
 import java.util.Calendar;
 import java.util.Date;
@@ -56,6 +62,30 @@ public class HomeFragment extends Fragment {
         ImageView profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
+        // Select from list
+        Button select_button = view.findViewById(R.id.selectItemsButton);
+        select_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item_list_view.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+            }
+        });
+
+        item_list_view.setOnItemClickListener((parent, view1, position, id) ->
+
+        {
+            boolean checked = item_list.get(position).checked;
+            if (!checked) {
+                item_list.get(position).checked = true;
+            } else {
+                item_list.get(position).checked = false;
+            }
+            itemAdapter.notifyDataSetChanged();
+        });
+
         return view;
     }
+
+
 }
