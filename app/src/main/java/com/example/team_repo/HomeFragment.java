@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectActivity.class);
+                Intent intent = new Intent(getActivity(), SelectActivity.class);
                 startActivity(intent);
             }
         });
