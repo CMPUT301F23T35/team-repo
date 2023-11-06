@@ -214,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // getters and setters of username, email, password and header's bitmap_profile
+
     public String getUsername() {
         return username;
     }
@@ -247,7 +249,5 @@ public class MainActivity extends AppCompatActivity {
         this.bitmap_profile = bitmap_profile;
         Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
     }
-
-
 
 }

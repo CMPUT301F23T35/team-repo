@@ -22,14 +22,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // TODO: implement login function
+        Toast.makeText(LoginActivity.this, "Login Activity not done yet", Toast.LENGTH_SHORT).show();
+
         // return to RegisterActivity
         toolbar = findViewById(R.id.login_toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
+            // click tool bar will close current activity
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        // initialize username, password and login button
         mUsername = findViewById(R.id.login_username);
         mPassword = findViewById(R.id.login_password);
         login = findViewById(R.id.btn_login);
@@ -37,8 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: give the username, email and password to main activity
-                // TODO: check if the username and password are correct
                 String username = mUsername.getText().toString();
                 String password = mPassword.getText().toString();
 
@@ -48,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                             "Please fill in all the blanks",
                             Toast.LENGTH_SHORT).show();
                 } else {
+                    // TODO: check if the username and password are correct
                     // jump to MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

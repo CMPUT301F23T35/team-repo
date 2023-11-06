@@ -60,6 +60,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Refreshes the home page
+     * May be used each time when there is a data change
+     */
     public void refresh() {
         // update header
         updateProfilePicture();
@@ -68,16 +72,21 @@ public class HomeFragment extends Fragment {
 
     }
 
-
+    /**
+     * Updates the profile picture, get the picture from MainActivity(bitmap_profile)
+     */
     private void updateProfilePicture() {
         // Display profile photo
         Bitmap profileBitmap = ((MainActivity) getActivity()).getBitmap_profile();
-        if (profileBitmap != null) {
-            profile_picture.setImageBitmap(profileBitmap);
-        } else {
-            Log.d("HomeFragment", "profileBitmap is null");
 
+        if (profileBitmap != null) {
+            // not the default profile picture
+            profile_picture.setImageBitmap(profileBitmap);
+
+        } else {
+            // initialized or deleted
             profile_picture.setImageResource(R.drawable.default_profile_image);
+
         }
     }
 }
