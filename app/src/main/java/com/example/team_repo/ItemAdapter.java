@@ -75,8 +75,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
 
         // Set the item's date
-        SimpleDateFormat date_format = new SimpleDateFormat("YYYY-MM-DD");
-        String date = date_format.format(item.getDate());
+//        SimpleDateFormat date_format = new SimpleDateFormat("YYYY-MM-DD");
+        // String date = date_format.format(item.getDate());
+        String date = item.getDate();
         item_purchase_date.setText(date);
 
         return view;

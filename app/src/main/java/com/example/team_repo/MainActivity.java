@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
     private HomeFragment homeFragment;  // the home page
-    private AddFragment addFragment;  // the add page
+    //private AddFragment addFragment;  // the add page
     private CameraFragment cameraFragment;  // the camera page
     private TagFragment tagFragment;  // the tag page
     private ProfileFragment profileFragment;  // the profile page
@@ -82,16 +82,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (position == 1) {
             // show the add page
-            if (addFragment == null) {
-                // add page has not been defined, define it
-                addFragment = new AddFragment();
-                fragmentTransaction.add(R.id.fragment_container, addFragment);
-
-            } else {
-                // add page has been defined, show it
-                fragmentTransaction.show(addFragment);
-
-            }
+//            if (addFragment == null) {
+//                // add page has not been defined, define it
+//                addFragment = new AddFragment();
+//                fragmentTransaction.add(R.id.fragment_container, addFragment);
+//
+//            } else {
+//                // add page has been defined, show it
+//                fragmentTransaction.show(addFragment);
+//
+//            }
+//        }
+            homeFragment.addExpenseInputDialog();
         }
 
         if (position == 2) {
@@ -153,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
         }
-        if (addFragment != null) {
-            fragmentTransaction.hide(addFragment);
-        }
+//        if (addFragment != null) {
+//            fragmentTransaction.hide(addFragment);
+//        }
         if (cameraFragment != null) {
             fragmentTransaction.hide(cameraFragment);
         }
