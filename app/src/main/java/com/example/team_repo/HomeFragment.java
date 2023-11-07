@@ -63,70 +63,9 @@ public class HomeFragment extends Fragment {
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
-
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addExpenseInputDialog();
-//                monthlyChargeList.total_monthly_charges();
-            }
-        });
         return view;
     }
 
-
-    public void addExpenseInputDialog() {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.fragment_add, null);
-
-        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
-        final EditText Description = dialogView.findViewById(R.id.Description);
-        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
-        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
-
-        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
-        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
-        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
-
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
-        dialogBuilder.setView(dialogView);
-//        dialogBuilder.setTitle("Add an Item");
-
-        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
-            String name = ItemName.getText().toString();
-            String date = DatePurchase.getText().toString();
-
-            String item_description = Description.getText().toString();
-            String make = ItemMake.getText().toString();
-            String model = ItemModel.getText().toString();
-            String serial = ItemSerial.getText().toString();
-            float value = Float.parseFloat(EstimatedValue.getText().toString());
-
-//
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-//            Date date = null;
-//            try {
-//                date = dateFormat.parse(dateString);
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-
-            if (name != null && !name.isEmpty()) {
-                // Create an item with the received name and other default values or set appropriate values.
-//                Calendar cal = Calendar.getInstance();
-//                Date date = cal.getTime();
-                Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
-                item_list.add(newItem);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-
-        });
-
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
     
     /**
      * Refreshes the home page
@@ -135,8 +74,16 @@ public class HomeFragment extends Fragment {
     public void refresh() {
         // update header
         updateProfilePicture();
+
         // TODO: update item list
+
+        ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
+        ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
+        item_list.addAll(add_item_list);
+        itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+
         // TODO: update total value
+        total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
 
     }
 

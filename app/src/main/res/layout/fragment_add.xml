@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/rounded_corners_bg"
     android:orientation="vertical"
+
     android:padding="16dp">
 
     <TextView
         android:id="@+id/top_app_bar"
         android:layout_width ="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:text="Hello, User!, Add a New Item"
-        android:textAlignment="viewStart"
-        android:textColor="#000000"
+        android:text="Add a New Item"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/black"
         android:textSize="24sp"
+        android:layout_marginVertical="5dp"
         android:textStyle="bold"
         />
 
@@ -22,7 +23,13 @@
         android:id="@+id/ItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/white_rounded_corner"
         android:hint="Enter an Item Name"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
         android:inputType="text" />
 
     <EditText
@@ -30,6 +37,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter the Date of Purchase"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/white_rounded_corner"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
         android:inputType="text" />
 
     <EditText
@@ -37,6 +50,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter the Description"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
         android:inputType="text" />
 
     <EditText
@@ -44,6 +63,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Make"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
         android:inputType="text" />
 
     <EditText
@@ -51,6 +76,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Model"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
         android:inputType="text" />
 
     <EditText
@@ -58,6 +89,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Serial Number"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
         android:inputType="text" />
 
     <EditText
@@ -65,18 +102,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Estimated Value"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="10dp"
         android:inputType="numberDecimal" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tag 1"
-        />
+    <!-- The RecyclerView showing all added tags -->
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tagRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/small_white_rounded_corner"
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <Button
+        android:id="@+id/btn_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tag 2" />
+        android:layout_gravity="end"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="10dp"
+        android:text="Confirm" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent">
+    </LinearLayout>
+
+
 </LinearLayout>

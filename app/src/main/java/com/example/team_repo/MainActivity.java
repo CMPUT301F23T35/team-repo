@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
     private HomeFragment homeFragment;  // the home page
-    //private AddFragment addFragment;  // the add page
+    private AddFragment addFragment;  // the add page
     private CameraFragment cameraFragment;  // the camera page
     private TagFragment tagFragment;  // the tag page
     private ProfileFragment profileFragment;  // the profile page
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap bitmap_profile;  // the profile photo of the user
     private ImageView headerPicture;  // the profile photo of the user in the header
-
+    private ItemList add_item_list;  // the list of items shown in the home page
 
     private FirebaseFirestore db;
 
@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize the header picture
         headerPicture = findViewById(R.id.headerPicture);
+
+        // initialize the item list adding into the home page, filled in the AddFragment
+        add_item_list = new ItemList();
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -117,37 +120,24 @@ public class MainActivity extends AppCompatActivity {
                 toolbarLinearLayout.setVisibility(View.GONE);
                 homeFragment.refresh();
                 fragmentTransaction.show(homeFragment);
-                Log.d("MainActivity", "selectedFragment() called, homeFragment: " + homeFragment);
 
             }
         }
 
         if (position == 1) {
             // show the add page
-//            if (addFragment == null) {
-//                // add page has not been defined, define it
-//                addFragment = new AddFragment();
-//                fragmentTransaction.add(R.id.fragment_container, addFragment);
-//
-//            } else {
-//                // add page has been defined, show it
-//                fragmentTransaction.show(addFragment);
-//
-//            }
-//        }
-            homeFragment.addExpenseInputDialog();
-//            if (addFragment == null) {
-//                // add page has not been defined, define it
-//                addFragment = new AddFragment();
-//                toolbarLinearLayout.setVisibility(View.VISIBLE);
-//                fragmentTransaction.add(R.id.fragment_container, addFragment);
-//
-//            } else {
-//                // add page has been defined, show it
-//                toolbarLinearLayout.setVisibility(View.VISIBLE);
-//                fragmentTransaction.show(addFragment);
-//
-//            }
+            if (addFragment == null) {
+                // add page has not been defined, define it
+                addFragment = new AddFragment();
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.add(R.id.fragment_container, addFragment);
+
+            } else {
+                // add page has been defined, show it
+                toolbarLinearLayout.setVisibility(View.VISIBLE);
+                fragmentTransaction.show(addFragment);
+
+            }
         }
 
         if (position == 2) {
@@ -215,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
         }
-//        if (addFragment != null) {
-//            fragmentTransaction.hide(addFragment);
-//        }
+        if (addFragment != null) {
+            fragmentTransaction.hide(addFragment);
+        }
         if (cameraFragment != null) {
             fragmentTransaction.hide(cameraFragment);
         }
@@ -263,6 +253,13 @@ public class MainActivity extends AppCompatActivity {
     public void setBitmap_profile(Bitmap bitmap_profile) {
         this.bitmap_profile = bitmap_profile;
         Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
+    }
+    public ItemList getAdd_item_list() {
+        return add_item_list;
+    }
+
+    public void setAdd_item_list(ItemList add_item_list) {
+        this.add_item_list = add_item_list;
     }
 
 }

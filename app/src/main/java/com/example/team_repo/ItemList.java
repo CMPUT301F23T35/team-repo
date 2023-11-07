@@ -19,6 +19,13 @@ public class ItemList {
         this.total_value = this.total_value + item.getValue();
     }
 
+    public void addAll(ItemList itemList) {
+        for (Item item : itemList.getList()) {
+            item_list.add(item);
+            this.total_value = this.total_value + item.getValue();
+        }
+    }
+
     // Remove item from list
     public void remove(Item item) {
         item_list.remove(item);
