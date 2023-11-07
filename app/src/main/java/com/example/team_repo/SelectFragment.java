@@ -50,7 +50,7 @@ public class SelectFragment extends Fragment {
                     DocumentSnapshot document_snap = task.getResult();
                     if (document_snap.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document_snap.getData());
-                        item_list = (ArrayList<Item>) document_snap.get("item_list");
+                        item_list = (ArrayList<Item>)document_snap.get("item_list");
                     } else {
                         Log.d(TAG, "No such document");
                     }
