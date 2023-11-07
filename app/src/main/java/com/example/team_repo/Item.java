@@ -15,7 +15,7 @@ public class Item {
     //  - Potentially deal with empty description/comment/make/model/etc???
 
     private String name;
-    private Date purchase_date;
+    private String purchase_date;
     private float value;
     private String description;
     private String make;
@@ -26,7 +26,7 @@ public class Item {
     private Image image;
 
     // Constructor (all information provided)
-    public Item(String name, Date purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<String> tags, Image image) {
+    public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<String> tags, Image image) {
         this.name = name;
         this.purchase_date = purchase_date;
         this.value = value;
@@ -40,7 +40,7 @@ public class Item {
     }
 
     // Constructor (without tags or image)
-    public Item(String name, Date purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
+    public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
         this.name = name;
         this.purchase_date = purchase_date;
         this.value = value;
@@ -61,11 +61,11 @@ public class Item {
         this.name = name;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return purchase_date;
     }
 
-    public void setDate(Date purchase_date) {
+    public void setDate(String purchase_date) {
         this.purchase_date = purchase_date;
     }
 

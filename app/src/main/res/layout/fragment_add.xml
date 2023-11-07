@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fragments_rounded_corner"
-    tools:context=".AddFragment">
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners_bg"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fragment_add" />
+        android:id="@+id/top_app_bar"
+        android:layout_width ="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:text="Hello, User!, Add a New Item"
+        android:textAlignment="viewStart"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/ItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter an Item Name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/DatePurchase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the Date of Purchase"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the Description"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/ItemMake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Make"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/ItemModel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Model"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/ItemSerial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Serial Number"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/EstimatedValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Estimated Value"
+        android:inputType="numberDecimal" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tag 1"
+        />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tag 2" />
+</LinearLayout>
