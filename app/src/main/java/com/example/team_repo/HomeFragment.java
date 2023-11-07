@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
 
         data.put("item_list", item_list.getList());
 
-        db.collection("items").document("test1")
+        db.collection("items").document("item_list")
                 .set(data, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
