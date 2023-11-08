@@ -54,21 +54,6 @@ public class HomeFragment extends Fragment {
 
         item_list = new ItemList();
 
-        // Test items (delete later)
-//        Calendar cal1 = Calendar.getInstance();
-//        cal1.set(2020, 0, 1);
-//        Date date1 = cal1.getTime();
-//        Item item1 = new Item("Name", date1, 12.34F, "Description", "Make", "Model", "Serial number", "Comment");
-//        item_list.add(item1);
-//        Item item2 = new Item("Table", date1, 3.01F, "Table", "Table", "Table", "Table", "Table");
-//        item_list.add(item2);
-//        Item item3 = new Item("ABCDEFGHIJKLMNOPQRSTUVWXYZ", date1, 1234567.89F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-//        item_list.add(item3);
-//        Item item4 = new Item("frog hat", date1, 0.01F, "This is the best hat ever", "First Edition", "First Model", "1L0V3FR0GH4T5", "");
-//        item_list.add(item4);
-//        Item item5 = new Item("", date1, 0F, "", "", "", "", "");
-//        item_list.add(item5);
-
         // Attach the items in the item list to the adapter
         item_list_view = view.findViewById(R.id.homepageListView);
         itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
@@ -161,7 +146,6 @@ public class HomeFragment extends Fragment {
         final EditText Description = dialogView.findViewById(R.id.Description);
         DatePurchase = dialogView.findViewById(R.id.DatePurchase);
         final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
-
         final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
         final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
         final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
@@ -178,11 +162,10 @@ public class HomeFragment extends Fragment {
 
         calendar = Calendar.getInstance();
 
-
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
         dialogBuilder.setView(dialogView);
-//        dialogBuilder.setTitle("Add an Item");
 
+        // edit text get focus -> show date picker dialog
         DatePurchase.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -192,6 +175,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // edit text get clicked -> show date picker dialog
         DatePurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,17 +184,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
-
         dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
             String name = ItemName.getText().toString();
             String date = DatePurchase.getText().toString();
-
             String item_description = Description.getText().toString();
             String make = ItemMake.getText().toString();
             String model = ItemModel.getText().toString();
             String serial = ItemSerial.getText().toString();
+
             float value;
             if (EstimatedValue.getText().toString().isEmpty()){
                 value = (float)0;
@@ -219,21 +200,8 @@ public class HomeFragment extends Fragment {
                 value = Float.parseFloat(EstimatedValue.getText().toString());
             }
 
-//
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-//            Date date = null;
-//            try {
-//                date = dateFormat.parse(dateString);
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-
-
             if (!name.isEmpty()) {
                 // Create an item with the received name and other default values or set appropriate values.
-//                Calendar cal = Calendar.getInstance();
-//                Date date = cal.getTime();
-
                 if (!isValidDate(date)) {
                     // TODO: handle empty date
                     if (date.isEmpty()) {
@@ -246,6 +214,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
+
                 // set the selected tags to the item
                 selectedTags = new ArrayList<>();
                 for (Tag tag : tagList) {
@@ -285,7 +254,9 @@ public class HomeFragment extends Fragment {
         dialog.show();
     }
 
-
+    /**
+     * Update the date label using the selected date from the date picker dialog
+     */
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; // date format
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -293,6 +264,9 @@ public class HomeFragment extends Fragment {
         HomeFragment.this.DatePurchase.setText(sdf.format(calendar.getTime()));
     }
 
+    /**
+     * Show a date picker dialog
+     */
     private void showDatePickerDialog(){
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -313,6 +287,11 @@ public class HomeFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    /**
+     * Check if the date string is valid
+     * @param dateStr the date string to be checked
+     * @return true: valid; false: invalid
+     */
     public boolean isValidDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         sdf.setLenient(false); // set to false to check date strictly

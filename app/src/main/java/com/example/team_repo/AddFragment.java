@@ -1,26 +1,18 @@
 package com.example.team_repo;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,18 +45,18 @@ public class AddFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
+        // initialize the views
         ItemName = view.findViewById(R.id.ItemName);
         Description = view.findViewById(R.id.Description);
         DatePurchase = view.findViewById(R.id.DatePurchase);
         ItemMake = view.findViewById(R.id.ItemMake);
-
         ItemModel = view.findViewById(R.id.ItemModel);
         ItemSerial = view.findViewById(R.id.ItemSerial);
         EstimatedValue = view.findViewById(R.id.EstimatedValue);
+
         BtnConfirm = view.findViewById(R.id.btn_confirm);
         tagRecyclerView = view.findViewById(R.id.tagRecyclerView);
         tagList = ((MainActivity)getActivity()).getTagList();
-
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
 
@@ -74,6 +66,7 @@ public class AddFragment extends Fragment{
 
         calendar = Calendar.getInstance();
 
+        // pop a date picker dialog when edit text get focus
         DatePurchase.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -83,6 +76,7 @@ public class AddFragment extends Fragment{
             }
         });
 
+        // pop a date picker dialog when edit text is clicked
         DatePurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,19 +85,19 @@ public class AddFragment extends Fragment{
             }
         });
 
-
+        // get input strings, check errors, and add the item to the item list
         BtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String name = ItemName.getText().toString();
                 String date = DatePurchase.getText().toString();
-
                 String item_description = Description.getText().toString();
                 String make = ItemMake.getText().toString();
                 String model = ItemModel.getText().toString();
                 String serial = ItemSerial.getText().toString();
                 float value;
                 if (EstimatedValue.getText().toString().isEmpty()){
+                    // empty value will cause error
                     value = (float)0;
                 }
                 else {
@@ -112,9 +106,6 @@ public class AddFragment extends Fragment{
 
                 if (!name.isEmpty()) {
                     // Create an item with the received name and other default values or set appropriate values.
-//                Calendar cal = Calendar.getInstance();
-//                Date date = cal.getTime();
-
                     if (!isValidDate(date)) {
                         if (date.isEmpty()) {
                             // TODO: handle empty date
@@ -125,6 +116,7 @@ public class AddFragment extends Fragment{
                             return;
                         }
                     }
+                    // TODO: handle empty description, make, model, serial, value
 
                     Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
 
@@ -137,17 +129,17 @@ public class AddFragment extends Fragment{
                     }
                     newItem.setTags(selectedTags);
 
+                    // give the new item to main activity
                     ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
                     add_item_list.add(newItem);
                     ((MainActivity) getActivity()).setAdd_item_list(add_item_list);
 
                     cleanEt();
 
-
-                    // give a message to show that the item is added successfully
+                    // successfully add message
                     Toast.makeText(getActivity(), "Item added successfully!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // give a message to show that the item is not added successfully
+                    // error message
                     Toast.makeText(getActivity(), "Item should have a name", Toast.LENGTH_SHORT).show();
                 }
 
@@ -158,6 +150,9 @@ public class AddFragment extends Fragment{
         return view;
     }
 
+    /**
+     * Keep the tag list updated, called in MainActivity
+     */
     public void refresh(){
         tagList = ((MainActivity)getActivity()).getTagList();
         tagAdapter.setTagList(tagList);
@@ -167,6 +162,9 @@ public class AddFragment extends Fragment{
         tagRecyclerView.setLayoutManager(layoutManager);
     }
 
+    /**
+     * Clean the edit text, called in confirm button on click
+     */
     private void cleanEt(){
         ItemName.setText("");
         DatePurchase.setText("");
@@ -177,6 +175,9 @@ public class AddFragment extends Fragment{
         EstimatedValue.setText("");
     }
 
+    /**
+     * Update the date label using the selected date from the date picker dialog
+     */
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; // date format
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -184,12 +185,14 @@ public class AddFragment extends Fragment{
         AddFragment.this.DatePurchase.setText(sdf.format(calendar.getTime()));
     }
 
+    /**
+     * Show a date picker dialog
+     */
     private void showDatePickerDialog(){
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                // month starts from 0
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -204,15 +207,18 @@ public class AddFragment extends Fragment{
                 calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    /**
+     * Check if the date string is valid
+     * @param dateStr the date string to be checked
+     * @return true: valid; false: invalid
+     */
     public boolean isValidDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        sdf.setLenient(false); // set to false to check date strictly
+        sdf.setLenient(false);  // set to false to check date strictly
         try {
-            // try to parse the string to date
             Date date = sdf.parse(dateStr);
-            return true; // if success, the date is valid
+            return true;
         } catch (ParseException e) {
-            // throw exception if the date string is invalid
             return false;
         }
     }
