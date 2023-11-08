@@ -51,6 +51,7 @@ public class TagFragment extends Fragment{
                     tagList.add(new Tag(tagText));
                     tagAdapter.notifyDataSetChanged();
                     tagEditText.setText("");  // clear EditText
+                    ((MainActivity)getActivity()).setTagList(tagList);  // update the tag list in the main activity
                 }
             }
         });

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
+public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHolder>{
     // This is the adapter for the tag page
     Context context;  // the context of the tag page
     ArrayList<Tag> tagList;
@@ -25,13 +27,16 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
         return tagList;
     }
 
+    public void setTagList(ArrayList<Tag> tagList) {
+        this.tagList = tagList;
+    }
 
     /**
      * Constructor of the TagAdapter
      * @param context the context of the tag page
      * @param tagList the list of all tags created
      */
-    public TagAdapter(Context context, ArrayList<Tag> tagList){
+    public AddTagAdapter(Context context, ArrayList<Tag> tagList){
         this.context = context;
         this.tagList = tagList;
     }
@@ -47,7 +52,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
     @NonNull
     @Override
     public TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.tag_content, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_tag_content, parent, false);
         return new TagViewHolder(v);
     }
 
@@ -58,20 +63,15 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull TagAdapter.TagViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AddTagAdapter.TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tvTag.setText(tag.getTagString());
 
-        holder.btnTagDelete.setOnClickListener(new View.OnClickListener() {
+        holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                int currentPosition = holder.getAdapterPosition();  // get the current position
-                if (currentPosition != RecyclerView.NO_POSITION) {  // if the position is valid
-                    tagList.remove(currentPosition);  // tell the list that the item has been removed
-                    notifyItemRemoved(currentPosition);  // tell the adapter to remove the item
-                    notifyItemRangeChanged(currentPosition, tagList.size());  // tell the adapter that the item range has been removed
-                    ((MainActivity)context).setTagList(tagList);  // update the tag list in the main activity
-                }
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                // update tag selected status
+                tag.setSelected(isChecked);
 
             }
         });
@@ -89,14 +89,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
     }
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
-        // Currently the tag_content.xml only has a TextView and a delete button
+        // Currently the item_tag_content.xml only has a TextView and a delete button
         public TextView tvTag;
-        public ImageButton btnTagDelete;
+        public CheckBox tagCheckBox;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTag = itemView.findViewById(R.id.tv_tag_content); // track the TextView
-            btnTagDelete = itemView.findViewById(R.id.btn_tag_delete);  // track the delete button
+            tvTag = itemView.findViewById(R.id.tv_item_tag_content); // track the TextView
+            tagCheckBox = itemView.findViewById(R.id.cb_tag);  // track the delete button
         }
     }
 

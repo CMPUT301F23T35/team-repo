@@ -115,10 +115,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="60dp"
         android:layout_margin="16dp"
         android:background="@drawable/small_white_rounded_corner"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal" />
 
     <Button

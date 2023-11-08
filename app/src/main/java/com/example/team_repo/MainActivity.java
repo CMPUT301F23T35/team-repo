@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap bitmap_profile;  // the profile photo of the user
     private ImageView headerPicture;  // the profile photo of the user in the header
     private ItemList add_item_list;  // the list of items shown in the home page
+    private ArrayList<Tag> tagList;  // the list of all tags created
 
     private FirebaseFirestore db;
 
@@ -66,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize the item list adding into the home page, filled in the AddFragment
         add_item_list = new ItemList();
+
+        // initialize the tag list, filled in the AddFragment
+        tagList = new ArrayList<>();
+        tagList.add(new Tag("Tag1"));
+        tagList.add(new Tag("Tag2"));
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -133,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.fragment_container, addFragment);
 
             } else {
-                // add page has been defined, show it
+                // add page has been defined, refresh it and show it
+                addFragment.refresh();
                 toolbarLinearLayout.setVisibility(View.VISIBLE);
                 fragmentTransaction.show(addFragment);
 
@@ -260,6 +267,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void setAdd_item_list(ItemList add_item_list) {
         this.add_item_list = add_item_list;
+    }
+    public ArrayList<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(ArrayList<Tag> tagList) {
+        this.tagList = tagList;
     }
 
 }

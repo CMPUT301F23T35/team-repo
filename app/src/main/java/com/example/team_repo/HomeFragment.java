@@ -1,5 +1,6 @@
 package com.example.team_repo;
 
+import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -7,12 +8,16 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,8 +26,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private ItemAdapter itemAdapter;
@@ -30,6 +37,14 @@ public class HomeFragment extends Fragment {
     private ListView item_list_view;
     private TextView total_value_view;
     private ImageView profile_picture;
+    private Calendar calendar;
+    private EditText DatePurchase;
+    private AddTagAdapter tagAdapter;  // the adapter of the tags
+    private LinearLayoutManager layoutManager;
+    private ArrayList<Tag> tagList;
+
+    private ArrayList<String> selectedTags;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,6 +89,28 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        item_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Item item = itemAdapter.getItem(position);
+
+                checkItem(item);
+
+
+
+
+            }
+        });
+
+
+
+
+
+
+
+
+
         return view;
     }
 
@@ -95,6 +132,7 @@ public class HomeFragment extends Fragment {
 
         // TODO: update total value
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
+
 
     }
 
@@ -123,17 +161,49 @@ public class HomeFragment extends Fragment {
 
         final EditText ItemName = dialogView.findViewById(R.id.ItemName);
         final EditText Description = dialogView.findViewById(R.id.Description);
-        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
+        DatePurchase = dialogView.findViewById(R.id.DatePurchase);
         final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
 
         final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
         final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
         final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
+        final RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
+
+        tagList = ((MainActivity)getActivity()).getTagList();
+
+        tagAdapter = new AddTagAdapter(getContext(), tagList);
+        tagRecyclerView.setAdapter(tagAdapter);
+
+        // set the layout manager of the recycler view
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        tagRecyclerView.setLayoutManager(layoutManager);
+
+        calendar = Calendar.getInstance();
 
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
         dialogBuilder.setView(dialogView);
 //        dialogBuilder.setTitle("Add an Item");
+
+        DatePurchase.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePickerDialog();
+                }
+            }
+        });
+
+        DatePurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+
+            }
+        });
+
+
+
 
         dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
             String name = ItemName.getText().toString();
@@ -150,6 +220,7 @@ public class HomeFragment extends Fragment {
             else {
                 value = Float.parseFloat(EstimatedValue.getText().toString());
             }
+
 //
 //            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
 //            Date date = null;
@@ -164,7 +235,28 @@ public class HomeFragment extends Fragment {
                 // Create an item with the received name and other default values or set appropriate values.
 //                Calendar cal = Calendar.getInstance();
 //                Date date = cal.getTime();
+
+                if (!isValidDate(date)) {
+                    // TODO: handle empty date
+                    if (date.isEmpty()) {
+                        date = "0000-00-00";
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Invalid date format, please use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
                 Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
+                // set the selected tags to the item
+                selectedTags = new ArrayList<>();
+                for (Tag tag : tagList) {
+                    if (tag.isSelected()) {
+                        selectedTags.add(tag.getTagString());
+                    }
+                }
+                newItem.setTags(selectedTags);
+
                 item_list.add(newItem);
                 itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                 total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -195,6 +287,67 @@ public class HomeFragment extends Fragment {
         dialog.show();
     }
 
+
+    private void updateLabel() {
+        String myFormat = "yyyy-MM-dd"; // date format
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        HomeFragment.this.DatePurchase.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void showDatePickerDialog(){
+
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                // month starts from 0
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(); // update the date label
+            }
+        };
+
+        // create and show a date picker dialog
+        new DatePickerDialog(getActivity(), dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public boolean isValidDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        sdf.setLenient(false); // set to false to check date strictly
+        try {
+            // try to parse the string to date
+            Date date = sdf.parse(dateStr);
+            return true; // if success, the date is valid
+        } catch (ParseException e) {
+            // throw exception if the date string is invalid
+            return false;
+        }
+    }
+
+
+    public void checkItem(Item item){
+        // Use log to check the item
+        Log.d("ListViewClick", "Item Name: " + item.getName());
+        Log.d("ListViewClick", "Purchase Date: " + item.getDate());
+        Log.d("ListViewClick", "Value: " + item.getValue());
+        Log.d("ListViewClick", "Description: " + item.getDescription());
+        Log.d("ListViewClick", "Make: " + item.getMake());
+        Log.d("ListViewClick", "Model: " + item.getModel());
+        Log.d("ListViewClick", "Serial Number: " + item.getSerialNumber());
+        Log.d("ListViewClick", "Comment: " + item.getComment());
+
+        if (item.getTags() != null) {
+            for (String tag : item.getTags()) {
+                Log.d("ListViewClick", "Tag: " + tag);
+            }
+        }
+        Log.d("ListViewClick", "divide-------------------------------divide");
+
+    }
 
 
 }

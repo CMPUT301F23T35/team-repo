@@ -83,4 +83,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         return view;
     }
 
+    public Item getItem(int position) {
+        return item_list.get(position);
+    }
+
 }
