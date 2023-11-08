@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,6 +120,7 @@ public class HomeFragment extends Fragment {
                 Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
                 item_list.add(newItem);
                 itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                refresh();
             }
 
 
@@ -136,8 +138,10 @@ public class HomeFragment extends Fragment {
         // update header
         updateProfilePicture();
         // TODO: update item list
-        // TODO: update total value
 
+        FragmentActivity current_activity = getActivity();
+        current_activity.findViewById(R.id.totalValueTextView);
+        total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
     }
 
     /**

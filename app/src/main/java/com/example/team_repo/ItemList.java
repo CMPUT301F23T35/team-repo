@@ -3,7 +3,6 @@ package com.example.team_repo;
 import java.util.ArrayList;
 
 public class ItemList {
-    // TODO: add an edit(), sort(), and/or filter() method?
 
     private ArrayList<Item> item_list;
     private float total_value;
