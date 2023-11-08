@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -130,10 +131,7 @@ public class HomeFragment extends Fragment {
         item_list.addAll(add_item_list);
         itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
-        // TODO: update total value
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
-
-
     }
 
     /**
