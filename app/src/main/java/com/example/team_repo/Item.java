@@ -1,12 +1,12 @@
 package com.example.team_repo;
 
 import android.media.Image;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Item {
+public class Item implements Serializable {
     // TODO:
     //  - Add more constructors when certain arguments aren't given/are optional
     //  - Make less tedious constructors??? (less arguments?)

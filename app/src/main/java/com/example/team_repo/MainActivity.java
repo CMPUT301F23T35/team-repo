@@ -264,5 +264,14 @@ public class MainActivity extends AppCompatActivity {
         this.bitmap_profile = bitmap_profile;
         Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
     }
-
+    public void showItemDetailFragment(Item item) {
+        // Create a new fragment instance and pass the item to it
+        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }
