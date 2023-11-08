@@ -75,7 +75,7 @@ public class AddFragment extends Fragment{
 //                throw new RuntimeException(e);
 //            }
 
-                if (name != null && !name.isEmpty()) {
+                if (!name.isEmpty()) {
                     // Create an item with the received name and other default values or set appropriate values.
 //                Calendar cal = Calendar.getInstance();
 //                Date date = cal.getTime();
