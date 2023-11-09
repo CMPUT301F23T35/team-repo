@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.FragmentActivity;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -32,8 +32,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+
+/**
+ * The fragment for the home page of the app, displaying the user's item list and total estimated value.
+ */
 public class HomeFragment extends Fragment {
-    private ItemAdapter itemAdapter;
+
+    private ItemAdapter item_adapter;
     private ItemList item_list;
     private ListView item_list_view;
     private TextView total_value_view;
@@ -44,12 +49,22 @@ public class HomeFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private ArrayList<Tag> tagList;
 
-    private ArrayList<String> selectedTags;
+    private ArrayList<Tag> selectedTags;
 
 
+    /**
+     * Creates the view for the home page fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the created view for the home page fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         item_list = new ItemList();
@@ -69,10 +84,10 @@ public class HomeFragment extends Fragment {
 //        Item item5 = new Item("", date1, 0F, "", "", "", "", "");
 //        item_list.add(item5);
 
-        // Attach the items in the item list to the adapter
+        // Attach the items in the item list to the item adapter
         item_list_view = view.findViewById(R.id.homepageListView);
-        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(itemAdapter);
+        item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
+        item_list_view.setAdapter(item_adapter);
 
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
@@ -82,25 +97,11 @@ public class HomeFragment extends Fragment {
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addExpenseInputDialog();
 //                monthlyChargeList.total_monthly_charges();
-            }
-        });
-
-        item_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                Item item = itemAdapter.getItem(position);
-
-                checkItem(item);
-
-
-
-
             }
         });
 
@@ -129,7 +130,7 @@ public class HomeFragment extends Fragment {
         ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
         ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
         item_list.addAll(add_item_list);
-        itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+        item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
     }
@@ -250,13 +251,13 @@ public class HomeFragment extends Fragment {
                 selectedTags = new ArrayList<>();
                 for (Tag tag : tagList) {
                     if (tag.isSelected()) {
-                        selectedTags.add(tag.getTagString());
+                        selectedTags.add(tag);
                     }
                 }
                 newItem.setTags(selectedTags);
 
                 item_list.add(newItem);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                 total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
 
                 ItemName.setText("");
@@ -326,26 +327,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-    public void checkItem(Item item){
-        // Use log to check the item
-        Log.d("ListViewClick", "Item Name: " + item.getName());
-        Log.d("ListViewClick", "Purchase Date: " + item.getDate());
-        Log.d("ListViewClick", "Value: " + item.getValue());
-        Log.d("ListViewClick", "Description: " + item.getDescription());
-        Log.d("ListViewClick", "Make: " + item.getMake());
-        Log.d("ListViewClick", "Model: " + item.getModel());
-        Log.d("ListViewClick", "Serial Number: " + item.getSerialNumber());
-        Log.d("ListViewClick", "Comment: " + item.getComment());
-
-        if (item.getTags() != null) {
-            for (String tag : item.getTags()) {
-                Log.d("ListViewClick", "Tag: " + tag);
-            }
-        }
-        Log.d("ListViewClick", "divide-------------------------------divide");
-
-    }
 
 
 }

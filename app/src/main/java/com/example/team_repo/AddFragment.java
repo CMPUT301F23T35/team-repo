@@ -44,7 +44,7 @@ public class AddFragment extends Fragment{
     private LinearLayoutManager layoutManager;
     private ArrayList<Tag> tagList;
 
-    private ArrayList<String> selectedTags;
+    private ArrayList<Tag> selectedTags;
 
 
     @Override
@@ -132,7 +132,7 @@ public class AddFragment extends Fragment{
                     selectedTags = new ArrayList<>();
                     for (Tag tag : tagList) {
                         if (tag.isSelected()) {
-                            selectedTags.add(tag.getTagString());
+                            selectedTags.add(tag);
                         }
                     }
                     newItem.setTags(selectedTags);
