@@ -139,7 +139,7 @@ public class ItemDetailFragment extends Fragment {
         }
 
         // Set up the toolbar
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        // toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
