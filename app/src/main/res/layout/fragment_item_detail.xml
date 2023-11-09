@@ -152,6 +152,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />
 
-    <!-- ... rest of the layout below ... -->
+    <!-- Photo Edit Button -->
+    <Button
+        android:id="@+id/editImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Photo"
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
+        app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
+
+    <!-- Take Photo Button -->
+    <Button
+        android:id="@+id/takePhotoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
+        app:layout_constraintStart_toEndOf="@+id/editImageButton"
+        app:layout_constraintEnd_toStartOf="@+id/deleteImageButton"
+        app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
+
+    <!-- Delete Photo Button -->
+    <Button
+        android:id="@+id/deleteImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Photo"
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
+        app:layout_constraintStart_toEndOf="@+id/takePhotoButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
