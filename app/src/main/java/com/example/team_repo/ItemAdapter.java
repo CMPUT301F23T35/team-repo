@@ -95,6 +95,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             item_value.setText(String.format("%.2f", item.getValue()).substring(0, 14) + "...");
         }
 
+        // Set the item's date
         String date = item.getDate();
         item_purchase_date.setText(date);
 

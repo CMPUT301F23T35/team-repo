@@ -71,7 +71,6 @@ public class HomeFragment extends Fragment {
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
-
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +81,9 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Create a dialog for the user clicks the "add" button, prompting them to enter an item.
+     */
     public void addExpenseInputDialog() {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_add, null);
@@ -91,11 +92,9 @@ public class HomeFragment extends Fragment {
         final EditText Description = dialogView.findViewById(R.id.Description);
         final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
         final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
-
         final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
         final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
         final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
-
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
         dialogBuilder.setView(dialogView);
@@ -104,14 +103,12 @@ public class HomeFragment extends Fragment {
         dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
             String name = ItemName.getText().toString();
             String date = DatePurchase.getText().toString();
-
             String item_description = Description.getText().toString();
             String make = ItemMake.getText().toString();
             String model = ItemModel.getText().toString();
             String serial = ItemSerial.getText().toString();
             float value = Float.parseFloat(EstimatedValue.getText().toString());
 
-//
 //            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
 //            Date date = null;
 //            try {
@@ -138,14 +135,14 @@ public class HomeFragment extends Fragment {
     }
     
     /**
-     * Refreshes the home page
-     * May be used each time when there is a data change
+     * Refreshes the home page.
+     * May be used each time when there is a data change.
      */
     public void refresh() {
-        // update header
+        // Update header
         updateProfilePicture();
-        // TODO: update item list
 
+        // Update total estimated value
         FragmentActivity current_activity = getActivity();
         current_activity.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
