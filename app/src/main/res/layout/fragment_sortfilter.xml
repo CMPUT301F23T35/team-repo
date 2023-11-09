@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".MainActivity">-->
+
+<!--    <Button-->
+<!--        android:id="@+id/makeAsc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/make_ascending"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="-2dp"-->
+<!--        tools:layout_editor_absoluteY="138dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/descripDesc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/description_desc"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="228dp"-->
+<!--        tools:layout_editor_absoluteY="229dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/descripAsc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/description_asc"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck,VisualLintBounds"-->
+<!--        tools:layout_editor_absoluteX="-2dp"-->
+<!--        tools:layout_editor_absoluteY="229dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/tagDesc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/tags_descending"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="228dp"-->
+<!--        tools:layout_editor_absoluteY="272dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/tagAsc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/tags_ascending"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck,VisualLintBounds"-->
+<!--        tools:layout_editor_absoluteX="-2dp"-->
+<!--        tools:layout_editor_absoluteY="272dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/datedesc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/date_descending"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="228dp"-->
+<!--        tools:layout_editor_absoluteY="181dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/estAsc"-->
+<!--        android:layout_width="161dp"-->
+<!--        android:layout_height="44dp"-->
+<!--        android:text="@string/est_value_asc"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck,VisualLintOverlap"-->
+<!--        tools:layout_editor_absoluteX="-2dp"-->
+<!--        tools:layout_editor_absoluteY="94dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/dateAsc"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:text="@string/date_ascending"-->
+<!--        tools:ignore="MissingConstraints,VisualLintBounds"-->
+<!--        tools:layout_editor_absoluteX="-2dp"-->
+<!--        tools:layout_editor_absoluteY="181dp" />-->
+
+<!--    <TextView-->
+<!--        android:layout_width="405dp"-->
+<!--        android:layout_height="32dp"-->
+<!--        android:text="@string/sort_by"-->
+<!--        android:textAlignment="viewStart"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold|italic"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.002"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.089"-->
+<!--        tools:ignore="TextSizeCheck" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="410dp"-->
+<!--        android:layout_height="51dp"-->
+<!--        android:background="#29958B"-->
+<!--        android:text="@string/sort_and_filter_by"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:ignore="MissingConstraints,TextContrastCheck" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/makeAsc"-->
+<!--        android:layout_width="58dp"-->
+<!--        android:layout_height="51dp"-->
+<!--        android:background="#00009688"-->
+<!--        android:drawableBottom="@android:drawable/ic_menu_revert"-->
+<!--        tools:ignore="DuplicateIds,MissingConstraints,SpeakableTextPresentCheck"-->
+<!--        tools:layout_editor_absoluteX="1dp"-->
+<!--        tools:layout_editor_absoluteY="0dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/estDesc"-->
+<!--        android:layout_width="160dp"-->
+<!--        android:layout_height="39dp"-->
+<!--        android:text="@string/est_values_desc"-->
+<!--        tools:ignore="DuplicateClickableBoundsCheck,MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="226dp"-->
+<!--        tools:layout_editor_absoluteY="94dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/makeDesc"-->
+<!--        android:layout_width="162dp"-->
+<!--        android:layout_height="43dp"-->
+<!--        android:text="@string/make_descending"-->
+<!--        tools:ignore="MissingConstraints,TouchTargetSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="224dp"-->
+<!--        tools:layout_editor_absoluteY="133dp" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="411dp"-->
+<!--        android:layout_height="37dp"-->
+<!--        android:text="@string/filter_by"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold|italic"-->
+<!--        tools:ignore="MissingConstraints,TextSizeCheck"-->
+<!--        tools:layout_editor_absoluteX="1dp"-->
+<!--        tools:layout_editor_absoluteY="320dp" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/Sortby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort By:"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/sortOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioNameAscending"
+            android:layout_width="241dp"
+            android:layout_height="wrap_content"
+            android:text="Item Name (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioNameDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Name (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioDescripAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Description (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioDescripDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Description(Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioMakeAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Make (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radiomakeDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Make (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioDateAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Date (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioDateDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Date (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioTagAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Tag (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioTagDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Tag (Descending)" />
+
+
+        <!-- Add more RadioButtons for other sorting options -->
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort"/>
+
+</LinearLayout>
