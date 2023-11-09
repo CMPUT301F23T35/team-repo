@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // home page has been defined, show it
                 toolbarLinearLayout.setVisibility(View.GONE);
-                homeFragment.refreshHomePage();
+                homeFragment.refresh();
                 fragmentTransaction.show(homeFragment);
                 Log.d("MainActivity", "selectedFragment() called, homeFragment: " + homeFragment);
 

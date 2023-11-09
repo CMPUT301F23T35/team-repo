@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
                 Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
                 item_list.add(newItem);
                 item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-                refreshHomePage();
+                refresh();
             }
 
 
@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
      * Refreshes the home page
      * May be used each time when there is a data change
      */
-    public void refreshHomePage() {
+    public void refresh() {
         // update header
         updateProfilePicture();
         // TODO: update item list
