@@ -146,6 +146,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 intent.putExtra("email", email);
                                 intent.putExtra("password", password);
                                 startActivity(intent);
+                            } else {
+                                // email is not unique
+                                Toast.makeText(RegisterActivity.this, "Email already exists.", Toast.LENGTH_SHORT).show();
+
                             }
                         } else {
                             // Error

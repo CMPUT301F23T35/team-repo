@@ -2,7 +2,6 @@ package com.example.team_repo;
 
 import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -10,7 +9,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -18,9 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
-import android.widget.AdapterView;
 
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,11 +32,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
@@ -168,7 +159,7 @@ public class HomeFragment extends Fragment {
             }
 
             if (!date.isEmpty()) {
-                item_list.getList().get(editPosition).setDate(date);
+                item_list.getList().get(editPosition).setPurchase_date(date);
                 itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
             }
 
@@ -188,7 +179,7 @@ public class HomeFragment extends Fragment {
             }
 
             if (!serial.isEmpty()) {
-                item_list.getList().get(editPosition).setSerialNumber(serial);
+                item_list.getList().get(editPosition).setSerial_number(serial);
                 itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
             }
 
@@ -423,12 +414,12 @@ public class HomeFragment extends Fragment {
         ArrayList<Item> list = item_list.getList();
         for (Item item : list){
             Log.d("HomeFragment", "item name: " + item.getName());
-            Log.d("HomeFragment", "item purchase date: " + item.getDate());
+            Log.d("HomeFragment", "item purchase date: " + item.getPurchase_date());
             Log.d("HomeFragment", "item value: " + item.getValue());
             Log.d("HomeFragment", "item description: " + item.getDescription());
             Log.d("HomeFragment", "item make: " + item.getMake());
             Log.d("HomeFragment", "item model: " + item.getModel());
-            Log.d("HomeFragment", "item serial number: " + item.getSerialNumber());
+            Log.d("HomeFragment", "item serial number: " + item.getSerial_number());
             Log.d("HomeFragment", "item comment: " + item.getComment());
             Log.d("HomeFragment", "item tags: " + item.getTags());
             Log.d("HomeFragment", "item image: " + item.getImagePath());

@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 
 import android.widget.EditText;
@@ -101,14 +100,13 @@ public class ItemDetailFragment extends Fragment {
         view.findViewById(R.id.deleteImageButton).setOnClickListener(v -> deleteImage());
 
         // Populate the views with item data
-
         nameTextView.setText(mItem.getName());
-        dateTextView.setText(mItem.getDate());
+        dateTextView.setText(mItem.getPurchase_date());
         valueTextView.setText(String.valueOf(mItem.getValue()));
         descriptionTextView.setText(mItem.getDescription());
         makeTextView.setText(mItem.getMake());
         modelTextView.setText(mItem.getModel());
-        serialNumberTextView.setText(mItem.getSerialNumber());
+        serialNumberTextView.setText(mItem.getSerial_number());
         commentTextView.setText(mItem.getComment());
 
         // Set a placeholder image from the drawable resources
@@ -235,9 +233,24 @@ public class ItemDetailFragment extends Fragment {
         final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
         final RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
 
+        // Populate the views with item data
+        ItemName.setText(mItem.getName());
+        Description.setText(mItem.getDescription());
+        DatePurchase.setText(mItem.getPurchase_date());
+        ItemMake.setText(mItem.getMake());
+        ItemModel.setText(mItem.getModel());
+        ItemSerial.setText(mItem.getSerial_number());
+        EstimatedValue.setText(String.valueOf(mItem.getValue()));
         tagList = ((MainActivity) getActivity()).getTagList();
-
         tagAdapter = new AddTagAdapter(getContext(), tagList);
+        // set item tags to be selected
+        for (Tag tag : mItem.getTags()) {
+            for (Tag t : tagList) {
+                if (tag.isSelected() == t.isSelected()) {
+                    t.setSelected(true);
+                }
+            }
+        }
         tagRecyclerView.setAdapter(tagAdapter);
 
         // set the layout manager of the recycler view
@@ -254,7 +267,8 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    showDatePickerDialog(dateTextView);
+                    showDatePickerDialog(DatePurchase);
+                    // showDatePickerDialog(dateTextView);
                 }
             }
         });
@@ -263,7 +277,8 @@ public class ItemDetailFragment extends Fragment {
         DatePurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog(dateTextView);
+                showDatePickerDialog(DatePurchase);
+                // showDatePickerDialog(dateTextView);
 
             }
         });
@@ -277,49 +292,48 @@ public class ItemDetailFragment extends Fragment {
             String serial = ItemSerial.getText().toString();
             String valueString = EstimatedValue.getText().toString();
 
-            if (!item_description.isEmpty()) {
-                mItem.setDescription(item_description);
-                descriptionTextView.setText((mItem.getDescription()));
-            }
-
-            if (!make.isEmpty()) {
-                mItem.setMake(make);
-                makeTextView.setText((mItem.getDescription()));
-            }
-
-            if (!model.isEmpty()) {
-                mItem.setModel(model);
-                modelTextView.setText((mItem.getDescription()));
-            }
-
-            if (!serial.isEmpty()) {
-                mItem.setSerialNumber(serial);
-                serialNumberTextView.setText(mItem.getSerialNumber());
-            }
-
-            float value;
-            if (EstimatedValue.getText().toString().isEmpty()) {
-                value = (float) 0;
-            } else {
-                value = Float.parseFloat(EstimatedValue.getText().toString());
-                valueTextView.setText(String.valueOf(value));
-            }
-
 
                 mItem.setName(name);
                 nameTextView.setText(mItem.getName());
-                // Create an item with the received name and other default values or set appropriate values.
-                if (!isValidDate(date)) {
-                    // TODO: handle empty date
-                    if (date.isEmpty()) {
-                        date = "0000-00-00";
-                    } else {
-                        Toast.makeText(getActivity(), "Invalid date format, please use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+
+                if (!item_description.isEmpty()) {
+                    mItem.setDescription(item_description);
+                    descriptionTextView.setText((mItem.getDescription()));
                 }
 
-                Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
+                if (!make.isEmpty()) {
+                    mItem.setMake(make);
+                    makeTextView.setText((mItem.getMake()));
+                }
+
+                if (!model.isEmpty()) {
+                    mItem.setModel(model);
+                    modelTextView.setText((mItem.getModel()));
+                }
+
+                if (!serial.isEmpty()) {
+                    mItem.setSerial_number(serial);
+                    serialNumberTextView.setText(mItem.getSerial_number());
+                }
+
+                // Create an item with the received name and other default values or set appropriate values.
+                if (!isValidDate(date)) {
+                    // TODO: handle invalid date
+                    mItem.setPurchase_date("0000-00-00");
+                    dateTextView.setText(mItem.getPurchase_date());
+                } else {
+                    mItem.setPurchase_date(date);
+                    dateTextView.setText(mItem.getPurchase_date());
+                }
+
+                float value;
+                if (valueString.isEmpty()) {
+                    value = (float) 0;
+                } else {
+                    value = Float.parseFloat(EstimatedValue.getText().toString());
+                }
+                valueTextView.setText(String.valueOf(value));
+                mItem.setValue(value);
 
                 // set the selected tags to the item
                 selectedTags = new ArrayList<>();
@@ -328,7 +342,8 @@ public class ItemDetailFragment extends Fragment {
                         selectedTags.add(tag);
                     }
                 }
-                newItem.setTags(selectedTags);
+                mItem.setTags(selectedTags);
+
 
                 ItemName.setText("");
                 DatePurchase.setText("");
@@ -357,17 +372,17 @@ public class ItemDetailFragment extends Fragment {
     /**
      * Update the date label using the selected date from the date picker dialog
      */
-    private void updateLabel(TextView dateTextView) {
+    private void updateLabel(TextView DatePurchase) {
         String myFormat = "yyyy-MM-dd"; // date format
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        dateTextView.setText(sdf.format(calendar.getTime()));
+        DatePurchase.setText(sdf.format(calendar.getTime()));
     }
 
     /**
      * Show a date picker dialog
      */
-    private void showDatePickerDialog(TextView dateTextView){
+    private void showDatePickerDialog(TextView DatePurchase){
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -376,7 +391,7 @@ public class ItemDetailFragment extends Fragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel(dateTextView); // update the date label
+                updateLabel(DatePurchase); // update the date label
             }
         };
 
