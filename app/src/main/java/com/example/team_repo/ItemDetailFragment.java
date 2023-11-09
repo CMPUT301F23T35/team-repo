@@ -31,6 +31,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +58,9 @@ public class ItemDetailFragment extends Fragment {
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
     public ItemDetailFragment() {
         // Required empty public constructor
 
@@ -242,15 +248,11 @@ public class ItemDetailFragment extends Fragment {
         ItemSerial.setText(mItem.getSerial_number());
         EstimatedValue.setText(String.valueOf(mItem.getValue()));
         tagList = ((MainActivity) getActivity()).getTagList();
-        tagAdapter = new AddTagAdapter(getContext(), tagList);
-        // set item tags to be selected
-        for (Tag tag : mItem.getTags()) {
-            for (Tag t : tagList) {
-                if (tag.isSelected() == t.isSelected()) {
-                    t.setSelected(true);
-                }
-            }
+        // set all tags to unselected
+        for (Tag tag : tagList) {
+            tag.setSelected(false);
         }
+        tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
 
         // set the layout manager of the recycler view
@@ -344,6 +346,7 @@ public class ItemDetailFragment extends Fragment {
                     }
                 }
                 mItem.setTags(selectedTags);
+                ((MainActivity) getActivity()).updateItemToDB(mItem);
 
 
                 ItemName.setText("");
