@@ -113,6 +113,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         String date = item.getDate();
         item_purchase_date.setText(date);
 
-
         return view;
-    }}
+    }
+
+
+    public Item getItem(int position) {
+        return item_list.get(position);
+    }
+
+}

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Item implements Serializable {
@@ -57,6 +59,12 @@ public class Item implements Serializable {
         this.imagePath = imagePath;
     }
 
+    // Constructor (without tags or image)
+    public Item(){
+
+    }
+
+
     /**
      * Constructor for an item when all information is provided, except for the item's tags and image.
      * @param name the item's name
@@ -67,6 +75,7 @@ public class Item implements Serializable {
      * @param model the item's model
      * @param serial_number the item's serial number
      */
+
     public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
         this.name = name;
         this.purchase_date = purchase_date;
@@ -80,10 +89,30 @@ public class Item implements Serializable {
         this.imagePath = null;
     }
 
+
+
+    public Map<String, Object> toMap(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("purchase_date", purchase_date);
+        map.put("value", value);
+        map.put("description", description);
+        map.put("make", make);
+        map.put("model", model);
+        map.put("serial_number", serial_number);
+        map.put("comment", comment);
+        map.put("tags", tags);
+        map.put("image", imagePath);
+        return map;
+    }
+
+
+
     /**
      * Return the name of the item.
      * @return the name of the item
      */
+
     public String getName() {
         return name;
     }

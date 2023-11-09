@@ -26,6 +26,14 @@ public class ItemList {
         item_list.add(item);
         this.total_value = this.total_value + item.getValue();
     }
+    public void addAll(ItemList itemList) {
+        for (Item item : itemList.getList()) {
+            item_list.add(item);
+            this.total_value = this.total_value + item.getValue();
+        }
+    }
+
+    // Remove item from list
 
     public void updateValue() {
         float sumItem = 0;
@@ -46,6 +54,7 @@ public class ItemList {
             }
         }
     }
+
     /**
      * Removes an item from the item list and updates the total estimated value of the list.
      * @param item the item to be removed from the list
