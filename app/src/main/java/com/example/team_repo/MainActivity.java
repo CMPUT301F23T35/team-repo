@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void showItemDetailFragment(Item item) {
         // Create a new fragment instance and pass the item to it
-        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
+        ItemDetailFragment2 fragment = ItemDetailFragment2.newInstance(item);
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()

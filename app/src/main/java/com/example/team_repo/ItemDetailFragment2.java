@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,19 +18,18 @@ import androidx.fragment.app.Fragment;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-public class ItemDetailFragment extends Fragment {
+public class ItemDetailFragment2 extends Fragment {
 
     private Item mItem;
 
 
-    public ItemDetailFragment() {
+    public ItemDetailFragment2() {
         // Required empty public constructor
     }
 
-    public static ItemDetailFragment newInstance(Item item) {
-        ItemDetailFragment fragment = new ItemDetailFragment();
+    public static ItemDetailFragment2 newInstance(Item item) {
+        ItemDetailFragment2 fragment = new ItemDetailFragment2();
         Bundle args = new Bundle();
         args.putSerializable("item", item); // Make sure Item implements Serializable
         fragment.setArguments(args);
