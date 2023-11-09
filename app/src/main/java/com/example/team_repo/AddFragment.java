@@ -120,6 +120,11 @@ public class AddFragment extends Fragment{
 
                     Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
 
+                    // set itemID using time stamp
+                    long timestamp = System.currentTimeMillis();
+                    newItem.setItemID(String.valueOf(timestamp));
+
+
                     // set the selected tags to the item
                     selectedTags = new ArrayList<>();
                     for (Tag tag : tagList) {
