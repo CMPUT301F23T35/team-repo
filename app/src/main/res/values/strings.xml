@@ -12,5 +12,11 @@
     <string name="dollar_sign">$</string>
     <string name="item_value">0.00</string>
     <string name="item_purchase_date">2023-11-01</string>
+    <string name="item_image">Item Image</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="no_date_available">No Date Available</string>
+
     <string name="add">Add</string>
+
 </resources>

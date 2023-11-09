@@ -6,25 +6,33 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The fragment for the home page of the app, displaying the user's item list and total estimated value.
  */
 public class HomeFragment extends Fragment {
 
-    private ItemAdapter item_adapter;
+    private ItemAdapter itemAdapter;
     private ItemList item_list;
     private ListView item_list_view;
     private TextView total_value_view;
     private ImageView profile_picture;
+
+    private ItemViewModel itemViewModel;
 
     /**
      * Creates the view for the home page fragment.
@@ -41,14 +49,19 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        item_list = new ItemList();
+        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+
+        item_list = itemViewModel.getItemList();
+        item_list.updateValue();
+        item_list.removeNullItem();
+        //item_list = new ItemList();
 
         // Test items (delete later)
 //        Calendar cal1 = Calendar.getInstance();
 //        cal1.set(2020, 0, 1);
-//        Date date1 = cal1.getTime();
-//        Item item1 = new Item("Name", date1, 12.34F, "Description", "Make", "Model", "Serial number", "Comment");
-//        item_list.add(item1);
+////        Date date1 = cal1.getTime();
+//          Item item1 = new Item("Name", "date", 12.34F, "Description", "Make", "Model", "Serial number", "Comment");
+//          item_list.add(item1);
 //        Item item2 = new Item("Table", date1, 3.01F, "Table", "Table", "Table", "Table", "Table");
 //        item_list.add(item2);
 //        Item item3 = new Item("ABCDEFGHIJKLMNOPQRSTUVWXYZ", date1, 1234567.89F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -59,10 +72,16 @@ public class HomeFragment extends Fragment {
 //        item_list.add(item5);
 
         // Attach the items in the item list to the item adapter
-        item_list_view = view.findViewById(R.id.homepageListView);
-        item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(item_adapter);
 
+
+        item_list_view = view.findViewById(R.id.homepageListView);
+        //item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
+        item_list_view.setAdapter(itemAdapter);
+        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
+
+        item_list_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        item_list_view.setAdapter(itemAdapter);
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -71,13 +90,28 @@ public class HomeFragment extends Fragment {
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
-        view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addExpenseInputDialog();
-//                monthlyChargeList.total_monthly_charges();
-            }
-        });
+
+        //view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                addExpenseInputDialog();
+////                monthlyChargeList.total_monthly_charges();
+//            }
+//        });
+
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int editPosition = item_list_view.getCheckedItemPosition();
+//                if (editPosition != AdapterView.INVALID_POSITION) {
+//                    editExpenseInputDialog(editPosition);
+//                    item_list_view.clearChoices();
+////                monthlyChargeList.total_monthly_charges();
+//                }
+//            }
+//        });
+
         return view;
     }
 
@@ -121,9 +155,20 @@ public class HomeFragment extends Fragment {
                 // Create an item with the received name and other default values or set appropriate values.
 //                Calendar cal = Calendar.getInstance();
 //                Date date = cal.getTime();
-                Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
+
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date dateObject = null;
+                String date_new = null;
+                try {
+                    dateObject = dateFormat.parse(date);
+                    date_new = String.valueOf(dateObject);
+                } catch (ParseException e) {
+                    date_new = getString(R.string.no_date_available);
+                }
+                Item newItem = new Item(name, date_new, value, item_description, make, model, serial, "");
                 item_list.add(newItem);
-                item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                 refresh();
             }
 
@@ -133,7 +178,81 @@ public class HomeFragment extends Fragment {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
-    
+
+
+
+
+
+    public void editExpenseInputDialog(int editPosition) {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.fragment_add, null);
+
+        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
+        final EditText Description = dialogView.findViewById(R.id.Description);
+        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
+        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
+
+        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
+        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
+        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
+        dialogBuilder.setView(dialogView);
+//        dialogBuilder.setTitle("Add an Item");
+
+        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
+            String name = ItemName.getText().toString();
+            String date = DatePurchase.getText().toString();
+            String item_description = Description.getText().toString();
+            String make = ItemMake.getText().toString();
+            String model = ItemModel.getText().toString();
+            String serial = ItemSerial.getText().toString();
+//            float value = Float.parseFloat(EstimatedValue.getText().toString());
+            String valueString = EstimatedValue.getText().toString();
+
+            if (!name.isEmpty()) {
+                item_list.getList().get(editPosition).setName(name);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!date.isEmpty()) {
+                item_list.getList().get(editPosition).setDate(date);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!item_description.isEmpty()) {
+                item_list.getList().get(editPosition).setDescription(item_description);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!make.isEmpty()) {
+                item_list.getList().get(editPosition).setMake(make);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!model.isEmpty()) {
+                item_list.getList().get(editPosition).setModel(model);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!serial.isEmpty()) {
+                item_list.getList().get(editPosition).setSerialNumber(serial);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!valueString.isEmpty()) {
+                float value = Float.parseFloat(EstimatedValue.getText().toString());
+                item_list.getList().get(editPosition).setValue(value);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+        });
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
     /**
      * Refreshes the home page.
      * May be used each time when there is a data change.
