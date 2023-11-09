@@ -195,7 +195,6 @@ public class ItemDetailFragment extends Fragment {
             }
 
         });
-
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
