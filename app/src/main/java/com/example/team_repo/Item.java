@@ -1,11 +1,9 @@
 package com.example.team_repo;
 
-import android.graphics.Bitmap;
-import android.media.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Item implements Serializable {
@@ -33,6 +31,10 @@ public class Item implements Serializable {
     private String imagePath; // Store the file path or URI of the image as a string
 
 
+
+    private String itemID;  // the unique ID of the item (primary key in the database)
+
+
     /**
      * Constructor for an item when all information is provided.
      * @param name the item's name
@@ -57,6 +59,12 @@ public class Item implements Serializable {
         this.imagePath = imagePath;
     }
 
+    // Constructor (without tags or image)
+    public Item(){
+
+    }
+
+
     /**
      * Constructor for an item when all information is provided, except for the item's tags and image.
      * @param name the item's name
@@ -67,6 +75,7 @@ public class Item implements Serializable {
      * @param model the item's model
      * @param serial_number the item's serial number
      */
+
     public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
         this.name = name;
         this.purchase_date = purchase_date;
@@ -80,10 +89,31 @@ public class Item implements Serializable {
         this.imagePath = null;
     }
 
+
+
+    public Map<String, Object> toMap(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("purchase_date", purchase_date);
+        map.put("value", value);
+        map.put("description", description);
+        map.put("make", make);
+        map.put("model", model);
+        map.put("serial_number", serial_number);
+        map.put("comment", comment);
+        map.put("tags", tags);
+        map.put("image", imagePath);
+        map.put("itemID", itemID);
+        return map;
+    }
+
+
+
     /**
      * Return the name of the item.
      * @return the name of the item
      */
+
     public String getName() {
         return name;
     }
@@ -100,7 +130,7 @@ public class Item implements Serializable {
      * Return the purchase date of the item.
      * @return the purchase date of the item.
      */
-    public String getDate() {
+    public String getPurchase_date() {
         return purchase_date;
     }
 
@@ -108,7 +138,7 @@ public class Item implements Serializable {
      * Changes the purchase date of the item to the given purchase date.
      * @param purchase_date the new purchase date of the item
      */
-    public void setDate(String purchase_date) {
+    public void setPurchase_date(String purchase_date) {
         this.purchase_date = purchase_date;
     }
 
@@ -180,7 +210,7 @@ public class Item implements Serializable {
      * Returns the serial number of the item.
      * @return the serial number of the item
      */
-    public String getSerialNumber() {
+    public String getSerial_number() {
         return serial_number;
     }
 
@@ -188,7 +218,7 @@ public class Item implements Serializable {
      * Changes the serial number of the item to the given serial number.
      * @param serial_number the new serial number of the item
      */
-    public void setSerialNumber(String serial_number) {
+    public void setSerial_number(String serial_number) {
         this.serial_number = serial_number;
     }
 
@@ -238,6 +268,15 @@ public class Item implements Serializable {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public String getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
 
     public void setAllNull(){
         this.name = null;

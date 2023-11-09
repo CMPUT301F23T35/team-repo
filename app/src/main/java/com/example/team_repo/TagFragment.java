@@ -1,5 +1,6 @@
 package com.example.team_repo;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +31,7 @@ public class TagFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
 
         // initialize the recycler view
-        tagList = new ArrayList<>();
+        tagList = ((MainActivity)getActivity()).getTagList();
         tagAdapter = new TagAdapter(getContext(), tagList);
         tagRecyclerView = view.findViewById(R.id.tagRecyclerView);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -48,16 +50,33 @@ public class TagFragment extends Fragment{
             public void onClick(View v) {
                 String tagText = tagEditText.getText().toString().trim();
                 if (!tagText.isEmpty()) {
-                    tagList.add(new Tag(tagText));
+                    Tag newTag = new Tag(tagText);
+                    tagList.add(newTag);
                     tagAdapter.notifyDataSetChanged();
                     tagEditText.setText("");  // clear EditText
+                    ((MainActivity)getActivity()).setTagList(tagList);  // update the tag list in the main activity
+
+                    ((MainActivity) getActivity()).addTagToDB(newTag);
+
+                    // get the input method manager
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+                    // Find the currently focused view, so we can grab the correct window token from it.
+                    View view = getActivity().getCurrentFocus();
+                    if (view == null) {
+                        view = new View(getActivity());
+                    }
+
+                    // Hide the soft keyboard.
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+
+
                 }
             }
         });
 
-        // add some default tags
-        tagList.add(new Tag("Tag1"));
-        tagList.add(new Tag("Tag2"));
+
 
         return view;
     }
