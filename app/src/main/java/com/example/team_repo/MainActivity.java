@@ -16,9 +16,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements ItemDetailFragment.OnItemUpdatedListener {
+public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
     private HomeFragment homeFragment;  // the home page
     //private AddFragment addFragment;  // the add page
@@ -33,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
     private Bitmap bitmap_profile;  // the profile photo of the user
     private ImageView headerPicture;  // the profile photo of the user in the header
-    private ItemAdapter itemAdapter;
 
 
     private FirebaseFirestore db;
@@ -81,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 return true;
             }
         });
-        itemAdapter = new ItemAdapter(this, getItemsList());
     }
 
     /**
@@ -263,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     }
     public void showItemDetailFragment(Item item) {
         // Create a new fragment instance and pass the item to it
-        ItemDetailFragment2 fragment = ItemDetailFragment2.newInstance(item);
+        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
@@ -271,20 +267,5 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 .addToBackStack(null)
                 .commit();
 
-    }
-
-
-    @Override
-    public void onItemUpdated(Item item) {
-        // Notify the adapter that the dataset has changed
-        if (itemAdapter != null) {
-            itemAdapter.notifyDataSetChanged();
-        }
-    }
-
-    // Method to get the items list, this should return the current list of items
-    private ArrayList<Item> getItemsList() {
-        // You need to implement this method to return the actual list of items
-        return new ArrayList<>();
     }
 }
