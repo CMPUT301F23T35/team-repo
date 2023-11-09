@@ -32,7 +32,8 @@ public class Item implements Serializable {
     private String serial_number;
     private String comment;
     private ArrayList<Tag> tags;
-    private Bitmap image;
+    private String imagePath; // Store the file path or URI of the image as a string
+
 
     /**
      * Constructor for an item when all information is provided.
@@ -44,9 +45,8 @@ public class Item implements Serializable {
      * @param model the item's model
      * @param serial_number the item's serial number
      * @param tags an array list of the item's tags
-     * @param image an image of the item
      */
-    public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<Tag> tags, Bitmap image) {
+    public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment, ArrayList<Tag> tags, String imagePath) {
         this.name = name;
         this.purchase_date = purchase_date;
         this.value = value;
@@ -56,7 +56,7 @@ public class Item implements Serializable {
         this.serial_number = serial_number;
         this.comment = comment;
         this.tags = tags;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     // Constructor (without tags or image)
@@ -86,7 +86,7 @@ public class Item implements Serializable {
         this.serial_number = serial_number;
         this.comment = comment;
         this.tags = null;
-        this.image = null;
+        this.imagePath = null;
     }
 
 
@@ -102,7 +102,7 @@ public class Item implements Serializable {
         map.put("serial_number", serial_number);
         map.put("comment", comment);
         map.put("tags", tags);
-        map.put("image", image);
+        map.put("image", imagePath);
         return map;
     }
 
@@ -257,16 +257,15 @@ public class Item implements Serializable {
      * Returns the image of the item.
      * @return the image of the item
      */
-    public Bitmap getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
     /**
      * Changes the image of the item to the given image.
-     * @param image the new image of the item
      */
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setAllNull(){

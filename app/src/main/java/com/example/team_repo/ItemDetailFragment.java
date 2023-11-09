@@ -1,22 +1,31 @@
 package com.example.team_repo;
 
+
 import android.app.DatePickerDialog;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
+
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -44,6 +53,9 @@ public class ItemDetailFragment extends Fragment {
 
 
 
+    private ImageView itemImageView;
+    private PhotoUtility photoUtility;
+    private OnItemUpdatedListener updateListener;
     public ItemDetailFragment() {
         // Required empty public constructor
 
@@ -54,7 +66,7 @@ public class ItemDetailFragment extends Fragment {
     public static ItemDetailFragment newInstance(Item item) {
         ItemDetailFragment fragment = new ItemDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable("item", item); // Make sure Item implements Serializable
+        args.putSerializable("item", item); // Ensure Item implements Serializable
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,8 +83,6 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_detail, container, false);
-
-
         Toolbar toolbar = view.findViewById(R.id.item_toolbar);
         TextView nameTextView = view.findViewById(R.id.itemNameTextView);
         TextView dateTextView = view.findViewById(R.id.itemDateTextView);
@@ -82,8 +92,15 @@ public class ItemDetailFragment extends Fragment {
         TextView modelTextView = view.findViewById(R.id.itemModelTextView);
         TextView serialNumberTextView = view.findViewById(R.id.itemSerialNumberTextView);
         TextView commentTextView = view.findViewById(R.id.itemCommentTextView);
-        ImageView imageView = view.findViewById(R.id.itemImageView);
+        itemImageView = view.findViewById(R.id.itemImageView);
+        photoUtility = new PhotoUtility(this);
 
+        // Setup listeners for image update buttons
+        view.findViewById(R.id.editImageButton).setOnClickListener(v -> photoUtility.choosePhoto());
+        view.findViewById(R.id.takePhotoButton).setOnClickListener(v -> photoUtility.takePhoto());
+        view.findViewById(R.id.deleteImageButton).setOnClickListener(v -> deleteImage());
+
+        // Populate the views with item data
 
         nameTextView.setText(mItem.getName());
         dateTextView.setText(mItem.getDate());
@@ -95,7 +112,7 @@ public class ItemDetailFragment extends Fragment {
         commentTextView.setText(mItem.getComment());
 
         // Set a placeholder image from the drawable resources
-        imageView.setImageResource(R.drawable.ic_launcher_background);
+        itemImageView.setImageResource(R.drawable.ic_launcher_background);
 
 
         //Toolbar
@@ -108,7 +125,17 @@ public class ItemDetailFragment extends Fragment {
 
 
         // TODO: Set up click listeners for edit and delete buttons
+        // Set the image if available, otherwise set a placeholder
+        if (mItem.getImagePath() != null && !mItem.getImagePath().isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(mItem.getImagePath());
+            itemImageView.setImageBitmap(bitmap);
+        } else {
+            // Set a default image if the path is null or empty
+            itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
+        }
 
+        // Set up the toolbar
+        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +154,73 @@ public class ItemDetailFragment extends Fragment {
         });
 
         return view;
+
     }
+
+    private void deleteImage() {
+        // Set the placeholder image and remove the current image path
+        itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
+        mItem.setImagePath(null); // Clear the image path
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap = null;
+
+        if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                // Handle gallery image selection
+                Uri selectedImageUri = data.getData();
+                bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
+            }
+        } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
+            // Handle camera image capture
+            Uri capturedImageUri = photoUtility.getImageUri();
+            bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
+        }
+
+        if (bitmap != null) {
+            itemImageView.setImageBitmap(bitmap);
+
+            // Create a unique filename based on the current timestamp
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String imageFileName = "JPEG_" + timestamp + "_";
+
+            // Save the bitmap to a file and get the path using ImageUtils
+            String imagePath = ImageUtils.saveBitmapToFile(requireContext(), bitmap, imageFileName);
+
+            if (imagePath != null) {
+                // Store the image path in the item
+                mItem.setImagePath(imagePath);
+            }
+        }
+    }
+
+
+    public interface OnItemUpdatedListener {
+        void onItemUpdated(Item item);
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            updateListener = (OnItemUpdatedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnItemUpdatedListener");
+        }
+    }
+
+
+    // Call this method when the item is updated
+    private void notifyItemUpdated(Item item) {
+        if (updateListener != null) {
+            updateListener.onItemUpdated(item);
+        }
+    }
+
 
     public void editExpenseInputDialog(TextView nameTextView, TextView dateTextView, TextView descriptionTextView, TextView makeTextView, TextView modelTextView, TextView serialNumberTextView, TextView valueTextView) {
         LayoutInflater inflater = getLayoutInflater();
@@ -255,7 +348,6 @@ public class ItemDetailFragment extends Fragment {
 
 
         });
-
         AlertDialog dialog = dialogBuilder.create();
         Window window = dialog.getWindow();
         if (window != null) {
@@ -318,8 +410,7 @@ public class ItemDetailFragment extends Fragment {
         }
     }
 
-
+        // Other methods can be added here if necessary
 
 }
-
 

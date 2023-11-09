@@ -22,7 +22,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements ItemDetailFragment.OnItemUpdatedListener {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
     private HomeFragment homeFragment;  // the home page
     private AddFragment addFragment;  // the add page
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ItemList add_item_list;  // the list of items shown in the home page
     private ItemList item_list;
     private ArrayList<Tag> tagList;  // the list of all tags created
+    private ItemAdapter itemAdapter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference itemsRef;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        itemAdapter = new ItemAdapter(this, getItemsList());
     }
 
     /**
@@ -368,5 +372,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+    @Override
+    public void onItemUpdated(Item item) {
+        // Notify the adapter that the dataset has changed
+        if (itemAdapter != null) {
+            itemAdapter.notifyDataSetChanged();
+        }
+    }
+
+    // Method to get the items list, this should return the current list of items
+    private ArrayList<Item> getItemsList() {
+        // You need to implement this method to return the actual list of items
+        return new ArrayList<>();
+    }
 
 }
