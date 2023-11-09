@@ -5,6 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -51,5 +56,27 @@ public class ImageUtils {
         }
 
         return imagePath;
+    }
+
+    public void uploadImageToFirebaseStorage(Bitmap bitmap, String filename) {
+        // Get Firebase storage instance
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        // Create a reference to "images/filename.jpg"
+        StorageReference imageRef = storageRef.child("images/" + filename + ".jpg");
+
+        // Convert bitmap to byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        // Upload the file
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            // Handle unsuccessful uploads
+        }).addOnSuccessListener(taskSnapshot -> {
+            // Task completed successfully
+        });
     }
 }
