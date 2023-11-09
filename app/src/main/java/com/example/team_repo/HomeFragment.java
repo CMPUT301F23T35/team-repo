@@ -47,8 +47,8 @@ public class HomeFragment extends Fragment {
 //        Calendar cal1 = Calendar.getInstance();
 //        cal1.set(2020, 0, 1);
 //        Date date1 = cal1.getTime();
-//        Item item1 = new Item("Name", date1, 12.34F, "Description", "Make", "Model", "Serial number", "Comment");
-//        item_list.add(item1);
+          Item item1 = new Item("Name", "date", 12.34F, "Description", "Make", "Model", "Serial number", "Comment");
+          item_list.add(item1);
 //        Item item2 = new Item("Table", date1, 3.01F, "Table", "Table", "Table", "Table", "Table");
 //        item_list.add(item2);
 //        Item item3 = new Item("ABCDEFGHIJKLMNOPQRSTUVWXYZ", date1, 1234567.89F, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
