@@ -430,7 +430,7 @@ public class HomeFragment extends Fragment {
             Log.d("HomeFragment", "item serial number: " + item.getSerialNumber());
             Log.d("HomeFragment", "item comment: " + item.getComment());
             Log.d("HomeFragment", "item tags: " + item.getTags());
-            Log.d("HomeFragment", "item image: " + item.getImage());
+            Log.d("HomeFragment", "item image: " + item.getImagePath());
         }
 
     }
