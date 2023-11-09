@@ -7,7 +7,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +14,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
+/**
+ * The fragment for the home page of the app, displaying the user's item list and total estimated value.
+ */
 public class HomeFragment extends Fragment {
-    private ItemAdapter itemAdapter;
+
+    private ItemAdapter item_adapter;
     private ItemList item_list;
     private ListView item_list_view;
     private TextView total_value_view;
     private ImageView profile_picture;
 
+    /**
+     * Creates the view for the home page fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the created view for the home page fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         item_list = new ItemList();
@@ -51,10 +58,10 @@ public class HomeFragment extends Fragment {
 //        Item item5 = new Item("", date1, 0F, "", "", "", "", "");
 //        item_list.add(item5);
 
-        // Attach the items in the item list to the adapter
+        // Attach the items in the item list to the item adapter
         item_list_view = view.findViewById(R.id.homepageListView);
-        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(itemAdapter);
+        item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
+        item_list_view.setAdapter(item_adapter);
 
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
@@ -65,7 +72,7 @@ public class HomeFragment extends Fragment {
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
 
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addExpenseInputDialog();
@@ -119,8 +126,8 @@ public class HomeFragment extends Fragment {
 //                Date date = cal.getTime();
                 Item newItem = new Item(name, date, value, item_description, make, model, serial, "");
                 item_list.add(newItem);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-                refresh();
+                item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                refreshHomePage();
             }
 
 
@@ -134,7 +141,7 @@ public class HomeFragment extends Fragment {
      * Refreshes the home page
      * May be used each time when there is a data change
      */
-    public void refresh() {
+    public void refreshHomePage() {
         // update header
         updateProfilePicture();
         // TODO: update item list

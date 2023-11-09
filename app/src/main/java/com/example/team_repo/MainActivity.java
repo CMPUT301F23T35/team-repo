@@ -2,26 +2,19 @@ package com.example.team_repo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
@@ -115,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // home page has been defined, show it
                 toolbarLinearLayout.setVisibility(View.GONE);
-                homeFragment.refresh();
+                homeFragment.refreshHomePage();
                 fragmentTransaction.show(homeFragment);
                 Log.d("MainActivity", "selectedFragment() called, homeFragment: " + homeFragment);
 

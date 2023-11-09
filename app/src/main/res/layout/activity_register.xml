@@ -28,7 +28,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textColor="#4F475D"
-            android:text="Please create an account to get started"
+            android:text="Please create an account to get started."
             android:textSize="20sp" />
 
         <ImageView
@@ -121,7 +121,7 @@
             android:id="@+id/tv_jump_to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have and account?"
+            android:text="Already have an account?"
             android:layout_gravity="end"
             android:layout_marginEnd="40dp"
             android:textSize="16sp"
