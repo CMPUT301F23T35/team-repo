@@ -19,7 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -39,39 +43,21 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap bitmap_profile;  // the profile photo of the user
     private ImageView headerPicture;  // the profile photo of the user in the header
     private ItemList add_item_list;  // the list of items shown in the home page
+    private ItemList item_list;
     private ArrayList<Tag> tagList;  // the list of all tags created
 
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference itemsRef;
+    private CollectionReference userRef;
+    private DocumentReference userDocRef;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get the username, email and password from the RegisterActivity or LoginActivity
-        username = getIntent().getStringExtra("username");
-        email = getIntent().getStringExtra("email");
-        password = getIntent().getStringExtra("password");
-
-        // set the header of the app
-        tv_header = findViewById(R.id.tv_header);
-        String header = "Hello, " + username + "!";
-        tv_header.setText(header);
-
-        // initialize the bottom navigation bar
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        toolbarLinearLayout = findViewById(R.id.toolbar);
-
-        // initialize the header picture
-        headerPicture = findViewById(R.id.headerPicture);
-
-        // initialize the item list adding into the home page, filled in the AddFragment
-        add_item_list = new ItemList();
-
-        // initialize the tag list, filled in the AddFragment
-        tagList = new ArrayList<>();
-        tagList.add(new Tag("Tag1"));
-        tagList.add(new Tag("Tag2"));
+        initializeUser();
 
         // default selection is the Home Page
         selectedFragment(0);
@@ -226,8 +212,89 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // getters and setters of username, email, password and header's bitmap_profile
 
+
+    private void initializeUser(){
+        // get the username, email and password from the RegisterActivity or LoginActivity
+        username = getIntent().getStringExtra("username");
+        email = getIntent().getStringExtra("email");
+        password = getIntent().getStringExtra("password");
+        userId = getIntent().getStringExtra("userId");
+
+        Log.d("LogMain", "Check id: " + userId);
+        // get the user document reference according to id
+        userRef = db.collection("users");
+        userDocRef = userRef.document(userId);
+
+        // set the header of the app
+        tv_header = findViewById(R.id.tv_header);
+        String header = "Hello, " + username + "!";
+        tv_header.setText(header);
+
+        // initialize the bottom navigation bar
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        toolbarLinearLayout = findViewById(R.id.toolbar);
+
+        // initialize the header picture
+        headerPicture = findViewById(R.id.headerPicture);
+
+        // initialize the item list adding into the home page, filled in the AddFragment
+        add_item_list = new ItemList();
+
+        // initialize the tag list, filled in the AddFragment
+        tagList = new ArrayList<>();
+
+        // check userDocRef if it has a "tags" collection
+        userDocRef.collection("tags").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                // get all tags from the collection and add them to tagList
+                for (int i = 0; i < task.getResult().size(); i++) {
+                    // get the tag name from the collection
+                    String tag_name = task.getResult().getDocuments().get(i).getId();
+                    Tag tag = new Tag(tag_name);
+                    tagList.add(tag);
+                }
+            } else {
+                // if the collection does not exist, create a new one
+                userDocRef.collection("tags");
+                // add two default tags
+                tagList.add(new Tag("Tag1"));
+                tagList.add(new Tag("Tag2"));
+                // add the tagList into the database
+                for (Tag tag : tagList) {
+                    userDocRef.collection("tags").document(tag.getTagString()).set(tag);
+                }
+            }
+        });
+
+        // initialize the item list, filled in the HomeFragment
+        add_item_list = new ItemList();
+        userDocRef.collection("items").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                // get all items from the collection and add them to add_item_list
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Item item = document.toObject(Item.class); // document -> item
+                    add_item_list.add(item); // add all
+                }
+
+            } else {
+                // if the collection does not exist, nothing happens
+                // a new collection will be created when the user adds an item
+                Log.d("LogMain", "No such document");
+            }
+        }) .addOnFailureListener(e -> {
+            Log.d("LogMain", "Error getting documents: ", e);
+        });
+
+    }
+
+    public void addItemToDB(Item item) {
+        // add the item to the database
+        userDocRef.collection("items").add(item.toMap());
+    }
+
+
+    // getters and setters of username, email, password and header's bitmap_profile
     public String getUsername() {
         return username;
     }

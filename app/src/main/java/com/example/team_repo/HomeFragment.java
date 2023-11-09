@@ -84,17 +84,19 @@ public class HomeFragment extends Fragment {
                 checkItem(item);
 
 
-
-
             }
         });
 
+        ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
+        // check add_item_list is empty or not
+        Log.d("HomeFragment", "add_item_list: " + add_item_list);
+        ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
+        item_list.addAll(add_item_list);
+        // check item_list
+        Log.d("HomeFragment", "item_list: " + item_list);
+        itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
-
-
-
-
-
+        total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
 
 
         return view;
@@ -124,6 +126,7 @@ public class HomeFragment extends Fragment {
      */
     private void updateProfilePicture() {
         // Display profile photo
+        Log.d("HomeFragment", "Check null pointer: " + ((MainActivity) getActivity()));
         Bitmap profileBitmap = ((MainActivity) getActivity()).getBitmap_profile();
 
         if (profileBitmap != null) {

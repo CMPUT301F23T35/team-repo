@@ -24,6 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;  // press to check validation and login
     private Toolbar toolbar;  // toolbar
     private FirebaseFirestore db;  // the database
+    private String email;
+    private String password;
 
     // TODO: Forgot password ?
 
@@ -32,6 +34,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         db = FirebaseFirestore.getInstance();
+
+        email = getIntent().getStringExtra("email");
+        password = getIntent().getStringExtra("password");
+        if (email != null && password != null) {
+            checkAndJump(email, password);
+        }
 
 
         // return to RegisterActivity
@@ -97,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
                                     // password matches, give data, jump
                                     Toast.makeText(LoginActivity.this, "Welcome back, " + name + " !", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    // get user id
+                                    intent.putExtra("userId", documentSnapshot.getId());
                                     intent.putExtra("username", name);
                                     intent.putExtra("email", email);
                                     intent.putExtra("password", password);

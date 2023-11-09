@@ -5,6 +5,8 @@ import android.media.Image;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Item {
     // TODO:
@@ -40,6 +42,9 @@ public class Item {
     }
 
     // Constructor (without tags or image)
+    public Item(){
+
+    }
     public Item(String name, String purchase_date, float value, String description, String make, String model, String serial_number, String comment) {
         this.name = name;
         this.purchase_date = purchase_date;
@@ -52,6 +57,22 @@ public class Item {
         this.tags = null;
         this.image = null;
     }
+
+    public Map<String, Object> toMap(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("purchase_date", purchase_date);
+        map.put("value", value);
+        map.put("description", description);
+        map.put("make", make);
+        map.put("model", model);
+        map.put("serial_number", serial_number);
+        map.put("comment", comment);
+        map.put("tags", tags);
+        map.put("image", image);
+        return map;
+    }
+
 
     public String getName() {
         return name;

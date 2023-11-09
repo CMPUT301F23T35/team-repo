@@ -109,8 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("email", email);
                             // TODO: encrypt the password ?
                             user.put("password", password);
-                            // generate a unique id using time
-                            user.put("id", System.currentTimeMillis());
 
                             db.collection("users")
                                     .add(user)
@@ -120,10 +118,13 @@ public class RegisterActivity extends AppCompatActivity {
                                             // create account successfully
                                             Toast.makeText(RegisterActivity.this, "Welcome, " + username +" !", Toast.LENGTH_SHORT).show();
 
+                                            // get the user id
+                                            String userId = documentReference.getId();
                                             // create sub collection here or later in Main Activity
 
                                             // jump to MainActivity with username, email and password
                                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                            intent.putExtra("userId", userId);
                                             intent.putExtra("username", username);
                                             intent.putExtra("email", email);
                                             intent.putExtra("password", password);
@@ -139,9 +140,13 @@ public class RegisterActivity extends AppCompatActivity {
                                     });
 
                         } else if (task.isSuccessful()) {
-                            // email is ont unique
-                            Toast.makeText(RegisterActivity.this, "Email has been used, please login.", Toast.LENGTH_SHORT).show();
-
+                            // email is DefaultEmail, login with default account
+                            if (email.equals("DefaultEmail")){
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                startActivity(intent);
+                            }
                         } else {
                             // Error
                             Toast.makeText(RegisterActivity.this, "Unexpected error.", Toast.LENGTH_SHORT).show();
@@ -151,6 +156,4 @@ public class RegisterActivity extends AppCompatActivity {
                 });
 
     }
-
-
 }

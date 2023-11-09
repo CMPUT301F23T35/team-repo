@@ -133,6 +133,7 @@ public class AddFragment extends Fragment{
                     ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
                     add_item_list.add(newItem);
                     ((MainActivity) getActivity()).setAdd_item_list(add_item_list);
+                    ((MainActivity) getActivity()).addItemToDB(newItem);
 
                     cleanEt();
 
@@ -222,6 +223,5 @@ public class AddFragment extends Fragment{
             return false;
         }
     }
-
 
 }
