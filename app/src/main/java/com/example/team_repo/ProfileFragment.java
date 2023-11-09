@@ -78,6 +78,9 @@ public class ProfileFragment extends Fragment {
                 ((MainActivity)getActivity()).setEmail(email);
                 ((MainActivity)getActivity()).setPassword(password);
 
+                // update the values in the database
+                ((MainActivity)getActivity()).updateProfileToDB();
+
                 // Show a success message
                 Toast.makeText(getContext(), "Profile successfully updated!", Toast.LENGTH_SHORT).show();
             }

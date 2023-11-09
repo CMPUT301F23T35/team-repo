@@ -1,6 +1,7 @@
 package com.example.team_repo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Maintains an item list and the total estimated value for all items in the list.
@@ -48,11 +49,20 @@ public class ItemList {
     }
 
     public void removeNullItem(){
-        for (Item item : this.item_list) {
+        /*for (Item item : this.item_list) {
             if (item.checkAllNull()){
                 remove(item);
             }
+        }*/
+        // previous method sometimes throws ConcurrentModificationException
+        Iterator<Item> iterator = this.item_list.iterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (item.checkAllNull()){
+                iterator.remove();
+            }
         }
+
     }
 
     /**

@@ -31,6 +31,10 @@ public class Item implements Serializable {
     private String imagePath; // Store the file path or URI of the image as a string
 
 
+
+    private String itemID;  // the unique ID of the item (primary key in the database)
+
+
     /**
      * Constructor for an item when all information is provided.
      * @param name the item's name
@@ -99,6 +103,7 @@ public class Item implements Serializable {
         map.put("comment", comment);
         map.put("tags", tags);
         map.put("image", imagePath);
+        map.put("itemID", itemID);
         return map;
     }
 
@@ -263,6 +268,15 @@ public class Item implements Serializable {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public String getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
 
     public void setAllNull(){
         this.name = null;
