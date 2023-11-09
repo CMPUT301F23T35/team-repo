@@ -2,18 +2,13 @@ package com.example.team_repo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeUser();
+        initializeUser(new OnUserDataLoadedListener() {
+            @Override
+            public void onUserDataLoaded() {
+                selectedFragment(0);
+            }
+        });
 
-        // default selection is the Home Page
-        selectedFragment(0);
 
         // listener of the bottom navigation bar
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -214,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void initializeUser(){
+    private void initializeUser(OnUserDataLoadedListener listener){
         // get the username, email and password from the RegisterActivity or LoginActivity
         username = getIntent().getStringExtra("username");
         email = getIntent().getStringExtra("email");
@@ -253,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
                     String tag_name = task.getResult().getDocuments().get(i).getId();
                     Tag tag = new Tag(tag_name);
                     tagList.add(tag);
+
                 }
             } else {
                 // if the collection does not exist, create a new one
@@ -267,14 +266,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // initialize the item list, filled in the HomeFragment
-        add_item_list = new ItemList();
+
         userDocRef.collection("items").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                 // get all items from the collection and add them to add_item_list
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    // check document id
+                    Log.d("LogMain", document.getId() + " => " + document.getData());
                     Item item = document.toObject(Item.class); // document -> item
                     add_item_list.add(item); // add all
+
+                    // use listener to make sure the tagList is loaded before the AddFragment is created
+                    if(listener != null) {
+                        listener.onUserDataLoaded();
+                    }
                 }
 
             } else {
@@ -328,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
         this.bitmap_profile = bitmap_profile;
         Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
     }
+
     public ItemList getAdd_item_list() {
         return add_item_list;
     }
@@ -342,5 +348,22 @@ public class MainActivity extends AppCompatActivity {
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
+
+
+    public void showItemDetailFragment(Item item) {
+        // Create a new fragment instance and pass the item to it
+        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public interface OnUserDataLoadedListener {
+        void onUserDataLoaded();
+    }
+
 
 }

@@ -5,6 +5,9 @@ public class Tag {
 
     private boolean isSelected = false;
 
+    Tag(){
+
+    }
     Tag(String tag){
         this.tagString  = tag;
     }
