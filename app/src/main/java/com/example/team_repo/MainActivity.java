@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,10 +22,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ItemDetailFragment.OnItemUpdatedListener {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
@@ -50,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     private CollectionReference itemsRef;
     private CollectionReference userRef;
     private DocumentReference userDocRef;
+
+
+
     private String userId;
 
     @Override
@@ -304,6 +311,58 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         userDocRef.collection("items").add(item.toMap());
     }
 
+    public void updateItemToDB(Item item){
+        // update all fields of the item, use the item id to find the item
+        String itemId = item.getItemID();
+        Map<String, Object> updates = new HashMap<>();
+        // name, purchase_date, value, description, make, model, serial_number, tags, image
+        updates.put("name", item.getName());
+        updates.put("purchase_date", item.getPurchase_date());
+        updates.put("value", item.getValue());
+        updates.put("description", item.getDescription());
+        updates.put("make", item.getMake());
+        updates.put("model", item.getModel());
+        updates.put("serial_number", item.getSerial_number());
+        updates.put("comment", item.getComment());
+        updates.put("tags", item.getTags());
+        updates.put("image", item.getImagePath());
+
+        db.collection("users").document(userId).collection("items")  // ref
+                .whereEqualTo("itemID", itemId)  // query with id
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // technically, there should be only one document
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            documentSnapshot.getReference().update(updates)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("logDB", "DocumentSnapshot successfully updated!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // handle error
+                                            Log.w("logDB", "Error updating document", e);
+                                            Toast.makeText(MainActivity.this, "Error updating document to DB", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // handle error
+                    }
+                });
+
+    }
+
     public void addTagToDB(Tag tag) {
         // add the tag to the database
         userDocRef.collection("tags").document(tag.getTagString()).set(tag);
@@ -316,14 +375,14 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     @Override
                     public void onSuccess(Void aVoid) {
                         // handle success
-                        Log.d("DB", "Tag successfully deleted!");
+                        Log.d("logDB", "Tag successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // handle error
-                        Log.w("DB", "Error deleting tag", e);
+                        // query failed
+                        Log.w("logDB", "Error deleting tag", e);
                     }
                 });
     }
@@ -369,6 +428,14 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         return add_item_list;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void setAdd_item_list(ItemList add_item_list) {
         this.add_item_list = add_item_list;
     }
@@ -379,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
+
 
 
     public void showItemDetailFragment(Item item) {

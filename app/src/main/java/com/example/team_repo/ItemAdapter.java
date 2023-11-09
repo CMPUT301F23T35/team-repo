@@ -88,6 +88,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                 // which replaces the current fragment with ItemDetailFragment
                 if (context instanceof MainActivity) {
                     ((MainActivity) context).showItemDetailFragment(item);
+
                 }
             }
         });
