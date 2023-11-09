@@ -44,6 +44,7 @@ public class ItemDetailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
+
         Toolbar toolbar = view.findViewById(R.id.item_toolbar);
         TextView nameTextView = view.findViewById(R.id.itemNameTextView);
         TextView dateTextView = view.findViewById(R.id.itemDateTextView);
@@ -67,6 +68,7 @@ public class ItemDetailFragment extends Fragment {
             dateTextView.setText(getString(R.string.no_date_available)); // Replace with your string for no available date
         }
 
+
         valueTextView.setText(String.valueOf(mItem.getValue()));
         descriptionTextView.setText(mItem.getDescription());
         makeTextView.setText(mItem.getMake());
@@ -77,6 +79,7 @@ public class ItemDetailFragment extends Fragment {
         // Set a placeholder image from the drawable resources
         imageView.setImageResource(R.drawable.ic_launcher_background);
 
+
         //Toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +89,7 @@ public class ItemDetailFragment extends Fragment {
         });
 
 
-        // TODO: Set up click listeners for edit and delete buttons
+
         return view;
     }
 }

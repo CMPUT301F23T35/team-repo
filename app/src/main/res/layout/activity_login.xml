@@ -61,14 +61,14 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_register_username" />
+                android:src="@drawable/ic_register_email" />
 
             <EditText
-                android:id="@+id/login_username"
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="Username"
+                android:hint="Email"
                 android:padding="10dp"
                 android:textSize="20sp" />
 
