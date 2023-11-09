@@ -268,4 +268,27 @@ public class Item implements Serializable {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public void setAllNull(){
+        this.name = null;
+        this.purchase_date = null;
+//        String valueString = String.valueOf(this.value);
+//        valueString = null;
+        this.value = 0;
+        this.description = null;
+        this.make = null;
+        this.model = null;
+        this.serial_number = null;
+        this.comment = null;
+//        this.tags = tags;
+//        this.image = image;
+    }
+
+    public boolean checkAllNull(){
+        if (this.name == null && this.purchase_date == null && this.value == 0 && this.description == null && this.make == null && this.model == null && this.serial_number == null && this.comment == null){
+            return true;
+        }
+        return false;
+    }
+
 }
