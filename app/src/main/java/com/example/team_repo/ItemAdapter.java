@@ -12,9 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates the views for an item list and its items.
@@ -79,7 +77,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         item_value.setText(String.format("%.2f", item.getValue()).length() <= 15 ?
                 String.format("%.2f", item.getValue()) :
                 String.format("%.2f", item.getValue()).substring(0, 14) + "...");
-        item_purchase_date.setText(item.getDate()); // Assuming getDate() returns a String
+        item_purchase_date.setText(item.getPurchase_date()); // Assuming getDate() returns a String
 
 
         // Set the onClickListener for the entire item view
@@ -110,7 +108,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             item_value.setText(String.format("%.2f", item.getValue()).substring(0, 14) + "...");
         }
 
-        String date = item.getDate();
+        String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
         return view;

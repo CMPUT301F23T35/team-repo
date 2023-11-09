@@ -1,11 +1,7 @@
 package com.example.team_repo;
 
-import android.graphics.Bitmap;
-import android.media.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,7 +125,7 @@ public class Item implements Serializable {
      * Return the purchase date of the item.
      * @return the purchase date of the item.
      */
-    public String getDate() {
+    public String getPurchase_date() {
         return purchase_date;
     }
 
@@ -137,7 +133,7 @@ public class Item implements Serializable {
      * Changes the purchase date of the item to the given purchase date.
      * @param purchase_date the new purchase date of the item
      */
-    public void setDate(String purchase_date) {
+    public void setPurchase_date(String purchase_date) {
         this.purchase_date = purchase_date;
     }
 
@@ -209,7 +205,7 @@ public class Item implements Serializable {
      * Returns the serial number of the item.
      * @return the serial number of the item
      */
-    public String getSerialNumber() {
+    public String getSerial_number() {
         return serial_number;
     }
 
@@ -217,7 +213,7 @@ public class Item implements Serializable {
      * Changes the serial number of the item to the given serial number.
      * @param serial_number the new serial number of the item
      */
-    public void setSerialNumber(String serial_number) {
+    public void setSerial_number(String serial_number) {
         this.serial_number = serial_number;
     }
 
