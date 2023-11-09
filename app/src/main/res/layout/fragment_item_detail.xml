@@ -8,25 +8,38 @@
     android:padding="16dp"
     tools:context=".ItemDetailFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/homepage_item_background_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:title="Item Detail"
+        app:titleTextColor="@color/white" />
+
     <ImageView
         android:id="@+id/itemImageView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/item_image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/itemNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintTop_toBottomOf="@id/itemImageView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
         tools:text="Item Name" />
 
     <!-- Item Date -->
@@ -34,11 +47,12 @@
         android:id="@+id/itemDateTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemNameTextView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemNameTextView"
         tools:text="Date" />
 
     <!-- Item Value -->
@@ -46,11 +60,11 @@
         android:id="@+id/itemValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemDateTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemDateTextView"
         tools:text="Value" />
 
     <!-- Item Description -->
@@ -58,11 +72,11 @@
         android:id="@+id/itemDescriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemValueTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemValueTextView"
         tools:text="Description" />
 
     <!-- Item Make -->
@@ -70,11 +84,11 @@
         android:id="@+id/itemMakeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemDescriptionTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemDescriptionTextView"
         tools:text="Make" />
 
     <!-- Item Model -->
@@ -82,11 +96,11 @@
         android:id="@+id/itemModelTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemMakeTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemMakeTextView"
         tools:text="Model" />
 
     <!-- Item Serial Number -->
@@ -94,11 +108,11 @@
         android:id="@+id/itemSerialNumberTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemModelTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemModelTextView"
         tools:text="Serial Number" />
 
     <!-- Item Comment -->
@@ -106,11 +120,11 @@
         android:id="@+id/itemCommentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintTop_toBottomOf="@id/itemSerialNumberTextView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberTextView"
         tools:text="Comment" />
 
     <!-- Edit Button -->
@@ -121,24 +135,23 @@
         android:id="@+id/editButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/homepage_item_background_color"
         android:text="@string/edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemCommentTextView"
         app:layout_constraintWidth_percent="0.5" />
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#E53935"
         android:text="@string/delete"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/editButton"
-        app:layout_constraintTop_toBottomOf="@+id/itemCommentTextView"
         app:layout_constraintWidth_percent="0.5" />
 
     <!-- ... rest of the layout below ... -->
