@@ -311,6 +311,31 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         userDocRef.collection("items").add(item.toMap());
     }
 
+    public void updateProfileToDB(){
+        // update current user's profile to the database
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("username", username);
+        updates.put("email", email);
+        updates.put("password", password);
+        userDocRef.update(updates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // handle success
+                        Log.d("logDB", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    // handle error
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("logDB", "Error updating document", e);
+                        Toast.makeText(MainActivity.this, "Error updating profile to DB", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
     public void updateItemToDB(Item item){
         // update all fields of the item, use the item id to find the item
         String itemId = item.getItemID();
