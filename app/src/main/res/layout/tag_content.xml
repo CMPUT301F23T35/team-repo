@@ -31,7 +31,6 @@
         android:src="@drawable/ic_tag_delete"
         android:textColor="@color/black"
         android:textSize="24sp">
-
     </ImageButton>
 
 </LinearLayout>
