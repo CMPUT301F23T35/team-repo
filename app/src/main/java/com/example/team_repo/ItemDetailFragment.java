@@ -306,7 +306,6 @@ public class ItemDetailFragment extends Fragment {
             }
 
 
-            if (!name.isEmpty()) {
                 mItem.setName(name);
                 nameTextView.setText(mItem.getName());
                 // Create an item with the received name and other default values or set appropriate values.
@@ -341,10 +340,6 @@ public class ItemDetailFragment extends Fragment {
 
                 // give a message to show that the item is added successfully
                 Toast.makeText(getActivity(), "Item added successfully!", Toast.LENGTH_SHORT).show();
-            } else {
-                // give a message to show that the item is not added successfully
-                Toast.makeText(getActivity(), "Item should have a name", Toast.LENGTH_SHORT).show();
-            }
 
 
         });
