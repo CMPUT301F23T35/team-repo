@@ -53,8 +53,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(context).inflate(R.layout.item_list_content, parent, false);
         }
 
+    
         // Get the current item to create the view for
-        Item item = item_list.get(position);
+        final Item item = item_list.get(position);
 
         // Get the TextViews and ImageView from the activity for the item
         ImageView item_image = view.findViewById(R.id.itemImageView);
@@ -65,19 +66,34 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         // Set the ImageView to the item's photo (or a default image)
         if (item.getImage() != null) {
-            item_image.setImageBitmap(item.getImage());
-        }
-        else {
+
+            // TODO do the image stuff here
+            // item_image.setImageBitmap(item.getImage())??? maybe
+            item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+        } else {
             item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
         }
 
-        // Set the item's name
-        if (item.getName().length() <= 12) {
-            item_name.setText(item.getName());
-        }
-        else {
-            item_name.setText(item.getName().substring(0, 11) + "...");
-        }
+        // Set the item's name, make, value, and purchase date with checks for length
+        item_name.setText(item.getName().length() <= 12 ? item.getName() : item.getName().substring(0, 11) + "...");
+        item_make.setText(item.getMake().length() <= 15 ? item.getMake() : item.getMake().substring(0, 14) + "...");
+        item_value.setText(String.format("%.2f", item.getValue()).length() <= 15 ?
+                String.format("%.2f", item.getValue()) :
+                String.format("%.2f", item.getValue()).substring(0, 14) + "...");
+        item_purchase_date.setText(item.getDate()); // Assuming getDate() returns a String
+
+
+        // Set the onClickListener for the entire item view
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Assuming MainActivity has a method called 'showItemDetailFragment'
+                // which replaces the current fragment with ItemDetailFragment
+                if (context instanceof MainActivity) {
+                    ((MainActivity) context).showItemDetailFragment(item);
+                }
+            }
+        });
 
         // Set the item's make
         if (item.getMake().length() <= 15) {
@@ -100,6 +116,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         return view;
     }
+
 
     public Item getItem(int position) {
         return item_list.get(position);

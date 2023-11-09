@@ -2,15 +2,24 @@ package com.example.team_repo;
 
 import android.graphics.Bitmap;
 import android.media.Image;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
+public class Item implements Serializable {
+    // TODO:
+    //  - Add more constructors when certain arguments aren't given/are optional
+    //  - Make less tedious constructors??? (less arguments?)
+    //  - Put more restrictions on getters/setters (e.g. make sure inputted value isn't negative)
+    //  - Come up with method to add a new tag to the tag list???
+    //  - Potentially deal with empty description/comment/make/model/etc???
+
 /**
  * Maintains information about a user's item.
  */
-public class Item {
+
 
     private String name;
     private String purchase_date;
