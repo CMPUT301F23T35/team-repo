@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,10 +20,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.AdapterView;
+
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 
 import android.widget.Toast;
 
@@ -34,12 +38,17 @@ import java.util.Date;
 import java.util.Locale;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 /**
  * The fragment for the home page of the app, displaying the user's item list and total estimated value.
  */
 public class HomeFragment extends Fragment {
 
-    private ItemAdapter item_adapter;
+    private ItemAdapter itemAdapter;
     private ItemList item_list;
     private ListView item_list_view;
     private TextView total_value_view;
@@ -52,6 +61,8 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Tag> selectedTags;
 
+
+    private ItemViewModel itemViewModel;
 
     /**
      * Creates the view for the home page fragment.
@@ -68,7 +79,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        item_list = new ItemList();
+        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+
+        item_list = itemViewModel.getItemList();
+        item_list.updateValue();
+        item_list.removeNullItem();
+        //item_list = new ItemList();
 
 
         ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
@@ -81,9 +97,19 @@ public class HomeFragment extends Fragment {
         // Attach the items in the item list to the adapter
 
         item_list_view = view.findViewById(R.id.homepageListView);
-        item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(item_adapter);
+        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
+        item_list_view.setAdapter(itemAdapter);
 
+
+
+        item_list_view = view.findViewById(R.id.homepageListView);
+        //item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
+        item_list_view.setAdapter(itemAdapter);
+        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
+
+        item_list_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        item_list_view.setAdapter(itemAdapter);
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -91,6 +117,7 @@ public class HomeFragment extends Fragment {
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
         profile_picture.setImageResource(R.drawable.default_profile_image);
+
 
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,10 +129,81 @@ public class HomeFragment extends Fragment {
 
 
 
+
         return view;
     }
 
-    
+
+    public void editExpenseInputDialog(int editPosition) {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.fragment_add, null);
+
+        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
+        final EditText Description = dialogView.findViewById(R.id.Description);
+        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
+        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
+
+        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
+        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
+        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
+        dialogBuilder.setView(dialogView);
+//        dialogBuilder.setTitle("Add an Item");
+
+        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
+            String name = ItemName.getText().toString();
+            String date = DatePurchase.getText().toString();
+            String item_description = Description.getText().toString();
+            String make = ItemMake.getText().toString();
+            String model = ItemModel.getText().toString();
+            String serial = ItemSerial.getText().toString();
+//            float value = Float.parseFloat(EstimatedValue.getText().toString());
+            String valueString = EstimatedValue.getText().toString();
+
+            if (!name.isEmpty()) {
+                item_list.getList().get(editPosition).setName(name);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!date.isEmpty()) {
+                item_list.getList().get(editPosition).setDate(date);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!item_description.isEmpty()) {
+                item_list.getList().get(editPosition).setDescription(item_description);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!make.isEmpty()) {
+                item_list.getList().get(editPosition).setMake(make);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!model.isEmpty()) {
+                item_list.getList().get(editPosition).setModel(model);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!serial.isEmpty()) {
+                item_list.getList().get(editPosition).setSerialNumber(serial);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+            if (!valueString.isEmpty()) {
+                float value = Float.parseFloat(EstimatedValue.getText().toString());
+                item_list.getList().get(editPosition).setValue(value);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            }
+
+        });
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
     /**
      * Refreshes the home page
      * May be used each time when there is a data change
@@ -121,7 +219,7 @@ public class HomeFragment extends Fragment {
             ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
             ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
             item_list.addAll(add_item_list);
-            item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+            itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
             total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
         } else {
@@ -237,7 +335,7 @@ public class HomeFragment extends Fragment {
                 newItem.setTags(selectedTags);
 
                 item_list.add(newItem);
-                item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                 total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
                 ((MainActivity) getActivity()).addItemToDB(newItem);
 
@@ -333,7 +431,7 @@ public class HomeFragment extends Fragment {
             Log.d("HomeFragment", "item serial number: " + item.getSerialNumber());
             Log.d("HomeFragment", "item comment: " + item.getComment());
             Log.d("HomeFragment", "item tags: " + item.getTags());
-            Log.d("HomeFragment", "item image: " + item.getImage());
+            Log.d("HomeFragment", "item image: " + item.getImagePath());
         }
 
     }

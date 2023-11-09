@@ -1,6 +1,7 @@
 package com.example.team_repo;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +66,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
 
         // Set the ImageView to the item's photo (or a default image)
-        if (item.getImage() != null) {
-
-            // TODO do the image stuff here
-            // item_image.setImageBitmap(item.getImage())??? maybe
-            item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+        if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
+            Bitmap bitmap = ImageUtils.convertImagePathToBitmap(item.getImagePath());
+            item_image.setImageBitmap(bitmap);
         } else {
-            item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+            item_image.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder image
         }
 
         // Set the item's name, make, value, and purchase date with checks for length
