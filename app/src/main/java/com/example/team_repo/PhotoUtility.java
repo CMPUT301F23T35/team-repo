@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -114,6 +116,9 @@ public class PhotoUtility {
         return img;
     }
 
+
+
+
     private static Bitmap rotateImage(Bitmap img, int degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
@@ -139,5 +144,7 @@ public class PhotoUtility {
     public static int getRequestCodeChoose() {
         return REQUEST_CODE_CHOOSE;
     }
+
+
 }
 

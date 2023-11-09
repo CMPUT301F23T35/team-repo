@@ -1,7 +1,11 @@
 package com.example.team_repo;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +17,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
-
+    private OnItemUpdatedListener updateListener;
     public ItemDetailFragment() {
         // Required empty public constructor
     }
@@ -71,9 +79,11 @@ public class ItemDetailFragment extends Fragment {
         commentTextView.setText(mItem.getComment());
 
         // Set the image if available, otherwise set a placeholder
-        if (mItem.getImage() != null) {
-            itemImageView.setImageBitmap(mItem.getImage());
+        if (mItem.getImagePath() != null && !mItem.getImagePath().isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(mItem.getImagePath());
+            itemImageView.setImageBitmap(bitmap);
         } else {
+            // Set a default image if the path is null or empty
             itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
         }
 
@@ -81,33 +91,73 @@ public class ItemDetailFragment extends Fragment {
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         return view;
+
     }
 
     private void deleteImage() {
-        // Set the placeholder image and remove the current image data
+        // Set the placeholder image and remove the current image path
         itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
-        mItem.setImage(null);
+        mItem.setImagePath(null); // Clear the image path
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap bitmap = null;
-        if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && resultCode == getActivity().RESULT_OK) {
+
+        if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
                 // Handle gallery image selection
-                bitmap = photoUtility.handleImageOnActivityResult(data.getData());
+                Uri selectedImageUri = data.getData();
+                bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
             }
-        } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == getActivity().RESULT_OK) {
+        } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
             // Handle camera image capture
-            bitmap = photoUtility.handleImageOnActivityResult(photoUtility.getImageUri());
+            Uri capturedImageUri = photoUtility.getImageUri();
+            bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
         }
 
         if (bitmap != null) {
             itemImageView.setImageBitmap(bitmap);
-            mItem.setImage(bitmap);
+
+            // Create a unique filename based on the current timestamp
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String imageFileName = "JPEG_" + timestamp + "_";
+
+            // Save the bitmap to a file and get the path using ImageUtils
+            String imagePath = ImageUtils.saveBitmapToFile(requireContext(), bitmap, imageFileName);
+
+            if (imagePath != null) {
+                // Store the image path in the item
+                mItem.setImagePath(imagePath);
+            }
         }
     }
 
+
+    public interface OnItemUpdatedListener {
+        void onItemUpdated(Item item);
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            updateListener = (OnItemUpdatedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnItemUpdatedListener");
+        }
+    }
+
+
+    // Call this method when the item is updated
+    private void notifyItemUpdated(Item item) {
+        if (updateListener != null) {
+            updateListener.onItemUpdated(item);
+        }
+    }
+
+
     // Other methods can be added here if necessary
-}
+    }
