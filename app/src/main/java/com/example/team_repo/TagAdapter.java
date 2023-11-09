@@ -71,6 +71,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
                     notifyItemRemoved(currentPosition);  // tell the adapter to remove the item
                     notifyItemRangeChanged(currentPosition, tagList.size());  // tell the adapter that the item range has been removed
                     ((MainActivity)context).setTagList(tagList);  // update the tag list in the main activity
+                    ((MainActivity) context).removeTagFromDB(tag);
                 }
 
             }

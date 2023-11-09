@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -297,6 +299,31 @@ public class MainActivity extends AppCompatActivity {
         // add the item to the database
         userDocRef.collection("items").add(item.toMap());
     }
+
+    public void addTagToDB(Tag tag) {
+        // add the tag to the database
+        userDocRef.collection("tags").document(tag.getTagString()).set(tag);
+    }
+
+    public void removeTagFromDB(Tag tag) {
+        userDocRef.collection("tags").document(tag.getTagString())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // handle success
+                        Log.d("DB", "Tag successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // handle error
+                        Log.w("DB", "Error deleting tag", e);
+                    }
+                });
+    }
+
 
 
     // getters and setters of username, email, password and header's bitmap_profile

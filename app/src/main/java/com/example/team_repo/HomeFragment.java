@@ -239,6 +239,7 @@ public class HomeFragment extends Fragment {
                 item_list.add(newItem);
                 item_adapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
                 total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
+                ((MainActivity) getActivity()).addItemToDB(newItem);
 
                 ItemName.setText("");
                 DatePurchase.setText("");
