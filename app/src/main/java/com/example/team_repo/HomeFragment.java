@@ -1,5 +1,7 @@
 package com.example.team_repo;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -11,14 +13,26 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< Updated upstream
 import android.widget.AdapterView;
+=======
+import android.widget.Button;
+>>>>>>> Stashed changes
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+<<<<<<< Updated upstream
+=======
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+>>>>>>> Stashed changes
 import java.util.Date;
 
 /**
@@ -91,6 +105,7 @@ public class HomeFragment extends Fragment {
         profile_picture.setImageResource(R.drawable.default_profile_image);
 
 
+<<<<<<< Updated upstream
         //view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
 //        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -114,8 +129,81 @@ public class HomeFragment extends Fragment {
 
 
 
+=======
+        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addExpenseInputDialog();
+//                monthlyChargeList.total_monthly_charges();
+            }
+        });
+        Button btnSort = view.findViewById(R.id.sortFilterItemsButton);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortDialog();
+            }
+        });
+>>>>>>> Stashed changes
         return view;
     }
+
+    private void showSortDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.fragment_sortfilter, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+
+        RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
+
+        // Add a listener for the "Sort" button in the dialog
+        Button btnSort = dialogView.findViewById(R.id.btnSort);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId = sortOptions.getCheckedRadioButtonId();
+                // Handle the selected sorting option
+                RadioButton radio_button_20 = sortOptions.findViewById(R.id.radioNameAscending);
+                int radio_button_20_id = radio_button_20.getId();
+                handleSorting(radio_button_20_id, selectedId);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    // Method to handle sorting based on the selected option
+    @SuppressLint("NonConstantResourceId")
+    private void handleSorting(int id_radio, int selectedId) {
+        // Implement sorting based on the selected option
+//        RadioButton radio_button_20 = id_radio.findViewById(R.id.radioNameAscending);
+//        int radio_button_20_id = radio_button_20.getId();
+        if (id_radio == selectedId) {
+            Context context = getContext(); // Replace with your activity or fragment's context
+            CharSequence message = "This is a toast message!";
+            int duration = Toast.LENGTH_SHORT; // or Toast.LENGTH_LONG for a longer duration
+
+            Toast toast = Toast.makeText(context, message, duration);
+            toast.show();
+
+            // Sort by item name ascending
+            Collections.sort(item_list.getList(), nameComparator);
+            itemAdapter.notifyDataSetChanged();
+        }
+        else{
+                throw new IllegalStateException("Unexpected value: " + selectedId);
+        }
+    }
+
+
+    Comparator<Item> nameComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getName().compareTo(item2.getName());
+        }
+    };
+
 
 
     public void addExpenseInputDialog() {
