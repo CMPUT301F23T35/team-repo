@@ -311,6 +311,43 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         userDocRef.collection("items").add(item.toMap());
     }
 
+    public void deleteItemFromDB(Item item){
+        String itemId = item.getItemID();
+
+        db.collection("users").document(userId).collection("items")  // ref
+                .whereEqualTo("itemID", itemId)  // query with id
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // technically, there should be only one document
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            documentSnapshot.getReference().delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("logDB", "DocumentSnapshot successfully deleted!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("logDB", "Error deleting document", e);
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                          // handle error
+                    }
+                });
+
+    }
+
     public void updateProfileToDB(){
         // update current user's profile to the database
         Map<String, Object> updates = new HashMap<>();

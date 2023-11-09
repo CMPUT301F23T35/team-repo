@@ -152,6 +152,8 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mItem.setAllNull();
+                // delete from database
+                ((MainActivity) getActivity()).deleteItemFromDB(mItem);
                 // Inside a Fragment or Activity
                 Toast.makeText(getContext(), "Item has been deleted, Return to the Home Page", Toast.LENGTH_SHORT).show();
             }
