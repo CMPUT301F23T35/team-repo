@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:text="@string/homepageTotalValue"
+        android:text="@string/homepage_total_value"
         app:layout_constraintBottom_toBottomOf="@+id/homepageListAndValueText"
         app:layout_constraintStart_toEndOf="@+id/homepageListAndValueText" />
 
@@ -54,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
+        android:background="@drawable/homepage_button_background"
         android:text="@string/select"
         android:textColor="@color/white"
-        android:background="@drawable/homepage_button_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
 
@@ -65,16 +65,26 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="156dp"
         android:background="@drawable/homepage_button_background"
         android:text="@string/sort_filter"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/addButton"
         app:layout_constraintStart_toEndOf="@+id/selectItemsButton"
-        app:layout_constraintTop_toBottomOf="@+id/homepageCardView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/addButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/homepage_button_background"
+        android:text="@string/add"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
 
     <ListView
         android:id="@+id/homepageListView"
@@ -86,20 +96,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectItemsButton" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#18BEBF"
-        android:text="Add"
-        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.78"
-        app:layout_constraintStart_toStartOf="@+id/sortFilterItemsButton"
-        app:layout_constraintTop_toBottomOf="@+id/homepageCardView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/sortFilterItemsButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
