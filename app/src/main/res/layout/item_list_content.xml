@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/homepage_item_background">
+
+    <ImageView
+        android:id="@+id/itemImageView"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:padding="8dp"
+        android:text="@string/item_name"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/itemImageView"
+        app:layout_constraintStart_toStartOf="@+id/itemImageView"
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView" />
+
+    <TextView
+        android:id="@+id/itemDetailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/item_detail_text"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/itemImageView"
+        app:layout_constraintStart_toEndOf="@+id/itemImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/itemMake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/make"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/itemDetailText"
+        app:layout_constraintTop_toTopOf="@+id/itemDetailText" />
+
+    <TextView
+        android:id="@+id/itemDollarSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/dollar_sign"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/itemDetailText"
+        app:layout_constraintStart_toEndOf="@+id/itemDetailText"
+        app:layout_constraintTop_toTopOf="@+id/itemDetailText" />
+
+    <TextView
+        android:id="@+id/itemValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_value"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/itemDetailText"
+        app:layout_constraintStart_toEndOf="@+id/itemDollarSign"
+        app:layout_constraintTop_toTopOf="@+id/itemDetailText" />
+
+    <TextView
+        android:id="@+id/itemPurchaseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/item_purchase_date"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/itemDetailText"
+        app:layout_constraintStart_toEndOf="@+id/itemDetailText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

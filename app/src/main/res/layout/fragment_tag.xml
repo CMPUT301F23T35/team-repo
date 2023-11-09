@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The layout of Tag fragment, do not include navigation bar -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fragments_rounded_corner"
+    tools:context=".TagFragment">
+
+    <!-- The Tile "Tags" of the title page -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tags"
+        android:gravity="center"
+        android:textSize="35sp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- The RecyclerView showing all added tags -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tagRecyclerView"
+        android:layout_width="match_parent"
+        android:background="@drawable/small_white_rounded_corner"
+        android:layout_height="60dp"
+        android:layout_marginTop="170dp"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/editTag"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="270dp"
+        android:background="@drawable/white_rounded_corner"
+        android:gravity="center"
+        android:hint="Enter a New Tag">
+
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_addTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:backgroundTint="#1EB4B3"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginTop="400dp"
+        android:text="Add">
+
+    </Button>
+
+
+</FrameLayout>
