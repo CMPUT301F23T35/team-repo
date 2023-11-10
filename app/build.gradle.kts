@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
 
 
+
 }
 
 android {
@@ -38,6 +39,9 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-auth:22.2.0")
     implementation("com.google.firebase:firebase-firestore:24.9.1")
+
+    // Add the dependency for the Cloud Storage library
+    implementation("com.google.firebase:firebase-storage")
 
 
 

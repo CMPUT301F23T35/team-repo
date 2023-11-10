@@ -128,18 +128,24 @@ public class ItemDetailFragment extends Fragment {
         });
 
 
-        // TODO: Set up click listeners for edit and delete buttons
         // Set the image if available, otherwise set a placeholder
         if (mItem.getImagePath() != null && !mItem.getImagePath().isEmpty()) {
             Bitmap bitmap = BitmapFactory.decodeFile(mItem.getImagePath());
             itemImageView.setImageBitmap(bitmap);
         } else {
-            // Set a default image if the path is null or empty
-            itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
-        }
+            // download image from firebase storage
+            ImageUtils.downloadImageFromFirebaseStorage(mItem.getItemID().toString(), new ImageUtils.OnBitmapReadyListener() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (bitmap != null){
+                        itemImageView.setImageBitmap(bitmap);
+                    } else {
+                        itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24);
+                    }
+                }
+            });
 
-        // Set up the toolbar
-        // toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        }
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +173,7 @@ public class ItemDetailFragment extends Fragment {
         // Set the placeholder image and remove the current image path
         itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
         mItem.setImagePath(null); // Clear the image path
+        ImageUtils.deleteImageFromFirebaseStorage(mItem.getItemID());  // Delete the image from Firebase Storage
     }
 
 
@@ -180,11 +187,17 @@ public class ItemDetailFragment extends Fragment {
                 // Handle gallery image selection
                 Uri selectedImageUri = data.getData();
                 bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
+
+                // save the bitmap to firebase storage
+                ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
             }
         } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
             // Handle camera image capture
             Uri capturedImageUri = photoUtility.getImageUri();
             bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
+
+            // save the bitmap to firebase storage
+            ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
         }
 
         if (bitmap != null) {
