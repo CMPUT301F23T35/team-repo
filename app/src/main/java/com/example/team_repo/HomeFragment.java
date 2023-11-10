@@ -1,9 +1,13 @@
 package com.example.team_repo;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -25,6 +29,16 @@ import android.widget.TextView;
 
 
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,18 +66,18 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Tag> selectedTags;
 
-
     private ItemViewModel itemViewModel;
 
     /**
      * Creates the view for the home page fragment.
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate
+     *                           any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's
+     *                           UI should be attached to.  The fragment should not add the view itself,
+     *                           but this can be used to generate the LayoutParams of the view.
      * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
+     *                           from a previous saved state as given here.
      * @return the created view for the home page fragment
      */
     @Override
@@ -92,15 +106,14 @@ public class HomeFragment extends Fragment {
         item_list_view.setAdapter(itemAdapter);
 
 
-
-        item_list_view = view.findViewById(R.id.homepageListView);
+        //item_list_view = view.findViewById(R.id.homepageListView);
         //item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(itemAdapter);
-        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
+        //item_list_view.setAdapter(itemAdapter);
+        //itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
 
         item_list_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        item_list_view.setAdapter(itemAdapter);
+        //item_list_view.setAdapter(itemAdapter);
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -111,7 +124,7 @@ public class HomeFragment extends Fragment {
         ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
             @Override
             public void onBitmapReady(Bitmap bitmap) {
-                if (bitmap != null){
+                if (bitmap != null) {
                     profile_picture.setImageBitmap(bitmap);
                 } else {
                     profile_picture.setImageResource(R.drawable.default_profile_image);
@@ -124,6 +137,13 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 addExpenseInputDialog();
 //                monthlyChargeList.total_monthly_charges();
+            }
+        });
+
+        view.findViewById(R.id.deleteItemsButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteMultiple();
             }
         });
 
@@ -205,7 +225,7 @@ public class HomeFragment extends Fragment {
      * May be used each time when there is a data change
      */
     public void refresh() {
-        if (isAdded()){
+        if (isAdded()) {
             // update header
             updateProfilePicture();
 
@@ -241,7 +261,7 @@ public class HomeFragment extends Fragment {
             ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
                 @Override
                 public void onBitmapReady(Bitmap bitmap) {
-                    if (bitmap != null){
+                    if (bitmap != null) {
                         profile_picture.setImageBitmap(bitmap);
                     } else {
                         profile_picture.setImageResource(R.drawable.default_profile_image);
@@ -267,7 +287,7 @@ public class HomeFragment extends Fragment {
         final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
         final RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
 
-        tagList = ((MainActivity)getActivity()).getTagList();
+        tagList = ((MainActivity) getActivity()).getTagList();
 
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -309,10 +329,9 @@ public class HomeFragment extends Fragment {
             String serial = ItemSerial.getText().toString();
 
             float value;
-            if (EstimatedValue.getText().toString().isEmpty()){
-                value = (float)0;
-            }
-            else {
+            if (EstimatedValue.getText().toString().isEmpty()) {
+                value = (float) 0;
+            } else {
                 value = Float.parseFloat(EstimatedValue.getText().toString());
             }
 
@@ -322,8 +341,7 @@ public class HomeFragment extends Fragment {
                     // TODO: handle empty date
                     if (date.isEmpty()) {
                         date = "0000-00-00";
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Invalid date format, please use yyyy-MM-dd.", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -388,7 +406,7 @@ public class HomeFragment extends Fragment {
     /**
      * Show a date picker dialog
      */
-    private void showDatePickerDialog(){
+    private void showDatePickerDialog() {
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -410,6 +428,7 @@ public class HomeFragment extends Fragment {
 
     /**
      * Check if the date string is valid
+     *
      * @param dateStr the date string to be checked
      * @return true: valid; false: invalid
      */
@@ -426,5 +445,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    public void deleteMultiple() {
+        for (Item item : item_list.getList()) {
+            if (item.checked) {
+                ((MainActivity) getActivity()).deleteItemFromDB(item);
+            }
+        }
+    }
 }
