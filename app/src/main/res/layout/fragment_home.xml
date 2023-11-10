@@ -49,13 +49,13 @@
         app:layout_constraintStart_toEndOf="@+id/homepageListAndValueText" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/selectItemsButton"
+        android:id="@+id/deleteItemsButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
         android:background="@drawable/homepage_button_background"
-        android:text="@string/select"
+        android:text="DELETE"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
@@ -68,9 +68,9 @@
         android:background="@drawable/homepage_button_background"
         android:text="@string/sort_filter"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/deleteItemsButton"
         app:layout_constraintEnd_toStartOf="@+id/addButton"
-        app:layout_constraintStart_toEndOf="@+id/selectItemsButton"
+        app:layout_constraintStart_toEndOf="@+id/deleteItemsButton"
         app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -82,7 +82,7 @@
         android:background="@drawable/homepage_button_background"
         android:text="@string/add"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/deleteItemsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homepageCardView" />
 
@@ -107,7 +107,7 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="#18BEBF"
         android:text="Edit"
-        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/deleteItemsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="@+id/sortFilterItemsButton"
