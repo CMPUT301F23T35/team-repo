@@ -52,6 +52,9 @@ public class ItemList {
 
     }
 
+    /**
+     * remove items that have null values from the itemlist
+     */
     public void removeNullItem(){
         /*for (Item item : this.item_list) {
             if (item.checkAllNull()){

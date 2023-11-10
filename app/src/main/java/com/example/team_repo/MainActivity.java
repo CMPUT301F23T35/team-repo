@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * MainActivity handles the initialization of information, bottom navigation bar,
+ * transaction between major fragments and connecting to database;
+ */
 public class MainActivity extends AppCompatActivity implements ItemDetailFragment.OnItemUpdatedListener {
     private BottomNavigationView bottomNavigationView;  // the bottom navigation bar
     private HomeFragment homeFragment;  // the home page
