@@ -126,7 +126,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         return view;
     }
 
-
+    /**
+     * Return an item at the given position in item list
+     * @param position Position of the item whose data we want within the adapter's
+     * data set.
+     * @return an item object at the given position
+     */
     public Item getItem(int position) {
         return item_list.get(position);
     }
