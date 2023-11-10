@@ -119,7 +119,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         else {
             item_value.setText(String.format("%.2f", item.getValue()).substring(0, 14) + "...");
         }
-
+        
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class TagFragment extends Fragment{
     private RecyclerView tagRecyclerView;  // the recycler view of the tag page
-    private EditText tagEditText;  // the edit text of the tag page、
+    private EditText tagEditText;  // the edit text of the tag page
     private Button btnAddTag;  // the button to add a tag
     private TagAdapter tagAdapter;  // the adapter of the tags
     private ArrayList<Tag> tagList;  // the list of all tags created
