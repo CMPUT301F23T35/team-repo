@@ -1,6 +1,11 @@
 package com.example.team_repo;
 
+
 import android.app.DatePickerDialog;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -15,12 +20,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.view.Window;
 import android.widget.DatePicker;
+
+
+import android.widget.Button;
 
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -28,8 +39,13 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import java.util.Collections;
+import java.util.Comparator;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -107,6 +123,7 @@ public class HomeFragment extends Fragment {
 
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
+
         // check the firebase storage, set the profile picture
         ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
             @Override
@@ -119,6 +136,33 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        profile_picture.setImageResource(R.drawable.default_profile_image);
+
+
+
+        //view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                addExpenseInputDialog();
+////                monthlyChargeList.total_monthly_charges();
+//            }
+//        });
+
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int editPosition = item_list_view.getCheckedItemPosition();
+//                if (editPosition != AdapterView.INVALID_POSITION) {
+//                    editExpenseInputDialog(editPosition);
+//                    item_list_view.clearChoices();
+////                monthlyChargeList.total_monthly_charges();
+//                }
+//            }
+//        });
+
+
+
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,8 +171,163 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addExpenseInputDialog();
+//                monthlyChargeList.total_monthly_charges();
+            }
+        });
+        Button btnSort = view.findViewById(R.id.sortFilterItemsButton);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortDialog();
+            }
+        });
+
         return view;
     }
+
+
+    private void showSortDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.fragment_sortfilter, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+
+        RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
+
+        // Add a listener for the "Sort" button in the dialog
+        Button btnSort = dialogView.findViewById(R.id.btnSort);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId = sortOptions.getCheckedRadioButtonId();
+                // Handle the selected sorting option
+                RadioButton radio_button_make = sortOptions.findViewById(R.id.radioMakeAsc);
+                RadioButton radio_button_makeDesc = sortOptions.findViewById(R.id.radiomakeDesc);
+                RadioButton radio_button_Date = sortOptions.findViewById(R.id.radioDateAsc);
+                RadioButton radio_button_DateDesc = sortOptions.findViewById(R.id.radioDateDesc);
+                RadioButton radio_button_Value = sortOptions.findViewById(R.id.radioValueAscending);
+                RadioButton radio_button_ValueDesc = sortOptions.findViewById(R.id.radioValueDesc);
+                RadioButton radio_button_Description = sortOptions.findViewById(R.id.radioDescripAsc);
+                RadioButton radio_button_DescriptionDesc = sortOptions.findViewById(R.id.radioDescripDesc);
+
+                if(selectedId == radio_button_make.getId()){
+                handleSorting(radio_button_make.getId(), selectedId,MakeComparator,true);
+                dialog.dismiss();
+            }   if(selectedId == radio_button_makeDesc.getId()){
+                    handleSorting(radio_button_makeDesc.getId(), selectedId,MakeComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Description.getId()){
+                    handleSorting(radio_button_Description.getId(), selectedId,DescripComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_DescriptionDesc.getId()){
+                    handleSorting(radio_button_DescriptionDesc.getId(), selectedId,DescripComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Value.getId()){
+                    handleSorting(radio_button_Value.getId(), selectedId,valueComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_ValueDesc.getId()){
+                    handleSorting(radio_button_ValueDesc.getId(), selectedId,valueComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Date.getId()){
+                    handleSorting(radio_button_Date.getId(), selectedId,dateComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_DateDesc.getId()){
+                    handleSorting(radio_button_DateDesc.getId(), selectedId,dateComparator,false);
+                    dialog.dismiss();
+                }
+                }
+        });
+
+        dialog.show();
+    }
+
+    // Method to handle sorting based on the selected option
+    @SuppressLint("NonConstantResourceId")
+    private void handleSorting(int id_radio, int selectedId, Comparator comp, boolean ascOrDesc) {
+        // Implement sorting based on the selected option
+//        RadioButton radio_button_20 = id_radio.findViewById(R.id.radioNameAscending);
+//        int radio_button_20_id = radio_button_20.getId();
+        if (id_radio == selectedId) {
+            Context context = getContext(); // Replace with your activity or fragment's context
+            CharSequence message = "This is a toast message!";
+            int duration = Toast.LENGTH_SHORT; // or Toast.LENGTH_LONG for a longer duration
+
+            Toast toast = Toast.makeText(context, message, duration);
+            toast.show();
+
+            // Sort by item name ascending
+            if (!ascOrDesc) {
+                Collections.sort(item_list.getList(), Collections.reverseOrder(comp));}
+            else{
+            Collections.sort(item_list.getList(), comp);}
+            itemAdapter.notifyDataSetChanged();
+        }
+        else{
+                throw new IllegalStateException("Unexpected value: " + selectedId);
+        }
+    }
+
+
+    Comparator<Item> MakeComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getMake().compareToIgnoreCase(item2.getMake());
+        }
+    };
+    Comparator<Item> DescripComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getDescription().compareToIgnoreCase(item2.getDescription());
+        }
+    };
+    Comparator<Item> valueComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            float value1 = item1.getValue();
+            float value2 = item2.getValue();
+
+            // Compare the float values
+            if (value1 < value2) {
+                return -1;
+            } else if (value1 > value2) {
+                return 1;
+            } else {
+                return 0; // values are equal
+            }
+        }
+    };
+
+    Comparator<Item> dateComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            String date1 = item1.getPurchase_date();
+            String date2 = item2.getPurchase_date();
+
+            // Compare the Date objects
+            return date1.compareTo(date2);
+        }
+    };
+
+
+
+
+
+
+
+
+
+
 
     public void editExpenseInputDialog(int editPosition) {
         LayoutInflater inflater = getLayoutInflater();
@@ -201,8 +400,8 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Refreshes the home page
-     * May be used each time when there is a data change
+     * Refreshes the home page.
+     * May be used each time when there is a data change.
      */
     public void refresh() {
         if (isAdded()){
@@ -221,7 +420,6 @@ public class HomeFragment extends Fragment {
         } else {
             Log.d("HomeFragment", "Not added");
         }
-
     }
 
     /**

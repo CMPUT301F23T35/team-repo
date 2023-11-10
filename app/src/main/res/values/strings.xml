@@ -12,11 +12,26 @@
     <string name="dollar_sign">$</string>
     <string name="item_value">0.00</string>
     <string name="item_purchase_date">2023-11-01</string>
+
     <string name="item_image">Item Image</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="no_date_available">No Date Available</string>
 
     <string name="add">Add</string>
+
+    <string name="sort_by">Sort by\n</string>
+    <string name="sort_and_filter_by">"Sort and Filter by "</string>
+    <string name="date_ascending">Date Ascending</string>
+    <string name="date_descending">Date Descending</string>
+    <string name="description_asc">Description Asc</string>
+    <string name="description_desc">Description Desc</string>
+    <string name="est_value_asc">Est Value Asc</string>
+    <string name="est_values_desc">Est Values Desc</string>
+    <string name="make_ascending">Make Ascending</string>
+    <string name="make_descending">Make descending</string>
+    <string name="tags_ascending">Tags Ascending</string>
+    <string name="tags_descending">Tags Descending</string>
+    <string name="filter_by">Filter By</string>
 
 </resources>
