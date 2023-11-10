@@ -167,16 +167,16 @@
         android:orientation="vertical">
 
         <RadioButton
-            android:id="@+id/radioNameAscending"
+            android:id="@+id/radioValueAscending"
             android:layout_width="241dp"
             android:layout_height="wrap_content"
-            android:text="Item Name (Ascending)" />
+            android:text="Item Value (Ascending)" />
 
         <RadioButton
-            android:id="@+id/radioNameDesc"
+            android:id="@+id/radioValueDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Item Name (Descending)" />
+            android:text="Item Value (Descending)" />
 
         <RadioButton
             android:id="@+id/radioDescripAsc"
@@ -214,17 +214,7 @@
             android:layout_height="wrap_content"
             android:text="Item Date (Descending)" />
 
-        <RadioButton
-            android:id="@+id/radioTagAsc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Item Tag (Ascending)" />
 
-        <RadioButton
-            android:id="@+id/radioTagDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Item Tag (Descending)" />
 
 
         <!-- Add more RadioButtons for other sorting options -->

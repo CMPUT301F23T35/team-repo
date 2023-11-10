@@ -25,8 +25,6 @@ import android.view.Window;
 import android.widget.DatePicker;
 
 
-import android.widget.AdapterView;
-
 import android.widget.Button;
 
 import android.widget.EditText;
@@ -45,7 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -209,11 +206,47 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 int selectedId = sortOptions.getCheckedRadioButtonId();
                 // Handle the selected sorting option
-                RadioButton radio_button_20 = sortOptions.findViewById(R.id.radioNameAscending);
-                int radio_button_20_id = radio_button_20.getId();
-                handleSorting(radio_button_20_id, selectedId);
+                RadioButton radio_button_make = sortOptions.findViewById(R.id.radioMakeAsc);
+                RadioButton radio_button_makeDesc = sortOptions.findViewById(R.id.radiomakeDesc);
+                RadioButton radio_button_Date = sortOptions.findViewById(R.id.radioDateAsc);
+                RadioButton radio_button_DateDesc = sortOptions.findViewById(R.id.radioDateDesc);
+                RadioButton radio_button_Value = sortOptions.findViewById(R.id.radioValueAscending);
+                RadioButton radio_button_ValueDesc = sortOptions.findViewById(R.id.radioValueDesc);
+                RadioButton radio_button_Description = sortOptions.findViewById(R.id.radioDescripAsc);
+                RadioButton radio_button_DescriptionDesc = sortOptions.findViewById(R.id.radioDescripDesc);
+
+                if(selectedId == radio_button_make.getId()){
+                handleSorting(radio_button_make.getId(), selectedId,MakeComparator,true);
                 dialog.dismiss();
-            }
+            }   if(selectedId == radio_button_makeDesc.getId()){
+                    handleSorting(radio_button_makeDesc.getId(), selectedId,MakeComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Description.getId()){
+                    handleSorting(radio_button_Description.getId(), selectedId,DescripComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_DescriptionDesc.getId()){
+                    handleSorting(radio_button_DescriptionDesc.getId(), selectedId,DescripComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Value.getId()){
+                    handleSorting(radio_button_Value.getId(), selectedId,valueComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_ValueDesc.getId()){
+                    handleSorting(radio_button_ValueDesc.getId(), selectedId,valueComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_Date.getId()){
+                    handleSorting(radio_button_Date.getId(), selectedId,dateComparator,true);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_DateDesc.getId()){
+                    handleSorting(radio_button_DateDesc.getId(), selectedId,dateComparator,false);
+                    dialog.dismiss();
+                }
+                }
         });
 
         dialog.show();
@@ -221,7 +254,7 @@ public class HomeFragment extends Fragment {
 
     // Method to handle sorting based on the selected option
     @SuppressLint("NonConstantResourceId")
-    private void handleSorting(int id_radio, int selectedId) {
+    private void handleSorting(int id_radio, int selectedId, Comparator comp, boolean ascOrDesc) {
         // Implement sorting based on the selected option
 //        RadioButton radio_button_20 = id_radio.findViewById(R.id.radioNameAscending);
 //        int radio_button_20_id = radio_button_20.getId();
@@ -234,7 +267,10 @@ public class HomeFragment extends Fragment {
             toast.show();
 
             // Sort by item name ascending
-            Collections.sort(item_list.getList(), nameComparator);
+            if (!ascOrDesc) {
+                Collections.sort(item_list.getList(), Collections.reverseOrder(comp));}
+            else{
+            Collections.sort(item_list.getList(), comp);}
             itemAdapter.notifyDataSetChanged();
         }
         else{
@@ -243,79 +279,50 @@ public class HomeFragment extends Fragment {
     }
 
 
-    Comparator<Item> nameComparator = new Comparator<Item>() {
+    Comparator<Item> MakeComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {
-            return item1.getName().compareTo(item2.getName());
+            return item1.getMake().compareToIgnoreCase(item2.getMake());
+        }
+    };
+    Comparator<Item> DescripComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getDescription().compareToIgnoreCase(item2.getDescription());
+        }
+    };
+    Comparator<Item> valueComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            float value1 = item1.getValue();
+            float value2 = item2.getValue();
+
+            // Compare the float values
+            if (value1 < value2) {
+                return -1;
+            } else if (value1 > value2) {
+                return 1;
+            } else {
+                return 0; // values are equal
+            }
+        }
+    };
+
+    Comparator<Item> dateComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            String date1 = item1.getPurchase_date();
+            String date2 = item2.getPurchase_date();
+
+            // Compare the Date objects
+            return date1.compareTo(date2);
         }
     };
 
 
 
-    public void addExpenseInputDialog() {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.fragment_add, null);
-
-        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
-        final EditText Description = dialogView.findViewById(R.id.Description);
-        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
-        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
-
-        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
-        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
-        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
 
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
-        dialogBuilder.setView(dialogView);
-//        dialogBuilder.setTitle("Add an Item");
-
-        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
-            String name = ItemName.getText().toString();
-            String date = DatePurchase.getText().toString();
-
-            String item_description = Description.getText().toString();
-            String make = ItemMake.getText().toString();
-            String model = ItemModel.getText().toString();
-            String serial = ItemSerial.getText().toString();
-            float value = Float.parseFloat(EstimatedValue.getText().toString());
-
-//
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
-//            Date date = null;
-//            try {
-//                date = dateFormat.parse(dateString);
-//            } catch (ParseException e) {
-//                throw new RuntimeException(e);
-//            }
-
-            if (name != null && !name.isEmpty()) {
-                // Create an item with the received name and other default values or set appropriate values.
-//                Calendar cal = Calendar.getInstance();
-//                Date date = cal.getTime();
-
-                String pattern = "yyyy-MM-dd";
-                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-                Date dateObject = null;
-                String date_new = null;
-                try {
-                    dateObject = dateFormat.parse(date);
-                    date_new = String.valueOf(dateObject);
-                } catch (ParseException e) {
-                    date_new = getString(R.string.no_date_available);
-                }
-                Item newItem = new Item(name, date_new, value, item_description, make, model, serial, "");
-                item_list.add(newItem);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-                refresh();
-            }
-
-
-        });
-
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
 
 
 
