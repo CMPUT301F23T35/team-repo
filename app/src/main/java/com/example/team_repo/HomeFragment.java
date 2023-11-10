@@ -140,29 +140,6 @@ public class HomeFragment extends Fragment {
 
 
 
-        //view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
-//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                addExpenseInputDialog();
-////                monthlyChargeList.total_monthly_charges();
-//            }
-//        });
-
-//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int editPosition = item_list_view.getCheckedItemPosition();
-//                if (editPosition != AdapterView.INVALID_POSITION) {
-//                    editExpenseInputDialog(editPosition);
-//                    item_list_view.clearChoices();
-////                monthlyChargeList.total_monthly_charges();
-//                }
-//            }
-//        });
-
-
-
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -190,7 +167,11 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Displays a dialog for sorting items based on different criteria. The dialog contains radio buttons
+     * for various sorting options such as sorting by make, description, value, and date. The selected
+     * sorting option is then applied to the item list.
+     */
     private void showSortDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = getLayoutInflater().inflate(R.layout.fragment_sortfilter, null);
@@ -253,6 +234,14 @@ public class HomeFragment extends Fragment {
     }
 
     // Method to handle sorting based on the selected option
+    /**
+     * Handles sorting of the item list based on the selected sorting option.
+     *
+     * @param id_radio     The ID of the radio button representing the selected sorting option.
+     * @param selectedId   The ID of the currently selected sorting option.
+     * @param comp         The comparator used for sorting the item list.
+     * @param ascOrDesc    A boolean indicating whether the sorting should be in ascending or descending order.
+     */
     @SuppressLint("NonConstantResourceId")
     private void handleSorting(int id_radio, int selectedId, Comparator comp, boolean ascOrDesc) {
         // Implement sorting based on the selected option
@@ -284,19 +273,29 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Comparator for sorting items based on their "make" attribute in a case-insensitive manner.
+     */
     Comparator<Item> MakeComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {
             return item1.getMake().compareToIgnoreCase(item2.getMake());
         }
     };
+
+    /**
+     * Comparator for sorting items based on their "description" attribute in a case-insensitive manner.
+     */
     Comparator<Item> DescripComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {
             return item1.getDescription().compareToIgnoreCase(item2.getDescription());
         }
     };
+
+    /**
+     * Comparator for sorting items based on their "value" attribute.
+     */
     Comparator<Item> valueComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {
@@ -314,6 +313,9 @@ public class HomeFragment extends Fragment {
         }
     };
 
+    /**
+     * Comparator for sorting items based on their "purchase date" attribute.
+     */
     Comparator<Item> dateComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {

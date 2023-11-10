@@ -84,6 +84,18 @@ public class ItemDetailFragment extends Fragment {
         }
     }
 
+
+    /**
+     * Creates the view for the Item Details page fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the created view for the Item Details page fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -169,6 +181,10 @@ public class ItemDetailFragment extends Fragment {
 
     }
 
+    /**
+     * Deletes the image associated with the current item. This method sets the placeholder image,
+     * removes the current image path from the item, and deletes the image from Firebase Storage.
+     */
     private void deleteImage() {
         // Set the placeholder image and remove the current image path
         itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
@@ -177,6 +193,13 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+    /**
+     * Handles the result of image selection from the gallery or capture from the camera.
+     *
+     * @param requestCode The request code that was specified when launching the activity.
+     * @param resultCode  The result code returned by the activity.
+     * @param data        An Intent that carries the result data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,9 +241,25 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+
+    /**
+     * Interface definition for a callback to be invoked when an item is updated.
+     * Implementing classes or objects should handle the {@code onItemUpdated} method
+     * to receive notifications about item updates.
+     */
     public interface OnItemUpdatedListener {
         void onItemUpdated(Item item);
     }
+
+
+    /**
+     * Called when the fragment is attached to the context. This method is typically used to
+     * initialize the fragment and establish communication with the hosting activity.
+     *
+     * @param context The context to which the fragment is attached.
+     * @throws ClassCastException If the hosting context does not implement the required
+     *                            {@link OnItemUpdatedListener} interface.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -233,7 +272,13 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
-    // Call this method when the item is updated
+    /**
+     * Notifies the registered update listener that an item has been updated.
+     * If an update listener is registered, the {@code onItemUpdated} method of the listener
+     * is called, providing the updated item as a parameter.
+     *
+     * @param item The item that has been updated and is being notified to the update listener.
+     */
     private void notifyItemUpdated(Item item) {
         if (updateListener != null) {
             updateListener.onItemUpdated(item);
@@ -241,6 +286,18 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+    /**
+     * Displays an AlertDialog for editing item details. This method populates the AlertDialog
+     * with the existing data of the provided item and allows the user to modify and confirm the changes.
+     *
+     * @param nameTextView          TextView for displaying the item name.
+     * @param dateTextView          TextView for displaying the purchase date of the item.
+     * @param descriptionTextView   TextView for displaying the description of the item.
+     * @param makeTextView          TextView for displaying the make of the item.
+     * @param modelTextView         TextView for displaying the model of the item.
+     * @param serialNumberTextView  TextView for displaying the serial number of the item.
+     * @param valueTextView         TextView for displaying the estimated value of the item.
+     */
     public void editExpenseInputDialog(TextView nameTextView, TextView dateTextView, TextView descriptionTextView, TextView makeTextView, TextView modelTextView, TextView serialNumberTextView, TextView valueTextView) {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add, null);
@@ -389,6 +446,7 @@ public class ItemDetailFragment extends Fragment {
 
     /**
      * Update the date label using the selected date from the date picker dialog
+     * @param DatePurchase  TextView for displaying the purchase date of the item.
      */
     private void updateLabel(TextView DatePurchase) {
         String myFormat = "yyyy-MM-dd"; // date format
@@ -399,6 +457,7 @@ public class ItemDetailFragment extends Fragment {
 
     /**
      * Show a date picker dialog
+     * @param DatePurchase  TextView for displaying the purchase date of the item.
      */
     private void showDatePickerDialog(TextView DatePurchase){
 
