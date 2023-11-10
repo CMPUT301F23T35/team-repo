@@ -27,6 +27,10 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
         return tagList;
     }
 
+    /**
+     * Change the list of tags
+     * @param tagList
+     */
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
