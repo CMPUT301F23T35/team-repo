@@ -107,13 +107,13 @@ public class ItemDetailFragment extends Fragment {
 
         // Populate the views with item data
         nameTextView.setText(mItem.getName());
-        dateTextView.setText(mItem.getPurchase_date());
-        valueTextView.setText(String.valueOf(mItem.getValue()));
-        descriptionTextView.setText(mItem.getDescription());
-        makeTextView.setText(mItem.getMake());
-        modelTextView.setText(mItem.getModel());
-        serialNumberTextView.setText(mItem.getSerial_number());
-        commentTextView.setText(mItem.getComment());
+        dateTextView.setText("Date: "+ mItem.getPurchase_date());
+        valueTextView.setText("Value: " + String.valueOf(mItem.getValue()));
+        descriptionTextView.setText("Desc: " + mItem.getDescription());
+        makeTextView.setText("Make: " + mItem.getMake());
+        modelTextView.setText("Model: " + mItem.getModel());
+        serialNumberTextView.setText("Serial: " + mItem.getSerial_number());
+        commentTextView.setText("Comment: " + mItem.getComment());
 
         // Set a placeholder image from the drawable resources
         itemImageView.setImageResource(R.drawable.ic_launcher_background);
@@ -315,32 +315,32 @@ public class ItemDetailFragment extends Fragment {
 
                 if (!item_description.isEmpty()) {
                     mItem.setDescription(item_description);
-                    descriptionTextView.setText((mItem.getDescription()));
+                    descriptionTextView.setText("Desc: " + (mItem.getDescription()));
                 }
 
                 if (!make.isEmpty()) {
                     mItem.setMake(make);
-                    makeTextView.setText((mItem.getMake()));
+                    makeTextView.setText("Make: " + (mItem.getMake()));
                 }
 
                 if (!model.isEmpty()) {
                     mItem.setModel(model);
-                    modelTextView.setText((mItem.getModel()));
+                    modelTextView.setText("Model: " + (mItem.getModel()));
                 }
 
                 if (!serial.isEmpty()) {
                     mItem.setSerial_number(serial);
-                    serialNumberTextView.setText(mItem.getSerial_number());
+                    serialNumberTextView.setText("Serial: " + mItem.getSerial_number());
                 }
 
                 // Create an item with the received name and other default values or set appropriate values.
                 if (!isValidDate(date)) {
                     // TODO: handle invalid date
                     mItem.setPurchase_date("0000-00-00");
-                    dateTextView.setText(mItem.getPurchase_date());
+                    dateTextView.setText("Date: " + mItem.getPurchase_date());
                 } else {
                     mItem.setPurchase_date(date);
-                    dateTextView.setText(mItem.getPurchase_date());
+                    dateTextView.setText("Date: " + mItem.getPurchase_date());
                 }
 
                 float value;
@@ -349,7 +349,7 @@ public class ItemDetailFragment extends Fragment {
                 } else {
                     value = Float.parseFloat(EstimatedValue.getText().toString());
                 }
-                valueTextView.setText(String.valueOf(value));
+                valueTextView.setText("Value: " + String.valueOf(value));
                 mItem.setValue(value);
 
                 // set the selected tags to the item
