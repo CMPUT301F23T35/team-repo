@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     private CollectionReference userRef;
     private DocumentReference userDocRef;
 
-
-
     private String userId;
 
     @Override
@@ -76,26 +74,27 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.home){
+                if (item.getItemId() == R.id.home) {
                     selectedFragment(0);
-                } else if (item.getItemId() == R.id.add){
+                } else if (item.getItemId() == R.id.add) {
                     selectedFragment(1);
-                } else if (item.getItemId() == R.id.camera){
+                } else if (item.getItemId() == R.id.camera) {
                     selectedFragment(2);
-                } else if (item.getItemId() == R.id.tag){
+                } else if (item.getItemId() == R.id.tag) {
                     selectedFragment(3);
-                } else if (item.getItemId() == R.id.profile){
+                } else if (item.getItemId() == R.id.profile) {
                     selectedFragment(4);
                 }
                 return true;
             }
         });
-        itemAdapter = new ItemAdapter(this, getItemsList());
+
     }
 
     /**
      * After click on the bottom navigation bar,
      * call this function to show the corresponding fragment
+     *
      * @param position the position of the button clicked
      */
     private void selectedFragment(int position) {
@@ -104,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         hideAllFragment(fragmentTransaction);
 
         // set the header of the app
-        if (bitmap_profile != null){
+        if (bitmap_profile != null) {
             headerPicture.setImageBitmap(bitmap_profile);
         } else {
             // get the image from the firebase storage, named email + ".jpg"
             ImageUtils.downloadImageFromFirebaseStorage(getEmail(), new ImageUtils.OnBitmapReadyListener() {
                 @Override
                 public void onBitmapReady(Bitmap bitmap) {
-                    if (bitmap != null){
+                    if (bitmap != null) {
                         headerPicture.setImageBitmap(bitmap);
                     } else {
                         headerPicture.setImageResource(R.drawable.default_profile_image);
@@ -207,15 +206,15 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         fragmentTransaction.commit();
 
 
-
     }
 
     /**
      * Hide all fragments
      * when click on the bottom navigation bar, call this method to hide all the fragments first
+     *
      * @param fragmentTransaction the transaction of the fragments
      */
-    private void hideAllFragment(FragmentTransaction fragmentTransaction){
+    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
         // if a fragment has been defined, hide it
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
@@ -235,8 +234,12 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     }
 
 
-
-    private void initializeUser(OnUserDataLoadedListener listener){
+    /**
+     * Read user information and stored items from database.
+     *
+     * @param listener listener for checking if the user data is loaded
+     */
+    private void initializeUser(OnUserDataLoadedListener listener) {
         // get the username, email and password from the RegisterActivity or LoginActivity
         username = getIntent().getStringExtra("username");
         email = getIntent().getStringExtra("email");
@@ -301,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     add_item_list.add(item); // add all
 
                     // use listener to make sure the tagList is loaded before the AddFragment is created
-                    if(listener != null) {
+                    if (listener != null) {
                         listener.onUserDataLoaded();
                     }
                 }
@@ -311,18 +314,28 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 // a new collection will be created when the user adds an item
                 Log.d("LogMain", "No such document");
             }
-        }) .addOnFailureListener(e -> {
+        }).addOnFailureListener(e -> {
             Log.d("LogMain", "Error getting documents: ", e);
         });
 
     }
 
+    /**
+     * Add an item to the database
+     *
+     * @param item
+     */
     public void addItemToDB(Item item) {
         // add the item to the database
         userDocRef.collection("items").add(item.toMap());
     }
 
-    public void deleteItemFromDB(Item item){
+    /**
+     * delete an item from the datd base
+     *
+     * @param item an item to be deleted
+     */
+    public void deleteItemFromDB(Item item) {
         String itemId = item.getItemID();
 
         db.collection("users").document(userId).collection("items")  // ref
@@ -353,13 +366,16 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                          // handle error
+                        // handle error
                     }
                 });
 
     }
 
-    public void updateProfileToDB(){
+    /**
+     * update username, email and password of a user in the database
+     */
+    public void updateProfileToDB() {
         // update current user's profile to the database
         Map<String, Object> updates = new HashMap<>();
         updates.put("username", username);
@@ -384,7 +400,12 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
     }
 
-    public void updateItemToDB(Item item){
+    /**
+     * Update all fields of an item
+     *
+     * @param item the item with new item information
+     */
+    public void updateItemToDB(Item item) {
         // update all fields of the item, use the item id to find the item
         String itemId = item.getItemID();
         Map<String, Object> updates = new HashMap<>();
@@ -436,11 +457,20 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
     }
 
+    /**
+     * add a tag to the database
+     *
+     * @param tag the tag to be added
+     */
     public void addTagToDB(Tag tag) {
-        // add the tag to the database
         userDocRef.collection("tags").document(tag.getTagString()).set(tag);
     }
 
+    /**
+     * delete a tag from db
+     *
+     * @param tag tag to be deleted
+     */
     public void removeTagFromDB(Tag tag) {
         userDocRef.collection("tags").document(tag.getTagString())
                 .delete()
@@ -461,67 +491,134 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     }
 
 
+    //getters and setters of username, email, password and header's bitmap_profile
 
-    // getters and setters of username, email, password and header's bitmap_profile
+    /**
+     * Return username
+     *
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Change username
+     *
+     * @param username the new username
+     */
     public void setUsername(String username) {
         this.username = username;
         tv_header.setText("Hello, " + username + "!");
 
     }
 
+    /**
+     * return the email of the user
+     *
+     * @return user's email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Change email information
+     *
+     * @param email new email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * return user's password
+     *
+     * @return user's password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Change user's password
+     *
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
+
+    /**
+     * Return user's photo
+     *
+     * @return photo
+     */
     public Bitmap getBitmap_profile() {
         return bitmap_profile;
     }
 
+    /**
+     * Change user's photo
+     *
+     * @param bitmap_profile photo
+     */
     public void setBitmap_profile(Bitmap bitmap_profile) {
         this.bitmap_profile = bitmap_profile;
         Log.d("MainActivity", "setBitmap_profile() called, bitmap_profile: " + bitmap_profile);
     }
 
+    /**
+     * return the itemlist for the home page
+     *
+     * @return
+     */
     public ItemList getAdd_item_list() {
         return add_item_list;
     }
 
+    /**
+     * Return the database user id
+     *
+     * @return userid
+     */
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
+    /**
+     * Change the item list
+     *
+     * @param add_item_list new item list
+     */
     public void setAdd_item_list(ItemList add_item_list) {
         this.add_item_list = add_item_list;
     }
+
+    /**
+     * return a tag list
+     *
+     * @return a tag list
+     */
     public ArrayList<Tag> getTagList() {
         return tagList;
     }
 
+
+    /**
+     * Change the tag list
+     *
+     * @param tagList new tag list
+     */
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
 
-
-
+    /**
+     * Transfer to item detail fragment
+     *
+     * @param item the item to be diaplayed
+     */
     public void showItemDetailFragment(Item item) {
         // Create a new fragment instance and pass the item to it
         ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
@@ -534,14 +631,18 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
     }
 
-
+    /**
+     * A listener for loading user data
+     */
     public interface OnUserDataLoadedListener {
         void onUserDataLoaded();
     }
 
-
-
-
+    /**
+     * Notify the adapter that the dataset has changed
+     *
+     * @param item
+     */
     @Override
     public void onItemUpdated(Item item) {
         // Notify the adapter that the dataset has changed
@@ -549,11 +650,4 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
             itemAdapter.notifyDataSetChanged();
         }
     }
-
-    // Method to get the items list, this should return the current list of items
-    private ArrayList<Item> getItemsList() {
-        // You need to implement this method to return the actual list of items
-        return new ArrayList<>();
-    }
-
 }
