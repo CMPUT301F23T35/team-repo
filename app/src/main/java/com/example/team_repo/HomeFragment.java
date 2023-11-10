@@ -400,8 +400,8 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Refreshes the home page
-     * May be used each time when there is a data change
+     * Refreshes the home page.
+     * May be used each time when there is a data change.
      */
     public void refresh() {
         if (isAdded()){
@@ -420,7 +420,6 @@ public class HomeFragment extends Fragment {
         } else {
             Log.d("HomeFragment", "Not added");
         }
-
     }
 
     /**
