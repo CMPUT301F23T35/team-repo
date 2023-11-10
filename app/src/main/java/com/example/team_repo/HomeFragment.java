@@ -107,8 +107,17 @@ public class HomeFragment extends Fragment {
 
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
-        profile_picture.setImageResource(R.drawable.default_profile_image);
-
+        // check the firebase storage, set the profile picture
+        ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
+            @Override
+            public void onBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    profile_picture.setImageBitmap(bitmap);
+                } else {
+                    profile_picture.setImageResource(R.drawable.default_profile_image);
+                }
+            }
+        });
 
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,10 +127,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return view;
     }
-
 
     public void editExpenseInputDialog(int editPosition) {
         LayoutInflater inflater = getLayoutInflater();
@@ -229,8 +236,18 @@ public class HomeFragment extends Fragment {
             profile_picture.setImageBitmap(profileBitmap);
 
         } else {
-            // initialized or deleted
-            profile_picture.setImageResource(R.drawable.default_profile_image);
+            // get the picture fro firebase storage
+            ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (bitmap != null){
+                        profile_picture.setImageBitmap(bitmap);
+                    } else {
+                        profile_picture.setImageResource(R.drawable.default_profile_image);
+                    }
+                }
+            });
+
 
         }
     }
@@ -407,27 +424,6 @@ public class HomeFragment extends Fragment {
             return false;
         }
     }
-
-
-    public void checklist(ItemList item_list){
-        // use Log.d to check
-        Log.d("HomeFragment", "checklist ---------------------------------------------------------------------------");
-        ArrayList<Item> list = item_list.getList();
-        for (Item item : list){
-            Log.d("HomeFragment", "item name: " + item.getName());
-            Log.d("HomeFragment", "item purchase date: " + item.getPurchase_date());
-            Log.d("HomeFragment", "item value: " + item.getValue());
-            Log.d("HomeFragment", "item description: " + item.getDescription());
-            Log.d("HomeFragment", "item make: " + item.getMake());
-            Log.d("HomeFragment", "item model: " + item.getModel());
-            Log.d("HomeFragment", "item serial number: " + item.getSerial_number());
-            Log.d("HomeFragment", "item comment: " + item.getComment());
-            Log.d("HomeFragment", "item tags: " + item.getTags());
-            Log.d("HomeFragment", "item image: " + item.getImagePath());
-        }
-
-    }
-
 
 
 }

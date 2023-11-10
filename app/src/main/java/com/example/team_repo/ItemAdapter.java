@@ -68,7 +68,18 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             Bitmap bitmap = ImageUtils.convertImagePathToBitmap(item.getImagePath());
             item_image.setImageBitmap(bitmap);
         } else {
-            item_image.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder image
+            // download image from firebase storage
+            ImageUtils.downloadImageFromFirebaseStorage(item.getItemID().toString(), new ImageUtils.OnBitmapReadyListener() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (bitmap != null){
+                    item_image.setImageBitmap(bitmap);
+                    } else {
+                        item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+                    }
+                }
+            });
+
         }
 
         // Set the item's name, make, value, and purchase date with checks for length

@@ -41,6 +41,18 @@ public class ProfileFragment extends Fragment {
         mPassword = view.findViewById(R.id.profile_password);
         saveChanges = view.findViewById(R.id.btn_save_changes);
         profilePagePicture = view.findViewById(R.id.profilePagePicture);
+        // check the firebase storage, set the profile picture
+        ImageUtils.downloadImageFromFirebaseStorage(((MainActivity)getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
+            @Override
+            public void onBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    profilePagePicture.setImageBitmap(bitmap);
+                } else {
+                    profilePagePicture.setImageResource(R.drawable.default_profile_image);
+                }
+            }
+        });
+
         cameraButton = view.findViewById(R.id.btn_camera);
         galleryButton = view.findViewById(R.id.btn_gallery);
         deleteButton = view.findViewById(R.id.btn_delete);
@@ -61,6 +73,9 @@ public class ProfileFragment extends Fragment {
         deleteButton.setOnClickListener(v -> {
             photoUtility.deletePhoto(profilePagePicture, R.drawable.default_profile_image);
             ((MainActivity)getActivity()).setBitmap_profile(null);
+            // delete from the firebase storage
+            ImageUtils.deleteImageFromFirebaseStorage(((MainActivity)getActivity()).getEmail());  // Delete the image from Firebase Storage
+
         });
 
         // Save changes button listener
@@ -102,6 +117,8 @@ public class ProfileFragment extends Fragment {
                 if (bitmap != null) {
                     profilePagePicture.setImageBitmap(bitmap);
                     ((MainActivity)getActivity()).setBitmap_profile(bitmap);
+                    // upload image to firebase storage
+                    ImageUtils.uploadImageToFirebaseStorage(bitmap, ((MainActivity)getActivity()).getEmail());
                 }
             }
         }
