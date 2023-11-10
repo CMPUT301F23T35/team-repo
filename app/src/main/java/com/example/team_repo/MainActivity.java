@@ -283,9 +283,6 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
             } else {
                 // if the collection does not exist, create a new one
                 userDocRef.collection("tags");
-                // add two default tags
-                tagList.add(new Tag("Tag1"));
-                tagList.add(new Tag("Tag2"));
                 // add the tagList into the database
                 for (Tag tag : tagList) {
                     userDocRef.collection("tags").document(tag.getTagString()).set(tag);
