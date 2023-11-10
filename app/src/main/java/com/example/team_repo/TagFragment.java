@@ -17,6 +17,9 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
+/**
+ * TagFragment extend Fragment. TagFragment represent a fragment for adding tag categories.
+ */
 public class TagFragment extends Fragment{
     private RecyclerView tagRecyclerView;  // the recycler view of the tag page
     private EditText tagEditText;  // the edit text of the tag page
@@ -70,13 +73,9 @@ public class TagFragment extends Fragment{
                     // Hide the soft keyboard.
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-
-
                 }
             }
         });
-
-
 
         return view;
     }

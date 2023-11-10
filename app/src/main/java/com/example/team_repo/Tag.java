@@ -2,6 +2,9 @@ package com.example.team_repo;
 
 import java.io.Serializable;
 
+/**
+ * Tag class represents a tag that could be selected.
+ */
 public class Tag implements Serializable {
     private String tagString;
     private boolean isSelected = false;
