@@ -26,6 +26,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
 
+
+/**
+ * The CameraHandler class manages camera functionalities including starting and stopping the camera,
+ * handling permissions, and capturing images.
+ */
 public class CameraHandler {
     private final Context context;
     private final PreviewView previewView;
@@ -33,6 +38,15 @@ public class CameraHandler {
     private final ActivityResultLauncher<String> activityResultLauncher;
     private boolean isCameraStarted = false;
 
+
+    /**
+     * Constructor for CameraHandler.
+     *
+     * @param context The context in which the handler is operating, usually the current activity
+     * @param previewView The PreviewView to display the camera preview
+     * @param captureButton The ImageButton to trigger image capture
+     * @param activityResultLauncher The launcher for handling permission results
+     */
     public CameraHandler(Context context, PreviewView previewView, ImageButton captureButton, ActivityResultLauncher<String> activityResultLauncher) {
         this.context = context;
         this.previewView = previewView;
@@ -40,12 +54,16 @@ public class CameraHandler {
         this.activityResultLauncher = activityResultLauncher;
     }
 
-    // Requests camera permission using the provided ActivityResultLauncher.
+    /**
+     * Requests camera permission using the provided ActivityResultLauncher.
+     */
     public void requestCameraPermission() {
         activityResultLauncher.launch(Manifest.permission.CAMERA);
     }
 
-    // Starts the camera preview if it hasn't been started already.
+    /**
+     * Starts the camera preview if it hasn't been started already.
+     */
     public void startCamera() {
         if (isCameraStarted) {
             return;
@@ -80,7 +98,10 @@ public class CameraHandler {
             }
         }, ContextCompat.getMainExecutor(context));
     }
-    // Stops the camera preview if it is currently running.
+
+    /**
+     * Stops the camera preview if it is currently running.
+     */
     public void stopCamera() {
         if (!isCameraStarted) {
             return;
@@ -99,7 +120,11 @@ public class CameraHandler {
         }, ContextCompat.getMainExecutor(context));
     }
 
-    // Captures an image and saves it to the external storage
+    /**
+     * Captures an image and saves it to the external storage.
+     *
+     * @param imageCapture The ImageCapture instance used for taking pictures
+     */
     private void takePicture(ImageCapture imageCapture) {
         // Content values to describe the saved image's metadata.
         ContentValues contentValues = new ContentValues();
