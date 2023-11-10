@@ -107,7 +107,18 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         if (bitmap_profile != null){
             headerPicture.setImageBitmap(bitmap_profile);
         } else {
-            headerPicture.setImageResource(R.drawable.default_profile_image);
+            // get the image from the firebase storage, named email + ".jpg"
+            ImageUtils.downloadImageFromFirebaseStorage(getEmail(), new ImageUtils.OnBitmapReadyListener() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (bitmap != null){
+                        headerPicture.setImageBitmap(bitmap);
+                    } else {
+                        headerPicture.setImageResource(R.drawable.default_profile_image);
+                    }
+                }
+            });
+
         }
 
         if (position == 0) {
