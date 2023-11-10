@@ -41,6 +41,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * The ItemDetailFragment class is a Fragment responsible for displaying and managing
+ * the details of an item. It provides functionalities such as editing item details,
+ * handling image selections, and interacting with Firebase for image storage.
+ */
 public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
