@@ -19,7 +19,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * The AddFragment class extends Fragment. It is used to display a fragment for taking input item information and add item to the items.
+ * This fragment is integrated in MainActivity to create a new AddFragment.
+ */
 public class AddFragment extends Fragment{
     private EditText ItemName;
     private EditText Description;
@@ -35,7 +38,6 @@ public class AddFragment extends Fragment{
     private AddTagAdapter tagAdapter;  // the adapter of the tags
     private LinearLayoutManager layoutManager;
     private ArrayList<Tag> tagList;
-
     private ArrayList<Tag> selectedTags;
 
     /**

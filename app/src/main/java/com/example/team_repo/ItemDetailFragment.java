@@ -50,29 +50,29 @@ public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
     private EditText DatePurchase;
-
     private Calendar calendar;
-
     private ArrayList<Tag> tagList;
     private ArrayList<Tag> selectedTags;
     private RecyclerView.LayoutManager layoutManager;
     private AddTagAdapter tagAdapter;
-
-
 
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    /**
+     * Empty public constuctor
+     */
     public ItemDetailFragment() {
         // Required empty public constructor
-
-
-
     }
 
+    /**
+     * Constructor with given an item
+     * @param item item to be displayed
+     * @return an item detail fragment
+     */
     public static ItemDetailFragment newInstance(Item item) {
         ItemDetailFragment fragment = new ItemDetailFragment();
         Bundle args = new Bundle();

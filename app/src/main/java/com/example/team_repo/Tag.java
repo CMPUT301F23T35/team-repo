@@ -23,7 +23,7 @@ public class Tag implements Serializable {
 
     /**
      * Return the string content of a tag
-     * @return
+     * @return the string of a tag
      */
     String getTagString(){
         return this.tagString;
@@ -31,7 +31,7 @@ public class Tag implements Serializable {
 
     /**
      * Check if a tag is selected
-     * @return
+     * @return whether a tag is selected
      */
     public boolean isSelected() {
         return isSelected;
