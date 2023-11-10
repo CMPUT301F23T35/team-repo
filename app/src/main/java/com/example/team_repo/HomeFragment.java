@@ -1,6 +1,11 @@
 package com.example.team_repo;
 
+
 import android.app.DatePickerDialog;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -15,12 +20,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.view.Window;
 import android.widget.DatePicker;
+
+
+import android.widget.AdapterView;
+
+import android.widget.Button;
 
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -28,8 +41,14 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -107,6 +126,7 @@ public class HomeFragment extends Fragment {
 
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
+
         // check the firebase storage, set the profile picture
         ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
             @Override
@@ -119,6 +139,33 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        profile_picture.setImageResource(R.drawable.default_profile_image);
+
+
+
+        //view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                addExpenseInputDialog();
+////                monthlyChargeList.total_monthly_charges();
+//            }
+//        });
+
+//        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int editPosition = item_list_view.getCheckedItemPosition();
+//                if (editPosition != AdapterView.INVALID_POSITION) {
+//                    editExpenseInputDialog(editPosition);
+//                    item_list_view.clearChoices();
+////                monthlyChargeList.total_monthly_charges();
+//                }
+//            }
+//        });
+
+
+
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,8 +174,153 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addExpenseInputDialog();
+//                monthlyChargeList.total_monthly_charges();
+            }
+        });
+        Button btnSort = view.findViewById(R.id.sortFilterItemsButton);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortDialog();
+            }
+        });
+
         return view;
     }
+
+
+    private void showSortDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.fragment_sortfilter, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+
+        RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
+
+        // Add a listener for the "Sort" button in the dialog
+        Button btnSort = dialogView.findViewById(R.id.btnSort);
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId = sortOptions.getCheckedRadioButtonId();
+                // Handle the selected sorting option
+                RadioButton radio_button_20 = sortOptions.findViewById(R.id.radioNameAscending);
+                int radio_button_20_id = radio_button_20.getId();
+                handleSorting(radio_button_20_id, selectedId);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    // Method to handle sorting based on the selected option
+    @SuppressLint("NonConstantResourceId")
+    private void handleSorting(int id_radio, int selectedId) {
+        // Implement sorting based on the selected option
+//        RadioButton radio_button_20 = id_radio.findViewById(R.id.radioNameAscending);
+//        int radio_button_20_id = radio_button_20.getId();
+        if (id_radio == selectedId) {
+            Context context = getContext(); // Replace with your activity or fragment's context
+            CharSequence message = "This is a toast message!";
+            int duration = Toast.LENGTH_SHORT; // or Toast.LENGTH_LONG for a longer duration
+
+            Toast toast = Toast.makeText(context, message, duration);
+            toast.show();
+
+            // Sort by item name ascending
+            Collections.sort(item_list.getList(), nameComparator);
+            itemAdapter.notifyDataSetChanged();
+        }
+        else{
+                throw new IllegalStateException("Unexpected value: " + selectedId);
+        }
+    }
+
+
+    Comparator<Item> nameComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            return item1.getName().compareTo(item2.getName());
+        }
+    };
+
+
+
+    public void addExpenseInputDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.fragment_add, null);
+
+        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
+        final EditText Description = dialogView.findViewById(R.id.Description);
+        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
+        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
+
+        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
+        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
+        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
+        dialogBuilder.setView(dialogView);
+//        dialogBuilder.setTitle("Add an Item");
+
+        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
+            String name = ItemName.getText().toString();
+            String date = DatePurchase.getText().toString();
+
+            String item_description = Description.getText().toString();
+            String make = ItemMake.getText().toString();
+            String model = ItemModel.getText().toString();
+            String serial = ItemSerial.getText().toString();
+            float value = Float.parseFloat(EstimatedValue.getText().toString());
+
+//
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+//            Date date = null;
+//            try {
+//                date = dateFormat.parse(dateString);
+//            } catch (ParseException e) {
+//                throw new RuntimeException(e);
+//            }
+
+            if (name != null && !name.isEmpty()) {
+                // Create an item with the received name and other default values or set appropriate values.
+//                Calendar cal = Calendar.getInstance();
+//                Date date = cal.getTime();
+
+                String pattern = "yyyy-MM-dd";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date dateObject = null;
+                String date_new = null;
+                try {
+                    dateObject = dateFormat.parse(date);
+                    date_new = String.valueOf(dateObject);
+                } catch (ParseException e) {
+                    date_new = getString(R.string.no_date_available);
+                }
+                Item newItem = new Item(name, date_new, value, item_description, make, model, serial, "");
+                item_list.add(newItem);
+                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
+                refresh();
+            }
+
+
+        });
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+
+
+
+
 
     public void editExpenseInputDialog(int editPosition) {
         LayoutInflater inflater = getLayoutInflater();
