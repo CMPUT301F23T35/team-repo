@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
+/**
+ * The AddTagAdapter class extends RecyclerView.Adapter.
+ * It is used to display a list of tags for selecting.
+ */
 public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHolder>{
     // This is the adapter for the tag page
     Context context;  // the context of the tag page
