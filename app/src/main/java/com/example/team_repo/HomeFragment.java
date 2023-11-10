@@ -260,7 +260,7 @@ public class HomeFragment extends Fragment {
 //        int radio_button_20_id = radio_button_20.getId();
         if (id_radio == selectedId) {
             Context context = getContext(); // Replace with your activity or fragment's context
-            CharSequence message = "This is a toast message!";
+            CharSequence message = "The List has been Sorted!";
             int duration = Toast.LENGTH_SHORT; // or Toast.LENGTH_LONG for a longer duration
 
             Toast toast = Toast.makeText(context, message, duration);
@@ -274,6 +274,12 @@ public class HomeFragment extends Fragment {
             itemAdapter.notifyDataSetChanged();
         }
         else{
+            Context context = getContext(); // Replace with your activity or fragment's context
+            CharSequence message = "Sorting Failed!";
+            int duration = Toast.LENGTH_SHORT; // or Toast.LENGTH_LONG for a longer duration
+
+            Toast toast = Toast.makeText(context, message, duration);
+            toast.show();
                 throw new IllegalStateException("Unexpected value: " + selectedId);
         }
     }
