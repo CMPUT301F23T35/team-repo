@@ -1,6 +1,8 @@
 package com.example.team_repo;
 
-public class Tag {
+import java.io.Serializable;
+
+public class Tag implements Serializable {
     private String tagString;
 
     private boolean isSelected = false;
