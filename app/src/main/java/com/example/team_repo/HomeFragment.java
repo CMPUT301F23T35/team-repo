@@ -147,8 +147,7 @@ public class HomeFragment extends Fragment {
 //                monthlyChargeList.total_monthly_charges();
             }
         });
-
-
+        // duplicated?
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,6 +155,7 @@ public class HomeFragment extends Fragment {
 //                monthlyChargeList.total_monthly_charges();
             }
         });
+
         Button btnSort = view.findViewById(R.id.sortFilterItemsButton);
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,14 +329,6 @@ public class HomeFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
     public void editExpenseInputDialog(int editPosition) {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_add, null);
@@ -459,7 +451,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Display a dialog fragment for adding an item
+     */
     public void addExpenseInputDialog() {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add, null);
