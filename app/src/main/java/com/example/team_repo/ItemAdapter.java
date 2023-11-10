@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,6 +63,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_make = view.findViewById(R.id.itemMake);
         TextView item_value = view.findViewById(R.id.itemValue);
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
+        CheckBox checkbox = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
         if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
@@ -123,9 +125,17 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
+
+        //check box
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.checked = checkbox.isChecked();
+            }
+        });
+
         return view;
     }
-
 
     public Item getItem(int position) {
         return item_list.get(position);
