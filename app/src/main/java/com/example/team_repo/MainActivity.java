@@ -14,8 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +28,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        toolbarLinearLayout = findViewById(R.id.toolbar);
+        toolbarLinearLayout = findViewById(R.id.select_toolbar);
 
         // initialize the header picture
         headerPicture = findViewById(R.id.headerPicture);
@@ -302,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     // check document id
                     Log.d("LogMain", document.getId() + " => " + document.getData());
                     Item item = document.toObject(Item.class); // document -> item
+                    item.itemRef = document.getId();
                     add_item_list.add(item); // add all
 
                     // use listener to make sure the tagList is loaded before the AddFragment is created
@@ -371,6 +373,25 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     }
                 });
 
+    }
+
+    public void readItemListFromDB(ItemList itemList, ItemAdapter itemAdapter){
+        db.collection("users").document(userId).collection("items").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            itemList.clear();
+                            for(QueryDocumentSnapshot document: task.getResult()){
+                                Item item = document.toObject(Item.class);
+                                item.itemRef = document.getId();
+                                itemList.add(item);
+                            }
+                            add_item_list = itemList;
+                            itemAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     /**

@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -147,20 +148,23 @@ public class HomeFragment extends Fragment {
 //                monthlyChargeList.total_monthly_charges();
             }
         });
-        // duplicated?
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addExpenseInputDialog();
-//                monthlyChargeList.total_monthly_charges();
-            }
-        });
 
         Button btnSort = view.findViewById(R.id.sortFilterItemsButton);
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSortDialog();
+            }
+        });
+
+        Button select = view.findViewById(R.id.selectItemsButton);
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SelectActivity.class);
+                intent.putExtra("taglist",((MainActivity)getActivity()).getTagList());
+                intent.putExtra("userID", ((MainActivity) getActivity()).getUserId());
+                startActivity(intent);
             }
         });
 
