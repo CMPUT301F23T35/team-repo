@@ -50,29 +50,29 @@ public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
     private EditText DatePurchase;
-
     private Calendar calendar;
-
     private ArrayList<Tag> tagList;
     private ArrayList<Tag> selectedTags;
     private RecyclerView.LayoutManager layoutManager;
     private AddTagAdapter tagAdapter;
-
-
 
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    /**
+     * Empty public constuctor
+     */
     public ItemDetailFragment() {
         // Required empty public constructor
-
-
-
     }
 
+    /**
+     * Constructor with given an item
+     * @param item item to be displayed
+     * @return an item detail fragment
+     */
     public static ItemDetailFragment newInstance(Item item) {
         ItemDetailFragment fragment = new ItemDetailFragment();
         Bundle args = new Bundle();
@@ -81,6 +81,11 @@ public class ItemDetailFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Receive item from bundle
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
