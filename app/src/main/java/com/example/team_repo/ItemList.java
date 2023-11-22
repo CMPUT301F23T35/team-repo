@@ -1,5 +1,6 @@
 package com.example.team_repo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import java.util.Comparator;
 /**
  * Maintains an item list and the total estimated value for all items in the list.
  */
-public class ItemList {
+public class ItemList implements Serializable {
 
     private ArrayList<Item> item_list;
     private float total_value;
@@ -107,5 +108,15 @@ public class ItemList {
 //            return item1.getName().compareTo(item2.getName());
 //        }
 //    };
+
+    public void clear(){
+        item_list.clear();
+        total_value = 0;
+    }
+
+    public void removeAll(ItemList delete_list){
+        this.item_list.removeAll(delete_list.getList());
+        this.updateValue();
+    }
 }
 
