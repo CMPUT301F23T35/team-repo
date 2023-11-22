@@ -14,9 +14,11 @@ import android.widget.ListView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 
@@ -68,15 +70,28 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     public void deleteMultiple(){
-        ItemList delete_list = item_list;
-        for(Item item: delete_list.getList()){
+        WriteBatch writeBatch = db.batch();
+        ItemList delete_list = new ItemList();
+        for(Item item: item_list.getList()){
             if(item.checked){
-                deleteItemFromDB(item);
+                delete_list.add(item);
+                DocumentReference documentReference = db.collection("users").document(userID).collection("items").document(item.itemRef);
+                writeBatch.delete(documentReference);
             }
         }
+
+        writeBatch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                item_list.removeAll(delete_list);
+                item_adapter.notifyDataSetChanged();
+            }
+        });
     }
 
-    public void deleteItemFromDB(Item item){
+
+   /* public void deleteItemFromDB(Item item){
+
         db.collection("users").document(userID).collection("items").document(item.itemRef)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -86,7 +101,7 @@ public class SelectActivity extends AppCompatActivity {
                         item_adapter.notifyDataSetChanged();
                     }
                 });
-    }
+    }*/
 
     public void readItemListFromDB(ItemList itemList){
         db.collection("users").document(userID).collection("items").get()

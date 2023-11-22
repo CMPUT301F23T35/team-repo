@@ -113,5 +113,10 @@ public class ItemList implements Serializable {
         item_list.clear();
         total_value = 0;
     }
+
+    public void removeAll(ItemList delete_list){
+        this.item_list.removeAll(delete_list.getList());
+        this.updateValue();
+    }
 }
 
