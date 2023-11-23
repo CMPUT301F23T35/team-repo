@@ -21,16 +21,18 @@ import java.util.ArrayList;
 public class ItemAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> item_list;
     private Context context;
+    private boolean showCheckbox;
 
     /**
      * Initializes the item adapter.
      * @param context the current context of the app
      * @param item_list the item list to create the views for
      */
-    public ItemAdapter(Context context, ArrayList<Item> item_list) {
+    public ItemAdapter(Context context, ArrayList<Item> item_list, boolean showCheckbox) {
         super(context, 0, item_list);
         this.context = context;
         this.item_list = item_list;
+        this.showCheckbox = showCheckbox;
     }
 
     /**
@@ -53,6 +55,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(context).inflate(R.layout.item_list_content, parent, false);
         }
 
+        if (showCheckbox) {
+            view.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        }
     
         // Get the current item to create the view for
         final Item item = item_list.get(position);
