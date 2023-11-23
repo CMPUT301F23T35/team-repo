@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -77,6 +78,7 @@ public class SelectActivity extends AppCompatActivity {
                 delete_list.add(item);
                 DocumentReference documentReference = db.collection("users").document(userID).collection("items").document(item.itemRef);
                 writeBatch.delete(documentReference);
+                item.checked = false;
             }
         }
 
@@ -84,9 +86,13 @@ public class SelectActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 item_list.removeAll(delete_list);
+                for (Item item : item_list.getList()) {
+                    item.checked = false;
+                }
                 item_adapter.notifyDataSetChanged();
             }
         });
+
     }
 
 
