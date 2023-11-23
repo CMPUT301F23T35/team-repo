@@ -103,15 +103,9 @@ public class HomeFragment extends Fragment {
         // Attach the items in the item list to the adapter
 
         item_list_view = view.findViewById(R.id.homepageListView);
-        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
+        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList(), false);
         item_list_view.setAdapter(itemAdapter);
 
-
-
-        item_list_view = view.findViewById(R.id.homepageListView);
-        //item_adapter = new ItemAdapter(this.getContext(), item_list.getList());
-        item_list_view.setAdapter(itemAdapter);
-        itemAdapter = new ItemAdapter(this.getContext(), item_list.getList());
 
         item_list_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 

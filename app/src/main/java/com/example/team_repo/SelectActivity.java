@@ -55,7 +55,7 @@ public class SelectActivity extends AppCompatActivity {
 
         item_list = new ItemList();
         ListView item_list_view = findViewById(R.id.itemListView);
-        item_adapter = new ItemAdapter(SelectActivity.this, item_list.getList());
+        item_adapter = new ItemAdapter(SelectActivity.this, item_list.getList(), true);
         item_list_view.setAdapter(item_adapter);
         readItemListFromDB(item_list);
 
