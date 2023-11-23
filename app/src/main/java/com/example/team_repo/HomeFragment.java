@@ -96,8 +96,6 @@ public class HomeFragment extends Fragment {
 
 
         ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
-        // check add_item_list is empty or not
-        Log.d("HomeFragment", "add_item_list: " + add_item_list);
         ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
         item_list.addAll(add_item_list);
 
@@ -331,78 +329,6 @@ public class HomeFragment extends Fragment {
         }
     };
 
-
-
-    public void editExpenseInputDialog(int editPosition) {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.fragment_add, null);
-
-        final EditText ItemName = dialogView.findViewById(R.id.ItemName);
-        final EditText Description = dialogView.findViewById(R.id.Description);
-        final EditText DatePurchase = dialogView.findViewById(R.id.DatePurchase);
-        final EditText ItemMake = dialogView.findViewById(R.id.ItemMake);
-
-        final EditText ItemModel = dialogView.findViewById(R.id.ItemModel);
-        final EditText ItemSerial = dialogView.findViewById(R.id.ItemSerial);
-        final EditText EstimatedValue = dialogView.findViewById(R.id.EstimatedValue);
-
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireContext());
-        dialogBuilder.setView(dialogView);
-//        dialogBuilder.setTitle("Add an Item");
-
-        dialogBuilder.setPositiveButton("Confirm", (dialog, which) -> {
-            String name = ItemName.getText().toString();
-            String date = DatePurchase.getText().toString();
-            String item_description = Description.getText().toString();
-            String make = ItemMake.getText().toString();
-            String model = ItemModel.getText().toString();
-            String serial = ItemSerial.getText().toString();
-//            float value = Float.parseFloat(EstimatedValue.getText().toString());
-            String valueString = EstimatedValue.getText().toString();
-
-            if (!name.isEmpty()) {
-                item_list.getList().get(editPosition).setName(name);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!date.isEmpty()) {
-                item_list.getList().get(editPosition).setPurchase_date(date);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!item_description.isEmpty()) {
-                item_list.getList().get(editPosition).setDescription(item_description);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!make.isEmpty()) {
-                item_list.getList().get(editPosition).setMake(make);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!model.isEmpty()) {
-                item_list.getList().get(editPosition).setModel(model);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!serial.isEmpty()) {
-                item_list.getList().get(editPosition).setSerial_number(serial);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-            if (!valueString.isEmpty()) {
-                float value = Float.parseFloat(EstimatedValue.getText().toString());
-                item_list.getList().get(editPosition).setValue(value);
-                itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
-            }
-
-        });
-
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
-
     /**
      * Refreshes the home page.
      * May be used each time when there is a data change.
@@ -412,15 +338,16 @@ public class HomeFragment extends Fragment {
             // update header
             updateProfilePicture();
 
-            // TODO: update item list
-
-
             ItemList add_item_list = ((MainActivity) getActivity()).getAdd_item_list();
             ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
             item_list.addAll(add_item_list);
+
+            ((MainActivity) getActivity()).checkItemList(item_list);
+
             itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
             total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
+
         } else {
             Log.d("HomeFragment", "Not added");
         }
@@ -431,7 +358,6 @@ public class HomeFragment extends Fragment {
      */
     private void updateProfilePicture() {
         // Display profile photo
-        Log.d("HomeFragment", "Check null pointer: " + ((MainActivity) getActivity()));
         Bitmap profileBitmap = ((MainActivity) getActivity()).getBitmap_profile();
 
         if (profileBitmap != null) {
@@ -630,5 +556,20 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // get the item list from the firebase
+        ((MainActivity)getActivity()).getItemListFromDB(new MainActivity.ItemListCallback() {
+            @Override
+            public void onCallback(ItemList itemList) {
+                item_list.clear();
+                item_list.addAll(itemList);
+                itemAdapter.notifyDataSetChanged(); // notice the adapter that the data has changed
+                ((MainActivity) getActivity()).checkItemList(item_list);
+                refresh();
+            }
+        });
+    }
 
 }
