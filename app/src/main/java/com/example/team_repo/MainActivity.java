@@ -3,6 +3,7 @@ package com.example.team_repo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -237,6 +238,12 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         }
         if (profileFragment != null) {
             fragmentTransaction.hide(profileFragment);
+        }
+
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof ScanFragment) {
+                onBackPressed();
+            }
         }
     }
 
@@ -705,6 +712,19 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         for (Item item : itemList.getList()) {
             Log.d("mainlog", item.getName());
         }
+    }
+
+    /**
+     * Transfer to scan fragment
+     */
+    public void showScanFragment() {
+        // Replace whatever is in the fragment_container view with ScanFragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, ScanFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
+
     }
 
 
