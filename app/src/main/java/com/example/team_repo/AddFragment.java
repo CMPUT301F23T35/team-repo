@@ -176,7 +176,7 @@ public class AddFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment();
+                    ((MainActivity) view.getContext()).showScanFragment(0);
                 }
             }
         });
@@ -185,7 +185,7 @@ public class AddFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment();
+                    ((MainActivity) view.getContext()).showScanFragment(1);
                 }
             }
         });
