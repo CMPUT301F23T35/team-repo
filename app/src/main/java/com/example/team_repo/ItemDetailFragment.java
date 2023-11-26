@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.DatePicker;
 
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -449,6 +450,28 @@ public class ItemDetailFragment extends Fragment {
             window.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.fragments_rounded_corner, null));
         }
         dialog.show();
+
+        ImageButton ItemDescriptionCameraButton = dialogView.findViewById(R.id.ItemDescriptionCameraButton);
+        ImageButton ItemSerialCameraButton = dialogView.findViewById(R.id.ItemSerialCameraButton);
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment();
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
 
