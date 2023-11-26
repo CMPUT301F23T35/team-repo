@@ -1,9 +1,11 @@
 package com.example.team_repo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +30,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     private Bitmap bitmap_profile;  // the profile photo of the user
     private ImageView headerPicture;  // the profile photo of the user in the header
     private ItemList add_item_list;  // the list of items shown in the home page
-    private ItemList item_list;
     private ArrayList<Tag> tagList;  // the list of all tags created
     private ItemAdapter itemAdapter;
 
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         });
 
     }
+
 
     /**
      * After click on the bottom navigation bar,
@@ -262,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
         // initialize the bottom navigation bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        toolbarLinearLayout = findViewById(R.id.toolbar);
+        toolbarLinearLayout = findViewById(R.id.select_toolbar);
 
         // initialize the header picture
         headerPicture = findViewById(R.id.headerPicture);
@@ -302,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     // check document id
                     Log.d("LogMain", document.getId() + " => " + document.getData());
                     Item item = document.toObject(Item.class); // document -> item
+                    item.itemRef = document.getId();
                     add_item_list.add(item); // add all
 
                     // use listener to make sure the tagList is loaded before the AddFragment is created
@@ -651,4 +655,57 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
             itemAdapter.notifyDataSetChanged();
         }
     }
+
+    /**
+     * A callback interface for getting the item list from the database
+     */
+    public interface ItemListCallback {
+        void onCallback(ItemList itemList);
+    }
+
+
+    /**
+     * Get the item list from the database
+     * How to use:
+     * getItemListFromDB(new ItemListCallback() {
+     *      \@Override public void onCallback(ItemList itemList) {
+     *          // use the itemList here
+     *      }
+     * });
+     * @param callback the callback function, use the list here
+     */
+    public void getItemListFromDB(ItemListCallback callback) {
+        ItemList itemList = new ItemList();
+        userDocRef.collection("items").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                // get all items from the collection and add them to itemList
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.d("mainlog", document.getId() + " => " + document.getData());
+                    Item item = document.toObject(Item.class);
+                    item.itemRef = document.getId();
+                    itemList.add(item);
+                }
+                checkItemList(itemList);
+                callback.onCallback(itemList); // Call back with the loaded list
+
+
+            } else {
+                Log.d("LogMain", "No such document");
+                callback.onCallback(itemList); // Call back with empty list
+            }
+        });
+    }
+
+    /**
+     * Check the item list
+     * TODO: delete this method
+     * @param itemList the item list to be checked
+     */
+    public void checkItemList(ItemList itemList) {
+        for (Item item : itemList.getList()) {
+            Log.d("mainlog", item.getName());
+        }
+    }
+
+
 }

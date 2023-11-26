@@ -32,6 +32,8 @@ public class Item implements Serializable {
     private ArrayList<Tag> tags;
     private String imagePath; // Store the file path or URI of the image as a string
     private String itemID;  // the unique ID of the item (primary key in the database)
+    protected String itemRef;
+    protected boolean checked;
 
 
     /**

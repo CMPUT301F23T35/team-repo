@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,16 +21,18 @@ import java.util.ArrayList;
 public class ItemAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> item_list;
     private Context context;
+    private boolean showCheckbox;
 
     /**
      * Initializes the item adapter.
      * @param context the current context of the app
      * @param item_list the item list to create the views for
      */
-    public ItemAdapter(Context context, ArrayList<Item> item_list) {
+    public ItemAdapter(Context context, ArrayList<Item> item_list, boolean showCheckbox) {
         super(context, 0, item_list);
         this.context = context;
         this.item_list = item_list;
+        this.showCheckbox = showCheckbox;
     }
 
     /**
@@ -52,6 +55,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(context).inflate(R.layout.item_list_content, parent, false);
         }
 
+        if (showCheckbox) {
+            view.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        }
     
         // Get the current item to create the view for
         final Item item = item_list.get(position);
@@ -62,6 +70,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_make = view.findViewById(R.id.itemMake);
         TextView item_value = view.findViewById(R.id.itemValue);
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
+        CheckBox checkbox = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
         if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
@@ -122,6 +131,15 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
+
+        // set the checkbox showing current checked status
+        checkbox.setChecked(item.checked);
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.checked = checkbox.isChecked();
+            }
+        });
 
         return view;
     }
