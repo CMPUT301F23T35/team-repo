@@ -120,10 +120,10 @@ public class ScanFragment extends Fragment {
     }
 
     public void sendBackScannedInformation(){
-        if (position == 1 || position == 3) {
+        if (position == 0) {
             String description = (String) scanned_string_textview.getText();
         }
-        if (position == 2 || position == 3) {
+        if (position == 1) {
             String serial_number = (String) scanned_string_textview.getText();
         }
         getActivity().onBackPressed();
