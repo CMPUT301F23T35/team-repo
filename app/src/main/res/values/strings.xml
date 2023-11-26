@@ -33,6 +33,9 @@
     <string name="tags_ascending">Tags Ascending</string>
     <string name="tags_descending">Tags Descending</string>
     <string name="filter_by">Filter By</string>
-    <string name="scan_image_instructions">Choose a photo to be scanned. It will be scanned for a serial number, and/or a barcode for the item description. \n\nYou can choose to change both the serial number and description to whatever was scanned, or just one.</string>
+    <string name="scan_image_desc_instructions">Choose a photo to be scanned for a barcode.\nThis barcode should load a description to input as the item\'s description.</string>
+    <string name="scan_image_sn_instructions">Choose a photo to be scanned for a serial number.</string>
+    <string name="scanned_item_desc_header">Scanned Item Description From Barcode:</string>
+    <string name="scanned_item_sn_header">Scanned Serial Number From Image:</string>
 
 </resources>

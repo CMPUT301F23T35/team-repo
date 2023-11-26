@@ -457,7 +457,7 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment();
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
                     dialog.dismiss();
                 }
             }
@@ -467,7 +467,7 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment();
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
                     dialog.dismiss();
                 }
             }
