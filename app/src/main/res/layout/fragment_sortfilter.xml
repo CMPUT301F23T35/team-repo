@@ -221,10 +221,46 @@
 
     </RadioGroup>
 
+
     <Button
         android:id="@+id/btnSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sort"/>
 
+
+    <EditText
+        android:id="@+id/makeFilterEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sortOptions"
+        android:layout_marginTop="16dp"
+        android:hint="Enter Make for Filtering" />
+
+    <!-- Add the button to apply the make filter -->
+    <Button
+        android:id="@+id/applyFilterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/makeFilterEditText"
+        android:layout_marginTop="8dp"
+        android:text="Apply Filter" />
+
+    <Button
+        android:id="@+id/clearFilterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/applyFilterButton"
+        android:layout_marginTop="8dp"
+        android:text="Clear Filter" />
+
+
+    <Button
+        android:id="@+id/filterByDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter by Date" />
+
+
 </LinearLayout>
+

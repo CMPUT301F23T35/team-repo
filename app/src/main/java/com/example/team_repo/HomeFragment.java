@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -72,6 +73,9 @@ public class HomeFragment extends Fragment {
 
 
     private ItemViewModel itemViewModel;
+
+    private Calendar startDateCalendar;
+    private Calendar endDateCalendar;
 
     /**
      * Creates the view for the home page fragment.
@@ -117,6 +121,10 @@ public class HomeFragment extends Fragment {
 
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
+
+
+        startDateCalendar = Calendar.getInstance();
+        endDateCalendar = Calendar.getInstance();
 
         // check the firebase storage, set the profile picture
         ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
@@ -177,6 +185,13 @@ public class HomeFragment extends Fragment {
 
         RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
 
+
+        EditText makeFilterEditText = dialogView.findViewById(R.id.makeFilterEditText);
+        Button applyFilterButton = dialogView.findViewById(R.id.applyFilterButton);
+        Button clearFilterButton = dialogView.findViewById(R.id.clearFilterButton);
+        Button filterByDateButton = dialogView.findViewById(R.id.filterByDateButton);
+
+
         // Add a listener for the "Sort" button in the dialog
         Button btnSort = dialogView.findViewById(R.id.btnSort);
         btnSort.setOnClickListener(new View.OnClickListener() {
@@ -227,8 +242,208 @@ public class HomeFragment extends Fragment {
                 }
         });
 
+        applyFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyMakeFilter(makeFilterEditText.getText().toString().trim());
+                dialog.dismiss();
+            }
+        });
+
+        clearFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearFilter();
+                dialog.dismiss();
+            }
+        });
+
+
+        filterByDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateFilterDialog();
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
+
+
+    private void applyMakeFilter(String makeFilter) {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+        boolean check = false;
+
+        if (!makeFilter.isEmpty()) {
+            for (Item item : originalList) {
+                if (item.getMake().toLowerCase().contains(makeFilter.toLowerCase())) {
+                    filteredList.add(item);
+                    check = true;
+
+                }
+
+            }
+
+            if (check != true){
+
+                filteredList.addAll(originalList);
+                Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
+//
+            }
+            itemAdapter.updateItemList(filteredList);
+        }
+//        } else {
+//            // If the filter is empty, show the original list
+//            filteredList.addAll(originalList);
+//        }
+
+        // Update the adapter with the filtered list
+
+    }
+
+
+    // Method to show the date filter dialog
+// Inside your HomeFragment class
+    private void showDateFilterDialog() {
+        DatePickerDialog.OnDateSetListener startDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                startDateCalendar.set(Calendar.YEAR, year);
+                startDateCalendar.set(Calendar.MONTH, month);
+                startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                // Show the end date picker dialog after selecting the start date
+                showEndDatePickerDialog();
+            }
+        };
+
+        // Show the start date picker dialog
+        new DatePickerDialog(requireContext(), startDateSetListener,
+                startDateCalendar.get(Calendar.YEAR),
+                startDateCalendar.get(Calendar.MONTH),
+                startDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+
+    private void showEndDatePickerDialog() {
+        DatePickerDialog.OnDateSetListener endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                endDateCalendar.set(Calendar.YEAR, year);
+                endDateCalendar.set(Calendar.MONTH, month);
+                endDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                // Perform filtering based on the selected date range
+                filterItemsByDateRange();
+            }
+        };
+
+        // Show the end date picker dialog
+        new DatePickerDialog(requireContext(), endDateSetListener,
+                endDateCalendar.get(Calendar.YEAR),
+                endDateCalendar.get(Calendar.MONTH),
+                endDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+//    private void filterItemsByDateRange() {
+//        ArrayList<Item> originalList = item_list.getList();
+//        ArrayList<Item> filteredList = new ArrayList<>();
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+//
+//        for (Item item : originalList) {
+//            try {
+//                Date itemDate = sdf.parse(item.getPurchase_date());
+//                Date startDate = startDateCalendar.getTime();
+//                Date endDate = endDateCalendar.getTime();
+//
+//                if (itemDate != null && (itemDate.equals(startDate) || itemDate.equals(endDate) ||
+//                        (itemDate.after(startDate) && itemDate.before(endDate)))) {
+//                    filteredList.add(item);
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        itemAdapter.updateItemList(filteredList);
+//        // Notify the adapter that the data has changed
+//        itemAdapter.notifyDataSetChanged();
+//    }
+
+    private void filterItemsByDateRange() {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+
+        for (Item item : originalList) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Date itemDate = sdf.parse(item.getPurchase_date());
+                Date startDate = startDateCalendar.getTime();
+                Date endDate = endDateCalendar.getTime();
+
+                Calendar itemCalendar = Calendar.getInstance();
+                itemCalendar.setTime(itemDate);
+
+                // Set the time fields to zero to compare only dates
+                itemCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                itemCalendar.set(Calendar.MINUTE, 0);
+                itemCalendar.set(Calendar.SECOND, 0);
+                itemCalendar.set(Calendar.MILLISECOND, 0);
+
+                startDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                startDateCalendar.set(Calendar.MINUTE, 0);
+                startDateCalendar.set(Calendar.SECOND, 0);
+                startDateCalendar.set(Calendar.MILLISECOND, 0);
+
+                endDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                endDateCalendar.set(Calendar.MINUTE, 0);
+                endDateCalendar.set(Calendar.SECOND, 0);
+                endDateCalendar.set(Calendar.MILLISECOND, 0);
+
+                if ((itemCalendar.equals(startDateCalendar) || itemCalendar.equals(endDateCalendar) ||
+                        (itemCalendar.after(startDateCalendar) && itemCalendar.before(endDateCalendar)))) {
+                    filteredList.add(item);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        itemAdapter.updateItemList(filteredList);
+        // Notify the adapter that the data has changed
+        itemAdapter.notifyDataSetChanged();
+    }
+
+
+    private void clearFilter() {
+
+
+        startDateCalendar = Calendar.getInstance();
+        endDateCalendar = Calendar.getInstance();
+        // Get the original list from Firebase
+        ((MainActivity) getActivity()).getItemListFromDB(new MainActivity.ItemListCallback() {
+            @Override
+            public void onCallback(ItemList originalItemList) {
+                ArrayList<Item> originalList = originalItemList.getList();
+
+                // Update the adapter with the original list
+                itemAdapter.updateItemList(originalList);
+
+                // Use 'previousItems' list as needed
+                // ...
+
+                // Notify the user or perform any other actions
+                Toast.makeText(getActivity(), "Filter cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
 
     // Method to handle sorting based on the selected option
     /**
