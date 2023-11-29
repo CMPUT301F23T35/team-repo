@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,18 +41,37 @@ public class ScanFragment extends Fragment {
     private Button changeButton;  // delete photo
     private ImageView scannedPhoto;
     private EditText scanned_string_textview;
-    private String scanned_string;
+    private String scanned_string = null;
     static private int position;
+    static private AlertDialog previous_dialog = null;
+    static private int previous_fragment_id = 0;
 
     /**
      * Constructor
      * @param position the position of the clicked icon.
+     *                 If position = 0, user clicked to scan for description (from barcode).
+     *                 If position = 1, user clicked to scan for serial number.
+     *                 TODO : make position something else (e.g. DESCRIPTION or SERIAL)
+     * @param dialog the dialog that the user used to navigate to the scan fragment
+     */
+    public static ScanFragment newInstance(int position, AlertDialog dialog) {
+        ScanFragment myFragment = new ScanFragment();
+        myFragment.position = position;
+        myFragment.previous_dialog = dialog;
+
+        return myFragment;
+    }
+
+    /**
+     * Constructor WHEN ADDFRANKFNRGOISRNGVJSAK
+     * @param position the position of the clicked icon.
      *                 If position = 0, user clicked to scan for description.
      *                 If position = 1, user clicked to scan for barcode.
      */
-    public static ScanFragment newInstance(int position) {
+    public static ScanFragment newInstance(int position, int previous_fragment_id) {
         ScanFragment myFragment = new ScanFragment();
         myFragment.position = position;
+        myFragment.previous_fragment_id = previous_fragment_id;
 
         return myFragment;
     }
@@ -84,8 +107,6 @@ public class ScanFragment extends Fragment {
         }
 
         scanned_string_textview = view.findViewById(R.id.itemScannedString);
-        scanned_string_textview.setText("Nothing has been scanned yet.");
-        scanned_string_textview.setTextColor(Color.RED);
 
         photoUtility = new PhotoUtility(this);
 
@@ -104,8 +125,7 @@ public class ScanFragment extends Fragment {
 
         deleteButton.setOnClickListener(v -> {
             photoUtility.deletePhoto(scannedPhoto, R.drawable.baseline_image_not_supported_24);
-            scanned_string_textview.setText("Nothing has been scanned yet.");
-            scanned_string_textview.setTextColor(Color.RED);
+            scanned_string_textview.setText(null);
         });
 
         changeButton = view.findViewById(R.id.btn_change);
@@ -114,32 +134,72 @@ public class ScanFragment extends Fragment {
             public void onClick(View v) {
                 toolbarLinearLayout.setVisibility(original_visibility);
                 getActivity().onBackPressed();
+                sendInformationBack();
             }
         });
 
         return view;
     }
 
-    public String getScannedInformation(){
-        return scanned_string;
+    /**......... continue writing comments
+     * If the user navigated to ScanFragment with a dialog, re-open the dialog.
+     * If the user navigated to ScanFragment from AddFragment, go back to the fragment.
+     */
+    public void sendInformationBack() {
+        scanned_string = scanned_string_textview.getText().toString();
+        EditText box_to_replace = null;
+        if (previous_dialog != null) {
+            if (position == 0) {
+                box_to_replace = previous_dialog.findViewById(R.id.Description);
+            }
+            else if (position == 1) {
+                box_to_replace = previous_dialog.findViewById(R.id.ItemSerial);
+            }
+
+            if (scanned_string != null) {
+                box_to_replace.setText(scanned_string);
+            }
+
+            previous_dialog.show();
+        }
+
+        else if (previous_fragment_id != 0) {
+            // TODO
+            Fragment previous_fragment = getActivity().getSupportFragmentManager().findFragmentById(previous_fragment_id);
+            if (position == 0) {
+                box_to_replace = previous_fragment.getView().findViewById(R.id.Description);
+            }
+            else if (position == 1) {
+                box_to_replace = previous_fragment.getView().findViewById(R.id.ItemSerial);
+            }
+
+            if (scanned_string != null) {
+                box_to_replace.setText(scanned_string);
+            }
+        }
+    }
+
+    private void scanBarcode(Bitmap bitmap) {
+        // TODO
     }
 
     public void scanSerialNumber(Bitmap bitmap) {
+        changeButton.setEnabled(false);
         InputImage image = InputImage.fromBitmap(bitmap, 0);
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         recognizer.process(image)
                 .addOnSuccessListener(new OnSuccessListener<Text>() {
-            @Override
-            public void onSuccess(Text text) {
-                scanned_string_textview.setText(text.getText());
-                scanned_string_textview.setTextColor(Color.BLACK);
-            }
-        })
+                    @Override
+                    public void onSuccess(Text text) {
+                        scanned_string_textview.setText(text.getText());
+                        changeButton.setEnabled(true);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        scanned_string_textview.setText("Unable to scan serial number from image. Try again.");
-                        scanned_string_textview.setTextColor(Color.RED);
+                        scanned_string_textview.setText(null);
+                        Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -162,9 +222,12 @@ public class ScanFragment extends Fragment {
                 Bitmap bitmap = photoUtility.handleImageOnActivityResult(photoUtility.getImageUri());
                 if (bitmap != null) {
                     scannedPhoto.setImageBitmap(bitmap);
-                    scanSerialNumber(bitmap);
+                    Toast.makeText(getContext(), "Scanning...", Toast.LENGTH_SHORT).show();
+                    if (position == 0) {scanBarcode(bitmap);}
+                    if (position == 1) {scanSerialNumber(bitmap);}
                 }
             }
         }
     }
+
 }
