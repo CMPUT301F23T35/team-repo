@@ -165,7 +165,7 @@ public class ScanFragment extends Fragment {
 
         else if (previous_fragment_id != 0) {
             // TODO
-            Fragment previous_fragment = getActivity().getSupportFragmentManager().findFragmentById(previous_fragment_id);
+            /*Fragment previous_fragment = getActivity().getSupportFragmentManager().findFragmentById(previous_fragment_id);
             if (position == 0) {
                 box_to_replace = previous_fragment.getView().findViewById(R.id.Description);
             }
@@ -175,7 +175,7 @@ public class ScanFragment extends Fragment {
 
             if (scanned_string != null) {
                 box_to_replace.setText(scanned_string);
-            }
+            }*/
         }
     }
 
