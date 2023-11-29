@@ -1,5 +1,7 @@
 package com.example.team_repo;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +24,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SelectActivity extends AppCompatActivity {
 
@@ -28,6 +33,7 @@ public class SelectActivity extends AppCompatActivity {
     ItemAdapter item_adapter;
     private String userID;
     private FirebaseFirestore db;
+    private ArrayList<Tag> tag_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,7 @@ public class SelectActivity extends AppCompatActivity {
         });
 
         RecyclerView tag_list_view = findViewById(R.id.TagListView);
-        ArrayList<Tag> tag_list = (ArrayList<Tag>) extras.get("taglist");
+        tag_list = (ArrayList<Tag>) extras.get("taglist");
         AddTagAdapter tag_adapter = new AddTagAdapter(this, tag_list);
         tag_list_view.setAdapter(tag_adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -66,7 +72,13 @@ public class SelectActivity extends AppCompatActivity {
             }
         });
 
-        Button add_button = findViewById(R.id.add_tag_button);
+        Button add_tags_button = findViewById(R.id.add_tags_button);
+        add_tags_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTags();
+            }
+        });
     }
 
     public void deleteMultiple(){
@@ -89,7 +101,46 @@ public class SelectActivity extends AppCompatActivity {
         });
     }
 
+    public void addTags(){
+        WriteBatch writeBatch = db.batch();
+        ArrayList<Tag> add_tag_list = new ArrayList<>();
+        for(Tag tag: tag_list){
+            if(tag.isSelected()){
+                add_tag_list.add(tag);
+            }
+        }
 
+        for(Item item: item_list.getList()){
+            if(item.checked){
+                ArrayList<Tag> origin_tags = item.getTags();
+                ArrayList<Tag> updated_tags = merge_tag_lists(add_tag_list, origin_tags);
+                DocumentReference documentReference = db.collection("users").document(userID).collection("items").document(item.itemRef);
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("tags", updated_tags);
+                writeBatch.update(documentReference, updates);
+
+                Toast.makeText(this, "Tags added successfully!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        writeBatch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                readItemListFromDB(item_list);
+            }
+        });
+    }
+
+    private ArrayList<Tag> merge_tag_lists(ArrayList<Tag> add_list, ArrayList<Tag> origin_list){
+        for (Tag tag: origin_list){
+            if(add_list.contains(tag)){
+                continue;
+            }
+            add_list.add(tag);
+        }
+
+        return add_list;
+    }
    /* public void deleteItemFromDB(Item item){
 
         db.collection("users").document(userID).collection("items").document(item.itemRef)

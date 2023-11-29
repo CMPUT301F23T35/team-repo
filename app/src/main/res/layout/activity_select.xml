@@ -60,12 +60,12 @@
             android:backgroundTint="#F44336"
             android:text="DELETE"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/add_tag_button"
+            app:layout_constraintEnd_toStartOf="@+id/add_tags_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/add_tag_button"
+            android:id="@+id/add_tags_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
