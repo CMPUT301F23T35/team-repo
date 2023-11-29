@@ -1,6 +1,7 @@
 package com.example.team_repo;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,9 @@ public class AddFragment extends Fragment{
     private LinearLayoutManager layoutManager;
     private ArrayList<Tag> tagList;
     private ArrayList<Tag> selectedTags;
+
+    private ImageButton ItemDescriptionCameraButton;
+    private ImageButton ItemSerialCameraButton;
 
     /**
      * Creates the view for the add page fragment.
@@ -70,6 +75,9 @@ public class AddFragment extends Fragment{
         tagList = ((MainActivity)getActivity()).getTagList();
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
+
+        ItemDescriptionCameraButton = view.findViewById(R.id.ItemDescriptionCameraButton);
+        ItemSerialCameraButton = view.findViewById(R.id.ItemSerialCameraButton);
 
         // set the layout manager of the recycler view
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -162,6 +170,24 @@ public class AddFragment extends Fragment{
 
             }
 
+        });
+
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (view.getContext() instanceof MainActivity) {
+                    ((MainActivity) view.getContext()).showScanFragment(0);
+                }
+            }
+        });
+
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (view.getContext() instanceof MainActivity) {
+                    ((MainActivity) view.getContext()).showScanFragment(1);
+                }
+            }
         });
 
         return view;

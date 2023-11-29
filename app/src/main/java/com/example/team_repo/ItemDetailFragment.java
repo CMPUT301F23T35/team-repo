@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.widget.DatePicker;
 
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,13 +54,16 @@ public class ItemDetailFragment extends Fragment {
     private EditText DatePurchase;
     private Calendar calendar;
     private ArrayList<Tag> tagList;
+    private ArrayList<Tag> detailTagList;
     private ArrayList<Tag> selectedTags;
     private RecyclerView.LayoutManager layoutManager;
     private AddTagAdapter tagAdapter;
+    private DetailTagAdapter detailTagAdapter;
 
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
+    private RecyclerView tagRecyclerView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
@@ -91,6 +96,16 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mItem = (Item) getArguments().getSerializable("item");
+
+            for (Tag tag : mItem.getTags()) {
+                // check if tag is null
+                if (tag.getTagString() == null) {
+                    Log.e("detail", "on create: tag string is null");
+                    continue;
+                }
+                Log.d("detail", "oncreate: " + tag.getTagString());
+            }
+
         }
     }
 
@@ -119,6 +134,27 @@ public class ItemDetailFragment extends Fragment {
         TextView modelTextView = view.findViewById(R.id.itemModelTextView);
         TextView serialNumberTextView = view.findViewById(R.id.itemSerialNumberTextView);
         TextView commentTextView = view.findViewById(R.id.itemCommentTextView);
+
+        detailTagList = mItem.getTags();
+        Log.d("detail", "detail tag list size: " + detailTagList.size());
+        for (Tag tag : detailTagList) {
+            // check if tag is null
+            if (tag.getTagString() == null) {
+                Log.e("detail", "tag string is null");
+                continue;
+            }
+            Log.d("detail", tag.getTagString());
+        }
+
+        detailTagAdapter = new DetailTagAdapter(getContext(), detailTagList);
+        tagRecyclerView = view.findViewById(R.id.detail_tags_recycler_view);
+        tagRecyclerView.setAdapter(detailTagAdapter);
+
+        // set the layout manager of the recycler view
+        layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        tagRecyclerView.setLayoutManager(layoutManager);
+
         itemImageView = view.findViewById(R.id.itemImageView);
         photoUtility = new PhotoUtility(this);
 
@@ -330,9 +366,10 @@ public class ItemDetailFragment extends Fragment {
         ItemSerial.setText(mItem.getSerial_number());
         EstimatedValue.setText(String.valueOf(mItem.getValue()));
         tagList = ((MainActivity) getActivity()).getTagList();
-        // set all tags to unselected
+
+        // set "selected" status of tags according to the item
         for (Tag tag : tagList) {
-            tag.setSelected(false);
+            tag.setSelected(mItem.getTags().contains(tag));
         }
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -427,6 +464,11 @@ public class ItemDetailFragment extends Fragment {
                     }
                 }
                 mItem.setTags(selectedTags);
+                // refresh the tag recycler view
+                detailTagList.clear();
+                detailTagList.addAll(selectedTags);
+                detailTagAdapter.notifyDataSetChanged();
+
                 ((MainActivity) getActivity()).updateItemToDB(mItem);
 
 
@@ -449,6 +491,28 @@ public class ItemDetailFragment extends Fragment {
             window.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.fragments_rounded_corner, null));
         }
         dialog.show();
+
+        ImageButton ItemDescriptionCameraButton = dialogView.findViewById(R.id.ItemDescriptionCameraButton);
+        ImageButton ItemSerialCameraButton = dialogView.findViewById(R.id.ItemSerialCameraButton);
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
 

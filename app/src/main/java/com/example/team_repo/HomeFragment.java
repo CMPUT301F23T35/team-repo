@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -336,8 +337,6 @@ public class HomeFragment extends Fragment {
             ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
             item_list.addAll(add_item_list);
 
-            ((MainActivity) getActivity()).checkItemList(item_list);
-
             itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
             total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -497,6 +496,27 @@ public class HomeFragment extends Fragment {
             window.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.fragments_rounded_corner, null));
         }
         dialog.show();
+
+        ImageButton ItemDescriptionCameraButton = dialogView.findViewById(R.id.ItemDescriptionCameraButton);
+        ImageButton ItemSerialCameraButton = dialogView.findViewById(R.id.ItemSerialCameraButton);
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
+                    dialog.dismiss();
+                }
+            }
+        });
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
     /**
@@ -560,7 +580,6 @@ public class HomeFragment extends Fragment {
                 item_list.clear();
                 item_list.addAll(itemList);
                 itemAdapter.notifyDataSetChanged(); // notice the adapter that the data has changed
-                ((MainActivity) getActivity()).checkItemList(item_list);
                 refresh();
             }
         });

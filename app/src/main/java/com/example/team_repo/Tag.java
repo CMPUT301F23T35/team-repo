@@ -1,6 +1,7 @@
 package com.example.team_repo;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Tag class represents a tag that could be selected.
@@ -28,8 +29,12 @@ public class Tag implements Serializable {
      * Return the string content of a tag
      * @return the string of a tag
      */
-    String getTagString(){
+    public String getTagString(){
         return this.tagString;
+    }
+
+    public void setTagString(String tagString) {
+        this.tagString = tagString;
     }
 
     /**
@@ -47,4 +52,28 @@ public class Tag implements Serializable {
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+
+    /**
+     * Check if the String of two tags are the same,
+     * override to use contains() method in ItemDetailFragment.java
+     * @param o the object to be compared
+     * @return True if tagString is the same, or false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(tagString, tag.tagString);
+    }
+
+    /**
+     * override to use contains() method in ItemDetailFragment.java
+     * @return the hashcode of the tagString
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(tagString);
+    }
+
 }

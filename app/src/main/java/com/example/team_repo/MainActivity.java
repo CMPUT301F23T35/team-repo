@@ -3,6 +3,7 @@ package com.example.team_repo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -238,6 +239,12 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
         if (profileFragment != null) {
             fragmentTransaction.hide(profileFragment);
         }
+
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof ScanFragment) {
+                onBackPressed();
+            }
+        }
     }
 
 
@@ -318,6 +325,9 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 // if the collection does not exist, nothing happens
                 // a new collection will be created when the user adds an item
                 Log.d("LogMain", "No such document");
+                if (listener != null) {
+                    listener.onUserDataLoaded();
+                }
             }
         }).addOnFailureListener(e -> {
             Log.d("LogMain", "Error getting documents: ", e);
@@ -684,28 +694,29 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     Item item = document.toObject(Item.class);
                     item.itemRef = document.getId();
                     itemList.add(item);
+
                 }
-                checkItemList(itemList);
                 callback.onCallback(itemList); // Call back with the loaded list
 
 
             } else {
-                Log.d("LogMain", "No such document");
                 callback.onCallback(itemList); // Call back with empty list
             }
         });
     }
 
-    /**
-     * Check the item list
-     * TODO: delete this method
-     * @param itemList the item list to be checked
-     */
-    public void checkItemList(ItemList itemList) {
-        for (Item item : itemList.getList()) {
-            Log.d("mainlog", item.getName());
-        }
-    }
 
+    /**
+     * Transfer to scan fragment
+     */
+    public void showScanFragment(int position) {
+        // Replace whatever is in the fragment_container view with ScanFragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position))
+                .addToBackStack(null)
+                .commit();
+
+    }
 
 }
