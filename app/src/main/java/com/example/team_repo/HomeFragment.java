@@ -503,7 +503,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0, dialog);
                     dialog.dismiss();
                 }
             }
@@ -512,7 +512,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1, dialog);
                     dialog.dismiss();
                 }
             }
