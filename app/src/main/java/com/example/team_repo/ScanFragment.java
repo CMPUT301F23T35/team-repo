@@ -58,6 +58,7 @@ public class ScanFragment extends Fragment {
         ScanFragment myFragment = new ScanFragment();
         myFragment.position = position;
         myFragment.previous_dialog = dialog;
+        myFragment.addFragment = null;
 
         return myFragment;
     }
@@ -71,6 +72,7 @@ public class ScanFragment extends Fragment {
     public static ScanFragment newInstance(int position, AddFragment addFragment) {
         ScanFragment myFragment = new ScanFragment();
         myFragment.position = position;
+        myFragment.previous_dialog = null;
         myFragment.addFragment = addFragment;
 
         return myFragment;
