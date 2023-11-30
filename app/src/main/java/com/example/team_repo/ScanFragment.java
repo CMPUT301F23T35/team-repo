@@ -182,15 +182,23 @@ public class ScanFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barcodes) {
-                        Barcode barcode = barcodes.get(0);
-                        String value = barcode.getRawValue();
-                        scanned_string_textview.setText(value);
+                        if (barcodes.size() == 0) {
+                            scanned_string_textview.setText(null);
+                            Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Barcode barcode = barcodes.get(0);
+                            String value = barcode.getRawValue();
+                            scanned_string_textview.setText(value);
+                        }
+
                         changeButton.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        changeButton.setEnabled(true);
                         scanned_string_textview.setText(null);
                         Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
                     }
