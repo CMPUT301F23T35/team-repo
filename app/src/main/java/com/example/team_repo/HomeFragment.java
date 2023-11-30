@@ -337,8 +337,6 @@ public class HomeFragment extends Fragment {
             ((MainActivity) getActivity()).setAdd_item_list(new ItemList());
             item_list.addAll(add_item_list);
 
-            ((MainActivity) getActivity()).checkItemList(item_list);
-
             itemAdapter.notifyDataSetChanged(); // Notify the adapter that the data has changed
 
             total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -582,7 +580,6 @@ public class HomeFragment extends Fragment {
                 item_list.clear();
                 item_list.addAll(itemList);
                 itemAdapter.notifyDataSetChanged(); // notice the adapter that the data has changed
-                ((MainActivity) getActivity()).checkItemList(item_list);
                 refresh();
             }
         });
