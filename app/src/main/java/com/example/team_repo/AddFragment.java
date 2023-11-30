@@ -172,11 +172,13 @@ public class AddFragment extends Fragment{
 
         });
 
+        AddFragment currentFragment = this;
+
         ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment(0);
+                    ((MainActivity) view.getContext()).showScanFragment(0, currentFragment);
                 }
             }
         });
@@ -185,7 +187,7 @@ public class AddFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment(1);
+                    ((MainActivity) view.getContext()).showScanFragment(1, currentFragment);
                 }
             }
         });
@@ -263,6 +265,16 @@ public class AddFragment extends Fragment{
             return true;
         } catch (ParseException e) {
             return false;
+        }
+    }
+
+    public void setScannedInformation(int position, String text) {
+        if (text != null) {
+            if (position == 0) {
+                Description.setText(text);
+            } else if (position == 1) {
+                ItemSerial.setText(text);
+            }
         }
     }
 
