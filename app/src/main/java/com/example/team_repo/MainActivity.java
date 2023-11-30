@@ -723,11 +723,11 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Transfer to scan fragment
      */
-    public void showScanFragment(int position) {
+    public void showScanFragment(int position, AddFragment addFragment) {
         // Replace whatever is in the fragment_container view with ScanFragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance(position, R.id.fragment_container))
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position, addFragment))
                 .addToBackStack(null)
                 .commit();
 

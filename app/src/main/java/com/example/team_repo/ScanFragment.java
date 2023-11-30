@@ -44,7 +44,7 @@ public class ScanFragment extends Fragment {
     private String scanned_string = null;
     static private int position;
     static private AlertDialog previous_dialog = null;
-    static private int previous_fragment_id = 0;
+    static private AddFragment addFragment = null;
 
     /**
      * Constructor
@@ -63,15 +63,15 @@ public class ScanFragment extends Fragment {
     }
 
     /**
-     * Constructor WHEN ADDFRANKFNRGOISRNGVJSAK
+     * Constructor when ScanFragment was called from AddFragment
      * @param position the position of the clicked icon.
      *                 If position = 0, user clicked to scan for description.
      *                 If position = 1, user clicked to scan for barcode.
      */
-    public static ScanFragment newInstance(int position, int previous_fragment_id) {
+    public static ScanFragment newInstance(int position, AddFragment addFragment) {
         ScanFragment myFragment = new ScanFragment();
         myFragment.position = position;
-        myFragment.previous_fragment_id = previous_fragment_id;
+        myFragment.addFragment = addFragment;
 
         return myFragment;
     }
@@ -162,20 +162,8 @@ public class ScanFragment extends Fragment {
 
             previous_dialog.show();
         }
-
-        else if (previous_fragment_id != 0) {
-            // TODO
-            /*Fragment previous_fragment = getActivity().getSupportFragmentManager().findFragmentById(previous_fragment_id);
-            if (position == 0) {
-                box_to_replace = previous_fragment.getView().findViewById(R.id.Description);
-            }
-            else if (position == 1) {
-                box_to_replace = previous_fragment.getView().findViewById(R.id.ItemSerial);
-            }
-
-            if (scanned_string != null) {
-                box_to_replace.setText(scanned_string);
-            }*/
+        else if (addFragment != null) {
+            addFragment.setScannedInformation(position, scanned_string);
         }
     }
 
