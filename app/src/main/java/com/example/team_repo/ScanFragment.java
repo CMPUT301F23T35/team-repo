@@ -5,8 +5,6 @@ import static android.app.PendingIntent.getActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -189,10 +186,27 @@ public class ScanFragment extends Fragment {
                         else {
                             Barcode barcode = barcodes.get(0);
                             String value = barcode.getRawValue();
-                            scanned_string_textview.setText(value);
-                        }
 
-                        changeButton.setEnabled(true);
+                            try {
+                                BarcodeSearchThread b = new BarcodeSearchThread(value);
+                                Thread thread = new Thread(b);
+                                thread.start();
+                                thread.join();
+                                String scanned_description = b.getDescription();
+                                if (scanned_description != null) {
+                                    scanned_string_textview.setText(scanned_description);
+                                }
+                                else {
+                                    scanned_string_textview.setText(value);
+                                }
+                                changeButton.setEnabled(true);
+
+                            }
+                            catch (Exception ignore) {
+                                scanned_string_textview.setText(value);
+                                changeButton.setEnabled(true);
+                            }
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
