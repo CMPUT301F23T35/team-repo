@@ -27,11 +27,16 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
+import java.util.List;
 
 public class ScanFragment extends Fragment {
     private PhotoUtility photoUtility;
@@ -170,7 +175,26 @@ public class ScanFragment extends Fragment {
     }
 
     private void scanBarcode(Bitmap bitmap) {
-        // TODO
+        changeButton.setEnabled(false);
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        BarcodeScanner scanner = BarcodeScanning.getClient();
+        scanner.process(image)
+                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                    @Override
+                    public void onSuccess(List<Barcode> barcodes) {
+                        Barcode barcode = barcodes.get(0);
+                        String value = barcode.getRawValue();
+                        scanned_string_textview.setText(value);
+                        changeButton.setEnabled(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        scanned_string_textview.setText(null);
+                        Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void scanSerialNumber(Bitmap bitmap) {
