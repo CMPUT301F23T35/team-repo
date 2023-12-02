@@ -184,6 +184,7 @@ public class HomeFragment extends Fragment {
         final AlertDialog dialog = builder.create();
 
         RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
+        EditText searchEditText = dialogView.findViewById(R.id.searchEditText);
 
 
         EditText makeFilterEditText = dialogView.findViewById(R.id.makeFilterEditText);
@@ -250,6 +251,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        applyFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyDescriptionFilter(searchEditText.getText().toString().trim());
+
+
+                dialog.dismiss();
+            }
+        });
+
         clearFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +290,39 @@ public class HomeFragment extends Fragment {
         if (!makeFilter.isEmpty()) {
             for (Item item : originalList) {
                 if (item.getMake().toLowerCase().contains(makeFilter.toLowerCase())) {
+                    filteredList.add(item);
+                    check = true;
+
+                }
+
+            }
+
+            if (check != true){
+
+                filteredList.addAll(originalList);
+                Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
+//
+            }
+            itemAdapter.updateItemList(filteredList);
+        }
+//        } else {
+//            // If the filter is empty, show the original list
+//            filteredList.addAll(originalList);
+//        }
+
+        // Update the adapter with the filtered list
+
+    }
+
+
+    private void applyDescriptionFilter(String descriptionFilter) {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+        boolean check = false;
+
+        if (!descriptionFilter.isEmpty()) {
+            for (Item item : originalList) {
+                if (item.getDescription().toLowerCase().contains(descriptionFilter.toLowerCase())) {
                     filteredList.add(item);
                     check = true;
 

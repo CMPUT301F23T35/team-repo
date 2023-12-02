@@ -237,6 +237,15 @@
         android:layout_marginTop="16dp"
         android:hint="Enter Make for Filtering" />
 
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by description"
+        android:inputType="text"
+        android:maxLines="1" />
+
     <!-- Add the button to apply the make filter -->
     <Button
         android:id="@+id/applyFilterButton"
