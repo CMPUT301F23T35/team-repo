@@ -6,20 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Item class implements Serializable. It represents an item.
+ * Maintains information about a user's item.
+ * Item class implements Serializable.
  */
 public class Item implements Serializable {
-    // TODO:
-    //  - Add more constructors when certain arguments aren't given/are optional
-    //  - Make less tedious constructors??? (less arguments?)
-    //  - Put more restrictions on getters/setters (e.g. make sure inputted value isn't negative)
-    //  - Come up with method to add a new tag to the tag list???
-    //  - Potentially deal with empty description/comment/make/model/etc???
-
-/**
- * Maintains information about a user's item.
- */
-
 
     private String name;
     private String purchase_date;
