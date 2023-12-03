@@ -58,7 +58,7 @@ public class TagFragment extends Fragment{
                     tagAdapter.notifyDataSetChanged();
                     tagEditText.setText("");  // clear EditText
                     ((MainActivity)getActivity()).setTagList(tagList);  // update the tag list in the main activity
-
+                    // tagAdapter.notifyDataSetChanged();
                     ((MainActivity) getActivity()).addTagToDB(newTag);
 
                     // get the input method manager
