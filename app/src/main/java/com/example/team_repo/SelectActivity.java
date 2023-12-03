@@ -35,6 +35,17 @@ public class SelectActivity extends AppCompatActivity {
 
     private ArrayList<Tag> tag_list;
 
+
+    /**
+     * Called when the activity is first created. This is where you should do all of your normal
+     * static set up: create views, bind data to lists, etc. This method also provides a Bundle
+     * containing the activity's previously frozen state, if there was one.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being
+     *                            shut down then this Bundle contains the data it most recently
+     *                            supplied in onSaveInstanceState(Bundle). Note: Otherwise, it is
+     *                            null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +92,14 @@ public class SelectActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Deletes multiple items from the Firestore database associated with the current user.
+     * The deletion is performed in a batch to improve efficiency. The method iterates through
+     * the list of items in the item_list and identifies items marked as checked for deletion.
+     * Upon successful deletion, the checked items are removed from the local item_list, and the
+     * adapter is notified to update the UI.
+     */
     public void deleteMultiple(){
         WriteBatch writeBatch = db.batch();
         ItemList delete_list = new ItemList();
@@ -101,6 +120,15 @@ public class SelectActivity extends AppCompatActivity {
         });
 
     }
+
+
+    /**
+     * Adds selected tags to items that are marked for modification. The method iterates through
+     * the tag_list to identify selected tags and then iterates through the item_list to identify
+     * items marked as checked for modification. For each checked item, the selected tags are added
+     * to its existing tags, and the update is committed to the Firestore database. A Toast message
+     * is displayed to indicate successful tag addition.
+     */
     public void addTags(){
         WriteBatch writeBatch = db.batch();
         ArrayList<Tag> add_tag_list = new ArrayList<>();
@@ -155,6 +183,15 @@ public class SelectActivity extends AppCompatActivity {
                 });
     }*/
 
+    /**
+     * Reads the list of items from the Firestore database associated with the current user.
+     * This method retrieves items from the "items" collection under the user's document, and
+     * populates the provided ItemList with the retrieved items. The method uses a listener to
+     * asynchronously handle the completion of the database query and updates the local item_list
+     * accordingly. After updating the local list, the adapter is notified to refresh the UI.
+     *
+     * @param itemList The ItemList to be populated with items from the database.
+     */
     public void readItemListFromDB(ItemList itemList){
         db.collection("users").document(userID).collection("items").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

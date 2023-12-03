@@ -13,6 +13,11 @@ public class BarcodeSearchThread implements Runnable {
     private volatile String scanned_description;
     private String barcode_raw_value;
 
+    /**
+     * Constructs a new BarcodeSearchThread with the specified barcode raw value.
+     *
+     * @param barcode_raw_value The raw value of the barcode to be processed by the thread.
+     */
     public BarcodeSearchThread(String barcode_raw_value) {
         this.barcode_raw_value = barcode_raw_value;
     }
@@ -93,6 +98,10 @@ public class BarcodeSearchThread implements Runnable {
         public Review[] reviews;
     }
 
+
+    /**
+     * Represents a root object containing an array of products.
+     */
     class RootObject {
         Product[] products;
     }
