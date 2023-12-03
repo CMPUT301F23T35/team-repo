@@ -2,10 +2,12 @@ package com.example.team_repo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -742,11 +744,23 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Transfer to scan fragment
      */
-    public void showScanFragment(int position) {
+    public void showScanFragment(int position, AlertDialog dialog) {
         // Replace whatever is in the fragment_container view with ScanFragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance(position))
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position, dialog))
+                .addToBackStack(null)
+                .commit();
+
+    }
+    /**
+     * Transfer to scan fragment
+     */
+    public void showScanFragment(int position, AddFragment addFragment) {
+        // Replace whatever is in the fragment_container view with ScanFragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position, addFragment))
                 .addToBackStack(null)
                 .commit();
 

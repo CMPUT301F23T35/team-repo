@@ -86,13 +86,20 @@
                 android:padding="8dp"
                 android:text="@string/scanned_item_desc_header" />
 
-            <TextView
+            <EditText
                 android:id="@+id/itemScannedString"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Nothing has been scanned yet."
                 android:padding="8dp"
-                android:text="This is an example description for an item.\nBy default, this should say 'N/A'.\nWhen an image has been scanned, this will be replaced with the image description." />
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="You may edit the text after scanning."/>
             <Button
                 android:id="@+id/btn_change"
                 android:layout_width="wrap_content"
@@ -101,7 +108,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_gravity="right"
                 android:backgroundTint="@color/homepage_item_background_color"
-                android:text="Change..."/>
+                android:text="Change"/>
 
         </LinearLayout>
 

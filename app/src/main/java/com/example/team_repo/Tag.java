@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Tag class represents a tag that could be selected.
  */
-public class Tag implements Serializable {
+public class Tag implements Serializable, Comparable<Tag>{
     private String tagString;
     private boolean isSelected = false;
 
@@ -74,6 +74,13 @@ public class Tag implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(tagString);
+    }
+
+
+    @Override
+    public int compareTo(Tag otherTag) {
+        // Implement your comparison logic here
+        return this.tagString.compareToIgnoreCase(otherTag.tagString);
     }
 
 }

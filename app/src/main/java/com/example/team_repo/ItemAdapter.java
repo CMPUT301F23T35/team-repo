@@ -151,4 +151,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         return item_list.get(position);
     }
 
+    public void updateItemList(ArrayList<Item> newList) {
+        clear();  // Clear the existing items in the adapter
+        addAll(newList);  // Add the new items to the adapter
+        notifyDataSetChanged();  // Notify the adapter that the data has changed
+    }
+
+
 }

@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="homepage_item_background_color">#18BFC0</color>
+    <color name="grey">#989898</color>
 </resources>
