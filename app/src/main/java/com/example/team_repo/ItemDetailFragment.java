@@ -32,15 +32,21 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -60,10 +66,15 @@ public class ItemDetailFragment extends Fragment {
     private AddTagAdapter tagAdapter;
     private DetailTagAdapter detailTagAdapter;
 
-    private ImageView itemImageView;
+    // private ImageView itemImageView;
+    private ViewPager imageViewPager;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
     private RecyclerView tagRecyclerView;
+    private List<ImageView> imageViewList;
+    private List<String> imageNameList;
+    private ViewPagerAdapter viewPagerAdapter;
+    private boolean noImage = true;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
@@ -97,15 +108,6 @@ public class ItemDetailFragment extends Fragment {
         if (getArguments() != null) {
             mItem = (Item) getArguments().getSerializable("item");
 
-            for (Tag tag : mItem.getTags()) {
-                // check if tag is null
-                if (tag.getTagString() == null) {
-                    Log.e("detail", "on create: tag string is null");
-                    continue;
-                }
-                Log.d("detail", "oncreate: " + tag.getTagString());
-            }
-
         }
     }
 
@@ -133,18 +135,8 @@ public class ItemDetailFragment extends Fragment {
         TextView makeTextView = view.findViewById(R.id.itemMakeTextView);
         TextView modelTextView = view.findViewById(R.id.itemModelTextView);
         TextView serialNumberTextView = view.findViewById(R.id.itemSerialNumberTextView);
-        TextView commentTextView = view.findViewById(R.id.itemCommentTextView);
 
         detailTagList = mItem.getTags();
-        Log.d("detail", "detail tag list size: " + detailTagList.size());
-        for (Tag tag : detailTagList) {
-            // check if tag is null
-            if (tag.getTagString() == null) {
-                Log.e("detail", "tag string is null");
-                continue;
-            }
-            Log.d("detail", tag.getTagString());
-        }
 
         detailTagAdapter = new DetailTagAdapter(getContext(), detailTagList);
         tagRecyclerView = view.findViewById(R.id.detail_tags_recycler_view);
@@ -155,7 +147,7 @@ public class ItemDetailFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         tagRecyclerView.setLayoutManager(layoutManager);
 
-        itemImageView = view.findViewById(R.id.itemImageView);
+//        itemImageView = view.findViewById(R.id.itemImageView);
         photoUtility = new PhotoUtility(this);
 
         // Setup listeners for image update buttons
@@ -171,11 +163,6 @@ public class ItemDetailFragment extends Fragment {
         makeTextView.setText("Make: " + mItem.getMake());
         modelTextView.setText("Model: " + mItem.getModel());
         serialNumberTextView.setText("Serial: " + mItem.getSerial_number());
-        commentTextView.setText("Comment: " + mItem.getComment());
-
-        // Set a placeholder image from the drawable resources
-        itemImageView.setImageResource(R.drawable.ic_launcher_background);
-
 
         //Toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -187,23 +174,46 @@ public class ItemDetailFragment extends Fragment {
 
 
         // Set the image if available, otherwise set a placeholder
-        if (mItem.getImagePath() != null && !mItem.getImagePath().isEmpty()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mItem.getImagePath());
-            itemImageView.setImageBitmap(bitmap);
-        } else {
-            // download image from firebase storage
-            ImageUtils.downloadImageFromFirebaseStorage(mItem.getItemID().toString(), new ImageUtils.OnBitmapReadyListener() {
-                @Override
-                public void onBitmapReady(Bitmap bitmap) {
-                    if (bitmap != null){
-                        itemImageView.setImageBitmap(bitmap);
-                    } else {
-                        itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24);
-                    }
-                }
-            });
+        imageViewPager = view.findViewById(R.id.vp_itemImage);
+        imageViewList = new ArrayList<>();
 
-        }
+
+        // download image from firebase storage
+        ImageUtils.downloadItemImages(mItem.getItemID(), new ImageUtils.OnBitmapsReadyListener() {
+
+            @Override
+            public void onBitmapsReady(List<Bitmap> bitmaps, List<String> imageNames) {
+                // check if getActivity() is null
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        // UI changes can only be done in the main (UI) thread (downloading images is done in a background thread)
+                        @Override
+                        public void run() {
+                            imageNameList = imageNames;
+                            Context context = getContext(); // check if current context is alive
+                            if (context != null) {
+                                if (bitmaps.isEmpty()) {
+                                    ImageView imageView = new ImageView(context);
+                                    imageView.setImageResource(R.drawable.baseline_image_not_supported_24);
+                                    imageViewList.add(imageView);
+                                } else {
+                                    for (Bitmap bitmap : bitmaps) {
+                                        ImageView imageView = new ImageView(context);
+                                        imageView.setImageBitmap(bitmap);
+                                        imageViewList.add(imageView);
+                                    }
+                                }
+
+                                viewPagerAdapter = new ViewPagerAdapter(imageViewList);
+                                imageViewPager.setAdapter(viewPagerAdapter);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,6 +225,10 @@ public class ItemDetailFragment extends Fragment {
         view.findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // check if getActivity() is null
+                if (getActivity() == null) {
+                    return;
+                }
                 mItem.setAllNull();
                 // delete from database
                 ((MainActivity) getActivity()).deleteItemFromDB(mItem);
@@ -233,9 +247,56 @@ public class ItemDetailFragment extends Fragment {
      */
     private void deleteImage() {
         // Set the placeholder image and remove the current image path
-        itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
+        // itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
         mItem.setImagePath(null); // Clear the image path
-        ImageUtils.deleteImageFromFirebaseStorage(mItem.getItemID());  // Delete the image from Firebase Storage
+        if (imageViewList.size() == 0 || noImage){
+            Toast.makeText(getContext(), "No image to delete", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int currentIndex = imageViewPager.getCurrentItem();
+        imageViewList.remove(currentIndex); // remove current image
+        viewPagerAdapter.notifyDataSetChanged();
+
+        if (imageViewList.size() > 0) {
+            // not empty after removing
+            if (currentIndex == imageViewList.size()) {
+                // if the last image is removed, set the current item to the previous image
+                imageViewPager.setCurrentItem(currentIndex - 1, true);
+            } else {
+                imageViewPager.setCurrentItem(currentIndex, true);
+            }
+
+        } else {
+            // empty after removing
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageResource(R.drawable.baseline_image_not_supported_24);
+            imageViewList.add(imageView);
+            viewPagerAdapter.notifyDataSetChanged();
+            imageViewPager.setCurrentItem(0);
+            noImage = true;
+        }
+
+        // delete image from firebase storage
+        // Create a storage reference from our app
+        StorageReference photoRef = FirebaseStorage.getInstance().getReference().child("images/" + mItem.getItemID() + "/" + imageNameList.get(currentIndex));
+
+        // delete the file
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // successfully deleted
+                Toast.makeText(getContext(), "Image " + (currentIndex+1) + " deleted", Toast.LENGTH_SHORT).show();
+                imageNameList.remove(currentIndex);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // failed to delete
+                Toast.makeText(getContext(), "Failed to delete image " + (currentIndex+1), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 
@@ -258,7 +319,12 @@ public class ItemDetailFragment extends Fragment {
                 bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
 
                 // save the bitmap to firebase storage
-                ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
+                // ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
+                String currentTime = String.valueOf(System.currentTimeMillis());
+                String newFileName = mItem.getItemID() + "/" + currentTime;
+                ImageUtils.uploadImageToFirebaseStorage(bitmap, newFileName);
+                imageNameList.add(currentTime + ".jpg");
+                Toast.makeText(getContext(), "New image added.", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
             // Handle camera image capture
@@ -266,11 +332,32 @@ public class ItemDetailFragment extends Fragment {
             bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
 
             // save the bitmap to firebase storage
-            ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
+            // ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
+            // generate a unique file name using current time stamp
+            String currentTime = String.valueOf(System.currentTimeMillis());
+            String newFileName = mItem.getItemID() + "/" + currentTime;
+            imageNameList.add(currentTime + ".jpg");
+            ImageUtils.uploadImageToFirebaseStorage(bitmap, newFileName);
+            Toast.makeText(getContext(), "New image added.", Toast.LENGTH_SHORT).show();
         }
 
         if (bitmap != null) {
-            itemImageView.setImageBitmap(bitmap);
+            // itemImageView.setImageBitmap(bitmap);
+            // add the new image to the view pager
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageBitmap(bitmap);
+
+            // if there is no image before, remove the placeholder image
+            if (noImage) {
+                imageViewList.remove(0);
+                noImage = false;
+            }
+
+            imageViewList.add(imageView);
+            viewPagerAdapter.notifyDataSetChanged();
+
+            int position = imageViewList.size() - 1;
+            imageViewPager.setCurrentItem(position);
 
             // Create a unique filename based on the current timestamp
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());

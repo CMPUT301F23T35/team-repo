@@ -73,23 +73,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         CheckBox checkbox = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
-        if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
-            Bitmap bitmap = ImageUtils.convertImagePathToBitmap(item.getImagePath());
-            item_image.setImageBitmap(bitmap);
-        } else {
-            // download image from firebase storage
-            ImageUtils.downloadImageFromFirebaseStorage(item.getItemID().toString(), new ImageUtils.OnBitmapReadyListener() {
-                @Override
-                public void onBitmapReady(Bitmap bitmap) {
-                    if (bitmap != null){
-                    item_image.setImageBitmap(bitmap);
-                    } else {
-                        item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
-                    }
-                }
-            });
+        // download image from firebase storage
+        ImageUtils.downloadFirstImage(item.getItemID(), new ImageUtils.OnFirstBitmapReadyListener() {
 
-        }
+            @Override
+            public void onFirstBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    item_image.setImageBitmap(bitmap);
+                } else {
+                    item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+                }
+            }
+        });
+
+
 
         // Set the item's name, make, value, and purchase date with checks for length
         item_name.setText(item.getName().length() <= 12 ? item.getName() : item.getName().substring(0, 11) + "...");

@@ -105,12 +105,9 @@ public class HomeFragment extends Fragment {
 
         item_list_view = view.findViewById(R.id.homepageListView);
         itemAdapter = new ItemAdapter(this.getContext(), item_list.getList(), false);
-        item_list_view.setAdapter(itemAdapter);
-
-
         item_list_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
         item_list_view.setAdapter(itemAdapter);
+        Log.d("Home", "setadapter called");
         // Display the total estimated value
         total_value_view = view.findViewById(R.id.totalValueTextView);
         total_value_view.setText(String.format("%.2f", item_list.getTotalValue()));
@@ -131,8 +128,6 @@ public class HomeFragment extends Fragment {
         });
 
         profile_picture.setImageResource(R.drawable.default_profile_image);
-
-
 
         view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
             @Override

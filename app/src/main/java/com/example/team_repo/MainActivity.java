@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     private CollectionReference itemsRef;
     private CollectionReference userRef;
     private DocumentReference userDocRef;
+    private ItemDetailFragment itemDetailFragment;
 
     private String userId;
 
@@ -224,21 +225,31 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
      */
     private void hideAllFragment(FragmentTransaction fragmentTransaction) {
         // if a fragment has been defined, hide it
+        if (itemDetailFragment != null) {
+            fragmentTransaction.hide(itemDetailFragment);
+            homeFragment = null;
+        }
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
+            homeFragment = null;
         }
         if (addFragment != null) {
             fragmentTransaction.hide(addFragment);
+            addFragment = null;
         }
         if (cameraFragment != null) {
             fragmentTransaction.hide(cameraFragment);
+            cameraFragment = null;  // release the camera
         }
         if (tagFragment != null) {
             fragmentTransaction.hide(tagFragment);
+            tagFragment = null;
         }
         if (profileFragment != null) {
             fragmentTransaction.hide(profileFragment);
+            profileFragment = null;
         }
+
 
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof ScanFragment) {
@@ -338,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Add an item to the database
      *
-     * @param item
+     * @param item an item to be added
      */
     public void addItemToDB(Item item) {
         // add the item to the database
@@ -558,7 +569,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Change user's password
      *
-     * @param password
+     * @param password new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -586,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * return the itemlist for the home page
      *
-     * @return
+     * @return itemlist
      */
     public ItemList getAdd_item_list() {
         return add_item_list;
@@ -636,11 +647,11 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
      */
     public void showItemDetailFragment(Item item) {
         // Create a new fragment instance and pass the item to it
-        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
+        itemDetailFragment = ItemDetailFragment.newInstance(item);
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, itemDetailFragment)
                 .addToBackStack(null)
                 .commit();
 
@@ -656,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Notify the adapter that the dataset has changed
      *
-     * @param item
+     * @param item the item to be updated
      */
     @Override
     public void onItemUpdated(Item item) {
@@ -718,5 +729,14 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 .commit();
 
     }
+
+
+
+
+
+
+
+
+
 
 }
