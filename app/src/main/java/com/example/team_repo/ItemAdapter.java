@@ -21,16 +21,18 @@ import java.util.ArrayList;
 public class ItemAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> item_list;
     private Context context;
+    private boolean showCheckbox;
 
     /**
      * Initializes the item adapter.
      * @param context the current context of the app
      * @param item_list the item list to create the views for
      */
-    public ItemAdapter(Context context, ArrayList<Item> item_list) {
+    public ItemAdapter(Context context, ArrayList<Item> item_list, boolean showCheckbox) {
         super(context, 0, item_list);
         this.context = context;
         this.item_list = item_list;
+        this.showCheckbox = showCheckbox;
     }
 
     /**
@@ -53,6 +55,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(context).inflate(R.layout.item_list_content, parent, false);
         }
 
+        if (showCheckbox) {
+            view.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        }
     
         // Get the current item to create the view for
         final Item item = item_list.get(position);
@@ -121,12 +128,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         else {
             item_value.setText(String.format("%.2f", item.getValue()).substring(0, 14) + "...");
         }
-
+        
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
-
-        //check box
+        // set the checkbox showing current checked status
+        checkbox.setChecked(item.checked);
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,8 +144,21 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         return view;
     }
 
+    /**
+     * Return an item at the given position in item list
+     * @param position Position of the item whose data we want within the adapter's
+     * data set.
+     * @return an item object at the given position
+     */
     public Item getItem(int position) {
         return item_list.get(position);
     }
+
+    public void updateItemList(ArrayList<Item> newList) {
+        clear();  // Clear the existing items in the adapter
+        addAll(newList);  // Add the new items to the adapter
+        notifyDataSetChanged();  // Notify the adapter that the data has changed
+    }
+
 
 }

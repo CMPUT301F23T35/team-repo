@@ -23,6 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The PhotoUtility class provides a set of utilities for handling photo operations
+ * such as taking a photo with the camera, choosing a photo from the gallery, and
+ * image rotation correction. This class is specifically designed for use within
+ * a Fragment context.
+ */
 public class PhotoUtility {
 
     private Fragment fragment;
@@ -31,10 +37,19 @@ public class PhotoUtility {
     public static final int REQUEST_CODE_CHOOSE = 0;
 
 
+    /**
+     * Constructor for PhotoUtility.
+     *
+     * @param fragment The fragment instance where the PhotoUtility is being used.
+     */
     public PhotoUtility(Fragment fragment) {
         this.fragment = fragment;
     }
 
+    /**
+     * Initiates the process of taking a photo using the device's camera.
+     * Checks for camera permission and requests it if not already granted.
+     */
     public void takePhoto() {
         if (ContextCompat.checkSelfPermission(fragment.requireContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             doTake();
@@ -43,6 +58,10 @@ public class PhotoUtility {
         }
     }
 
+    /**
+     * Initiates the process of choosing a photo from the device's gallery.
+     * Checks for read external storage permission and requests it if not already granted.
+     */
     public void choosePhoto() {
         String permission = Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q ? android.Manifest.permission.READ_EXTERNAL_STORAGE : android.Manifest.permission.READ_MEDIA_IMAGES;
         if (ContextCompat.checkSelfPermission(fragment.requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
@@ -52,6 +71,12 @@ public class PhotoUtility {
         }
     }
 
+    /**
+     * Deletes the currently selected photo and updates the ImageView with a default image.
+     *
+     * @param imageView The ImageView from which the image is to be deleted.
+     * @param defaultImageRes The resource ID of the default image to be set after deletion.
+     */
     public void deletePhoto(ImageView imageView, int defaultImageRes) {
         imageView.setImageResource(defaultImageRes);
         imageUri = null;

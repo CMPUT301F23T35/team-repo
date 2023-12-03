@@ -23,6 +23,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RegisterActivity is an AppCompatActivity that manages user registration.
+ * It provides a user interface for inputting username, email, and password, and includes
+ * validation and interaction with Firebase Firestore to create new user accounts.
+ */
 public class RegisterActivity extends AppCompatActivity {
     private EditText mUsername;  // input username
     private EditText mEmail;  // input email
@@ -32,6 +37,13 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView skip;  // press to use default account
     private FirebaseFirestore db;  // the database
 
+    /**
+     * Called when the activity is starting. This is where most initialization should go.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being
+     *                           shut down then this Bundle contains the data it most recently
+     *                           supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

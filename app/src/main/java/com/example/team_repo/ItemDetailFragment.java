@@ -3,7 +3,7 @@ package com.example.team_repo;
 
 import android.app.DatePickerDialog;
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.widget.DatePicker;
 
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,33 +43,41 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * The ItemDetailFragment class is a Fragment responsible for displaying and managing
+ * the details of an item. It provides functionalities such as editing item details,
+ * handling image selections, and interacting with Firebase for image storage.
+ */
 public class ItemDetailFragment extends Fragment {
 
     private Item mItem;
     private EditText DatePurchase;
-
     private Calendar calendar;
-
     private ArrayList<Tag> tagList;
+    private ArrayList<Tag> detailTagList;
     private ArrayList<Tag> selectedTags;
     private RecyclerView.LayoutManager layoutManager;
     private AddTagAdapter tagAdapter;
-
-
+    private DetailTagAdapter detailTagAdapter;
 
     private ImageView itemImageView;
     private PhotoUtility photoUtility;
     private OnItemUpdatedListener updateListener;
+    private RecyclerView tagRecyclerView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    /**
+     * Empty public constuctor
+     */
     public ItemDetailFragment() {
         // Required empty public constructor
-
-
-
     }
 
+    /**
+     * Constructor with given an item
+     * @param item item to be displayed
+     * @return an item detail fragment
+     */
     public static ItemDetailFragment newInstance(Item item) {
         ItemDetailFragment fragment = new ItemDetailFragment();
         Bundle args = new Bundle();
@@ -76,14 +86,41 @@ public class ItemDetailFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Receive item from bundle
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mItem = (Item) getArguments().getSerializable("item");
+
+            for (Tag tag : mItem.getTags()) {
+                // check if tag is null
+                if (tag.getTagString() == null) {
+                    Log.e("detail", "on create: tag string is null");
+                    continue;
+                }
+                Log.d("detail", "oncreate: " + tag.getTagString());
+            }
+
         }
     }
 
+
+    /**
+     * Creates the view for the Item Details page fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the created view for the Item Details page fragment
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -97,6 +134,27 @@ public class ItemDetailFragment extends Fragment {
         TextView modelTextView = view.findViewById(R.id.itemModelTextView);
         TextView serialNumberTextView = view.findViewById(R.id.itemSerialNumberTextView);
         TextView commentTextView = view.findViewById(R.id.itemCommentTextView);
+
+        detailTagList = mItem.getTags();
+        Log.d("detail", "detail tag list size: " + detailTagList.size());
+        for (Tag tag : detailTagList) {
+            // check if tag is null
+            if (tag.getTagString() == null) {
+                Log.e("detail", "tag string is null");
+                continue;
+            }
+            Log.d("detail", tag.getTagString());
+        }
+
+        detailTagAdapter = new DetailTagAdapter(getContext(), detailTagList);
+        tagRecyclerView = view.findViewById(R.id.detail_tags_recycler_view);
+        tagRecyclerView.setAdapter(detailTagAdapter);
+
+        // set the layout manager of the recycler view
+        layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        tagRecyclerView.setLayoutManager(layoutManager);
+
         itemImageView = view.findViewById(R.id.itemImageView);
         photoUtility = new PhotoUtility(this);
 
@@ -107,13 +165,13 @@ public class ItemDetailFragment extends Fragment {
 
         // Populate the views with item data
         nameTextView.setText(mItem.getName());
-        dateTextView.setText(mItem.getPurchase_date());
-        valueTextView.setText(String.valueOf(mItem.getValue()));
-        descriptionTextView.setText(mItem.getDescription());
-        makeTextView.setText(mItem.getMake());
-        modelTextView.setText(mItem.getModel());
-        serialNumberTextView.setText(mItem.getSerial_number());
-        commentTextView.setText(mItem.getComment());
+        dateTextView.setText("Date: "+ mItem.getPurchase_date());
+        valueTextView.setText("Value: " + String.valueOf(mItem.getValue()));
+        descriptionTextView.setText("Desc: " + mItem.getDescription());
+        makeTextView.setText("Make: " + mItem.getMake());
+        modelTextView.setText("Model: " + mItem.getModel());
+        serialNumberTextView.setText("Serial: " + mItem.getSerial_number());
+        commentTextView.setText("Comment: " + mItem.getComment());
 
         // Set a placeholder image from the drawable resources
         itemImageView.setImageResource(R.drawable.ic_launcher_background);
@@ -169,6 +227,10 @@ public class ItemDetailFragment extends Fragment {
 
     }
 
+    /**
+     * Deletes the image associated with the current item. This method sets the placeholder image,
+     * removes the current image path from the item, and deletes the image from Firebase Storage.
+     */
     private void deleteImage() {
         // Set the placeholder image and remove the current image path
         itemImageView.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder drawable resource
@@ -177,6 +239,13 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+    /**
+     * Handles the result of image selection from the gallery or capture from the camera.
+     *
+     * @param requestCode The request code that was specified when launching the activity.
+     * @param resultCode  The result code returned by the activity.
+     * @param data        An Intent that carries the result data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,9 +287,25 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+
+    /**
+     * Interface definition for a callback to be invoked when an item is updated.
+     * Implementing classes or objects should handle the {@code onItemUpdated} method
+     * to receive notifications about item updates.
+     */
     public interface OnItemUpdatedListener {
         void onItemUpdated(Item item);
     }
+
+
+    /**
+     * Called when the fragment is attached to the context. This method is typically used to
+     * initialize the fragment and establish communication with the hosting activity.
+     *
+     * @param context The context to which the fragment is attached.
+     * @throws ClassCastException If the hosting context does not implement the required
+     *                            {@link OnItemUpdatedListener} interface.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -233,7 +318,13 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
-    // Call this method when the item is updated
+    /**
+     * Notifies the registered update listener that an item has been updated.
+     * If an update listener is registered, the {@code onItemUpdated} method of the listener
+     * is called, providing the updated item as a parameter.
+     *
+     * @param item The item that has been updated and is being notified to the update listener.
+     */
     private void notifyItemUpdated(Item item) {
         if (updateListener != null) {
             updateListener.onItemUpdated(item);
@@ -241,6 +332,18 @@ public class ItemDetailFragment extends Fragment {
     }
 
 
+    /**
+     * Displays an AlertDialog for editing item details. This method populates the AlertDialog
+     * with the existing data of the provided item and allows the user to modify and confirm the changes.
+     *
+     * @param nameTextView          TextView for displaying the item name.
+     * @param dateTextView          TextView for displaying the purchase date of the item.
+     * @param descriptionTextView   TextView for displaying the description of the item.
+     * @param makeTextView          TextView for displaying the make of the item.
+     * @param modelTextView         TextView for displaying the model of the item.
+     * @param serialNumberTextView  TextView for displaying the serial number of the item.
+     * @param valueTextView         TextView for displaying the estimated value of the item.
+     */
     public void editExpenseInputDialog(TextView nameTextView, TextView dateTextView, TextView descriptionTextView, TextView makeTextView, TextView modelTextView, TextView serialNumberTextView, TextView valueTextView) {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add, null);
@@ -263,9 +366,10 @@ public class ItemDetailFragment extends Fragment {
         ItemSerial.setText(mItem.getSerial_number());
         EstimatedValue.setText(String.valueOf(mItem.getValue()));
         tagList = ((MainActivity) getActivity()).getTagList();
-        // set all tags to unselected
+
+        // set "selected" status of tags according to the item
         for (Tag tag : tagList) {
-            tag.setSelected(false);
+            tag.setSelected(mItem.getTags().contains(tag));
         }
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -310,38 +414,37 @@ public class ItemDetailFragment extends Fragment {
             String valueString = EstimatedValue.getText().toString();
 
 
-            if (!name.isEmpty()) {
                 mItem.setName(name);
                 nameTextView.setText(mItem.getName());
 
                 if (!item_description.isEmpty()) {
                     mItem.setDescription(item_description);
-                    descriptionTextView.setText((mItem.getDescription()));
+                    descriptionTextView.setText("Desc: " + (mItem.getDescription()));
                 }
 
                 if (!make.isEmpty()) {
                     mItem.setMake(make);
-                    makeTextView.setText((mItem.getMake()));
+                    makeTextView.setText("Make: " + (mItem.getMake()));
                 }
 
                 if (!model.isEmpty()) {
                     mItem.setModel(model);
-                    modelTextView.setText((mItem.getModel()));
+                    modelTextView.setText("Model: " + (mItem.getModel()));
                 }
 
                 if (!serial.isEmpty()) {
                     mItem.setSerial_number(serial);
-                    serialNumberTextView.setText(mItem.getSerial_number());
+                    serialNumberTextView.setText("Serial: " + mItem.getSerial_number());
                 }
 
                 // Create an item with the received name and other default values or set appropriate values.
                 if (!isValidDate(date)) {
                     // TODO: handle invalid date
                     mItem.setPurchase_date("0000-00-00");
-                    dateTextView.setText(mItem.getPurchase_date());
+                    dateTextView.setText("Date: " + mItem.getPurchase_date());
                 } else {
                     mItem.setPurchase_date(date);
-                    dateTextView.setText(mItem.getPurchase_date());
+                    dateTextView.setText("Date: " + mItem.getPurchase_date());
                 }
 
                 float value;
@@ -350,7 +453,7 @@ public class ItemDetailFragment extends Fragment {
                 } else {
                     value = Float.parseFloat(EstimatedValue.getText().toString());
                 }
-                valueTextView.setText(String.valueOf(value));
+                valueTextView.setText("Value: " + String.valueOf(value));
                 mItem.setValue(value);
 
                 // set the selected tags to the item
@@ -361,6 +464,11 @@ public class ItemDetailFragment extends Fragment {
                     }
                 }
                 mItem.setTags(selectedTags);
+                // refresh the tag recycler view
+                detailTagList.clear();
+                detailTagList.addAll(selectedTags);
+                detailTagAdapter.notifyDataSetChanged();
+
                 ((MainActivity) getActivity()).updateItemToDB(mItem);
 
 
@@ -374,10 +482,6 @@ public class ItemDetailFragment extends Fragment {
 
                 // give a message to show that the item is added successfully
                 Toast.makeText(getActivity(), "Item added successfully!", Toast.LENGTH_SHORT).show();
-            } else {
-                // give a message to show that the item is not added successfully
-                Toast.makeText(getActivity(), "Item should have a name", Toast.LENGTH_SHORT).show();
-            }
 
 
         });
@@ -387,6 +491,28 @@ public class ItemDetailFragment extends Fragment {
             window.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.fragments_rounded_corner, null));
         }
         dialog.show();
+
+        ImageButton ItemDescriptionCameraButton = dialogView.findViewById(R.id.ItemDescriptionCameraButton);
+        ImageButton ItemSerialCameraButton = dialogView.findViewById(R.id.ItemSerialCameraButton);
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0, dialog);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogView.getContext() instanceof MainActivity) {
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1, dialog);
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
 
@@ -394,6 +520,7 @@ public class ItemDetailFragment extends Fragment {
 
     /**
      * Update the date label using the selected date from the date picker dialog
+     * @param DatePurchase  TextView for displaying the purchase date of the item.
      */
     private void updateLabel(TextView DatePurchase) {
         String myFormat = "yyyy-MM-dd"; // date format
@@ -404,6 +531,7 @@ public class ItemDetailFragment extends Fragment {
 
     /**
      * Show a date picker dialog
+     * @param DatePurchase  TextView for displaying the purchase date of the item.
      */
     private void showDatePickerDialog(TextView DatePurchase){
 

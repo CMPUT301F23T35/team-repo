@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * TagAdapter adapts a tagList into view
+ */
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder>{
     // This is the adapter for the tag page
     Context context;  // the context of the tag page

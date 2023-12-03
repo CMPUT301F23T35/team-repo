@@ -16,8 +16,22 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+
+/**
+ * The ImageUtils class provides static utility methods for various image-related operations
+ * such as converting image paths to Bitmaps, saving Bitmaps to files, and handling Firebase
+ * storage operations (upload, download, and delete images).
+ *
+ */
 public class ImageUtils {
 
+
+    /**
+     * Converts an image path to a Bitmap object.
+     *
+     * @param imagePath The path of the image file to be converted
+     * @return A Bitmap object of the image, or null if the path is null or empty
+     */
     public static Bitmap convertImagePathToBitmap(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
             return null; // Handle null or empty path as needed
@@ -29,7 +43,14 @@ public class ImageUtils {
         return BitmapFactory.decodeFile(imagePath, options);
     }
 
-
+    /**
+     * Saves a Bitmap to a file in the application's private storage directory.
+     *
+     * @param context The context used to access the application's private directory
+     * @param bitmap The Bitmap to be saved
+     * @param filename The name of the file to save the bitmap to
+     * @return The absolute path of the saved image file or null if saving failed
+     */
     public static String saveBitmapToFile(Context context, Bitmap bitmap, String filename) {
         // Create an image file name
         String imageFileName = filename + ".jpg";
@@ -59,6 +80,12 @@ public class ImageUtils {
         return imagePath;
     }
 
+    /**
+     * Uploads an image represented by a Bitmap to Firebase Storage.
+     *
+     * @param bitmap The Bitmap to upload
+     * @param filename The name of the file under which the image will be stored in Firebase
+     */
     public static void uploadImageToFirebaseStorage(Bitmap bitmap, String filename) {
         // Get Firebase storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -81,6 +108,12 @@ public class ImageUtils {
         });
     }
 
+    /**
+     * Downloads an image from Firebase Storage and provides it as a Bitmap.
+     *
+     * @param filename The name of the file to be downloaded from Firebase Storage
+     * @param listener A callback listener that receives the Bitmap once it's ready
+     */
     public static void downloadImageFromFirebaseStorage(String filename, OnBitmapReadyListener listener) {
         // Get Firebase storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -107,6 +140,11 @@ public class ImageUtils {
         void onBitmapReady(Bitmap bitmap);
     }
 
+    /**
+     * Deletes an image from Firebase Storage.
+     *
+     * @param filename The name of the file to be deleted from Firebase Storage
+     */
     public static void deleteImageFromFirebaseStorage(String filename) {
         // Get Firebase storage instance
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -124,7 +162,6 @@ public class ImageUtils {
 
         });
     }
-
 
 
 }

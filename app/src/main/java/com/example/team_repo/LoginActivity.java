@@ -18,6 +18,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+/**
+ * LoginActivity displays the login page and checks the user authentication and
+ */
 public class LoginActivity extends AppCompatActivity {
     private EditText mEmail;  // input email
     private EditText mPassword;  // input password

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Item class implements Serializable. It represents an item.
+ */
 public class Item implements Serializable {
     // TODO:
     //  - Add more constructors when certain arguments aren't given/are optional
@@ -29,10 +31,9 @@ public class Item implements Serializable {
     private String comment;
     private ArrayList<Tag> tags;
     private String imagePath; // Store the file path or URI of the image as a string
-
     private String itemID;  // the unique ID of the item (primary key in the database)
-
-    protected boolean checked = false;
+    protected String itemRef;
+    protected boolean checked;
 
 
     /**
@@ -59,7 +60,9 @@ public class Item implements Serializable {
         this.imagePath = imagePath;
     }
 
-    // Constructor (without tags or image)
+    /**
+     * Constructor (without tags or image)
+     */
     public Item(){
 
     }
@@ -90,7 +93,10 @@ public class Item implements Serializable {
     }
 
 
-
+    /**
+     * map an item with string keys refer to its attributes
+     * @return
+     */
     public Map<String, Object> toMap(){
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
@@ -281,23 +287,19 @@ public class Item implements Serializable {
     public void setAllNull(){
         this.name = null;
         this.purchase_date = null;
-//        String valueString = String.valueOf(this.value);
-//        valueString = null;
         this.value = 0;
         this.description = null;
         this.make = null;
         this.model = null;
         this.serial_number = null;
         this.comment = null;
-//        this.tags = tags;
-//        this.image = image;
     }
 
+    /**
+     * Check if all information of an item is null
+     */
     public boolean checkAllNull(){
-        if (this.name == null && this.purchase_date == null && this.value == 0 && this.description == null && this.make == null && this.model == null && this.serial_number == null && this.comment == null){
-            return true;
-        }
-        return false;
+        return this.name == null && this.purchase_date == null && this.value == 0 && this.description == null && this.make == null && this.model == null && this.serial_number == null && this.comment == null;
     }
 
 }

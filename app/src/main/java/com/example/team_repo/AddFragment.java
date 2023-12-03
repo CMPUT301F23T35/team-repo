@@ -1,17 +1,18 @@
 package com.example.team_repo;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * The AddFragment class extends Fragment. It is used to display a fragment for taking input item information and add item to the items.
+ * This fragment is integrated in MainActivity to create a new AddFragment.
+ */
 public class AddFragment extends Fragment{
     private EditText ItemName;
     private EditText Description;
@@ -35,10 +39,22 @@ public class AddFragment extends Fragment{
     private AddTagAdapter tagAdapter;  // the adapter of the tags
     private LinearLayoutManager layoutManager;
     private ArrayList<Tag> tagList;
-
     private ArrayList<Tag> selectedTags;
 
+    private ImageButton ItemDescriptionCameraButton;
+    private ImageButton ItemSerialCameraButton;
 
+    /**
+     * Creates the view for the add page fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return the created view for the add page fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +75,9 @@ public class AddFragment extends Fragment{
         tagList = ((MainActivity)getActivity()).getTagList();
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
+
+        ItemDescriptionCameraButton = view.findViewById(R.id.ItemDescriptionCameraButton);
+        ItemSerialCameraButton = view.findViewById(R.id.ItemSerialCameraButton);
 
         // set the layout manager of the recycler view
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -153,6 +172,26 @@ public class AddFragment extends Fragment{
 
         });
 
+        AddFragment currentFragment = this;
+
+        ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (view.getContext() instanceof MainActivity) {
+                    ((MainActivity) view.getContext()).showScanFragment(0, currentFragment);
+                }
+            }
+        });
+
+        ItemSerialCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (view.getContext() instanceof MainActivity) {
+                    ((MainActivity) view.getContext()).showScanFragment(1, currentFragment);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -226,6 +265,16 @@ public class AddFragment extends Fragment{
             return true;
         } catch (ParseException e) {
             return false;
+        }
+    }
+
+    public void setScannedInformation(int position, String text) {
+        if (text != null) {
+            if (position == 0) {
+                Description.setText(text);
+            } else if (position == 1) {
+                ItemSerial.setText(text);
+            }
         }
     }
 

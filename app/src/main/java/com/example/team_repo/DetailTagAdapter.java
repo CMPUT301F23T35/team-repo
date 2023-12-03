@@ -12,13 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
-
 /**
- * The AddTagAdapter class extends RecyclerView.Adapter.
+ * The DetailTagAdapter class extends RecyclerView.Adapter.
  * It is used to display a list of tags for selecting.
  */
-public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHolder>{
+public class DetailTagAdapter extends RecyclerView.Adapter<DetailTagAdapter.TagViewHolder>{
     // This is the adapter for the tag page
     Context context;  // the context of the tag page
     ArrayList<Tag> tagList;
@@ -31,22 +29,10 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
         return tagList;
     }
 
-
-    public ArrayList<Tag> getSelectedTags() {
-        ArrayList<Tag> selectedTags = new ArrayList<>();
-        for (Tag tag : tagList) {
-            if (tag.isSelected()) {
-                selectedTags.add(tag);
-            }
-        }
-        return selectedTags;
-    }
     /**
      * Change the list of tags
-     * @param tagList
+     * @param tagList the new list of tags
      */
-
-
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
@@ -56,7 +42,7 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
      * @param context the context of the tag page
      * @param tagList the list of all tags created
      */
-    public AddTagAdapter(Context context, ArrayList<Tag> tagList){
+    public DetailTagAdapter(Context context, ArrayList<Tag> tagList){
         this.context = context;
         this.tagList = tagList;
     }
@@ -71,9 +57,9 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
      */
     @NonNull
     @Override
-    public TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item_tag_content, parent, false);
-        return new TagViewHolder(v);
+    public DetailTagAdapter.TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.detail_tag_content, parent, false);
+        return new DetailTagAdapter.TagViewHolder(v);
     }
 
     /**
@@ -83,21 +69,9 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull AddTagAdapter.TagViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DetailTagAdapter.TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tvTag.setText(tag.getTagString());
-        holder.tagCheckBox.setChecked(tag.isSelected());
-
-        holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                // update tag selected status
-                tag.setSelected(isChecked);
-
-            }
-        });
-
-
     }
 
     /**
@@ -112,12 +86,10 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
     public static class TagViewHolder extends RecyclerView.ViewHolder {
         // Currently the item_tag_content.xml only has a TextView and a delete button
         public TextView tvTag;
-        public CheckBox tagCheckBox;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTag = itemView.findViewById(R.id.tv_item_tag_content); // track the TextView
-            tagCheckBox = itemView.findViewById(R.id.cb_tag);  // track the delete button
         }
     }
 

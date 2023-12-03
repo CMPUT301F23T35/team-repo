@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/rounded_corners_bg"
     android:orientation="vertical"
 
@@ -45,18 +46,34 @@
         android:hint="Date of Purchase (YYYY-MM-DD)"
         android:inputType="text" />
 
-    <EditText
-        android:id="@+id/Description"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter the Description"
-        android:textSize="25sp"
-        android:padding="5dp"
-        android:gravity="center"
-        android:background="@drawable/white_rounded_corner"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
-        android:inputType="text" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter the Description"
+            android:textSize="25sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:background="@drawable/white_rounded_corner"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="10dp"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/ItemDescriptionCameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/white"
+            android:translationX="-30dp"
+            android:translationY="20dp"
+            app:srcCompat="@drawable/ic_camera_black" />
+
+    </FrameLayout>
 
     <EditText
         android:id="@+id/ItemMake"
@@ -84,18 +101,34 @@
         android:layout_marginVertical="10dp"
         android:inputType="text" />
 
-    <EditText
-        android:id="@+id/ItemSerial"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Serial Number"
-        android:textSize="25sp"
-        android:padding="5dp"
-        android:gravity="center"
-        android:background="@drawable/white_rounded_corner"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
-        android:inputType="text" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/ItemSerial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Serial Number"
+            android:textSize="25sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:background="@drawable/white_rounded_corner"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="10dp"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/ItemSerialCameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/white"
+            android:translationX="-30dp"
+            android:translationY="20dp"
+            app:srcCompat="@drawable/ic_camera_black" />
+
+    </FrameLayout>
 
     <EditText
         android:id="@+id/EstimatedValue"
