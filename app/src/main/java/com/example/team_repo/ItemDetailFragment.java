@@ -233,7 +233,14 @@ public class ItemDetailFragment extends Fragment {
                 // delete from database
                 ((MainActivity) getActivity()).deleteItemFromDB(mItem);
                 // Inside a Fragment or Activity
-                Toast.makeText(getContext(), "Item has been deleted, Return to the Home Page", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Item has been deleted", Toast.LENGTH_SHORT).show();
+                // pause for 700ms
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getActivity().onBackPressed();  // return to the home page
             }
         });
 
@@ -568,7 +575,7 @@ public class ItemDetailFragment extends Fragment {
                 EstimatedValue.setText("");
 
                 // give a message to show that the item is added successfully
-                Toast.makeText(getActivity(), "Item added successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Item changed successfully!", Toast.LENGTH_SHORT).show();
 
 
         });
