@@ -242,13 +242,13 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
             fragmentTransaction.hide(profileFragment);
         }
 
+        // If ScanFragment is displayed and the navigation bar is clicked at all, remove it
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof ScanFragment) {
                 onBackPressed();
             }
         }
     }
-
 
     /**
      * Read user information and stored items from database.
@@ -707,25 +707,25 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
 
 
     /**
-     * Transfer to scan fragment
+     * Transfer to ScanFragment from a dialog
      */
-    public void showScanFragment(int position, AlertDialog dialog) {
+    public void showScanFragment(boolean scan_for_description, AlertDialog dialog) {
         // Replace whatever is in the fragment_container view with ScanFragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance(position, dialog))
+                .replace(R.id.fragment_container, ScanFragment.newInstance(scan_for_description, dialog))
                 .addToBackStack(null)
                 .commit();
 
     }
     /**
-     * Transfer to scan fragment
+     * Transfer to ScanFragment from AddFragment
      */
-    public void showScanFragment(int position, AddFragment addFragment) {
+    public void showScanFragment(boolean scan_for_description, AddFragment addFragment) {
         // Replace whatever is in the fragment_container view with ScanFragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance(position, addFragment))
+                .replace(R.id.fragment_container, ScanFragment.newInstance(scan_for_description, addFragment))
                 .addToBackStack(null)
                 .commit();
 

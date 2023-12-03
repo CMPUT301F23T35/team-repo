@@ -854,13 +854,14 @@ public class HomeFragment extends Fragment {
         }
         dialog.show();
 
+        // Create listeners for when the user clicks one of the scan buttons on the dialog
         ImageButton ItemDescriptionCameraButton = dialogView.findViewById(R.id.ItemDescriptionCameraButton);
         ImageButton ItemSerialCameraButton = dialogView.findViewById(R.id.ItemSerialCameraButton);
         ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(0, dialog);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(true, dialog);
                     dialog.dismiss();
                 }
             }
@@ -869,7 +870,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(1, dialog);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(false, dialog);
                     dialog.dismiss();
                 }
             }
