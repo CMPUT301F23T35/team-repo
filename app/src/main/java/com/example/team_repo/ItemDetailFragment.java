@@ -203,6 +203,7 @@ public class ItemDetailFragment extends Fragment {
                                         imageView.setImageBitmap(bitmap);
                                         imageViewList.add(imageView);
                                     }
+                                    noImage = false;
                                 }
 
                                 viewPagerAdapter = new ViewPagerAdapter(imageViewList);
@@ -213,6 +214,7 @@ public class ItemDetailFragment extends Fragment {
                 }
             }
         });
+
 
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {

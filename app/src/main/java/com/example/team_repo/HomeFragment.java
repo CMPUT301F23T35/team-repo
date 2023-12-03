@@ -743,6 +743,10 @@ public class HomeFragment extends Fragment {
         final RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
 
         tagList = ((MainActivity)getActivity()).getTagList();
+        // set all tags to unselected
+        for (Tag tag : tagList) {
+            tag.setSelected(false);
+        }
 
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
