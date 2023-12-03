@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -208,6 +209,8 @@ public class HomeFragment extends Fragment {
                 RadioButton radio_button_ValueDesc = sortOptions.findViewById(R.id.radioValueDesc);
                 RadioButton radio_button_Description = sortOptions.findViewById(R.id.radioDescripAsc);
                 RadioButton radio_button_DescriptionDesc = sortOptions.findViewById(R.id.radioDescripDesc);
+                RadioButton radio_button_TagAsc = sortOptions.findViewById(R.id.radioTagAsc);
+                RadioButton radio_button_TagDesc = sortOptions.findViewById(R.id.radioTagDesc);
 
                 if(selectedId == radio_button_make.getId()){
                 handleSorting(radio_button_make.getId(), selectedId,MakeComparator,true);
@@ -240,6 +243,16 @@ public class HomeFragment extends Fragment {
                     handleSorting(radio_button_DateDesc.getId(), selectedId,dateComparator,false);
                     dialog.dismiss();
                 }
+
+                if(selectedId == radio_button_TagDesc.getId()){
+                    handleSorting(radio_button_TagDesc.getId(), selectedId,TagComparator,false);
+                    dialog.dismiss();
+                }
+                if(selectedId == radio_button_TagAsc.getId()){
+                    handleSorting(radio_button_TagAsc.getId(), selectedId,TagComparator,true);
+                    dialog.dismiss();
+                }
+
                 }
         });
 
@@ -278,9 +291,99 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        Button filterByTagButton = dialogView.findViewById(R.id.filterByTagButton);
+        filterByTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTagFilterDialog();
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 
+    private void showTagFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_tag_filter, null);
+        builder.setView(dialogView);
+
+        // Initialize tag list and adapter
+        tagList = ((MainActivity) getActivity()).getTagList();
+        tagAdapter = new AddTagAdapter(getContext(), tagList);
+
+        RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
+        tagRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        tagRecyclerView.setAdapter(tagAdapter);
+
+        Button applyTagFilterButton = dialogView.findViewById(R.id.applyTagFilterButton);
+        Button clearTagFilterButton = dialogView.findViewById(R.id.clearTagFilterButton);
+
+        AlertDialog tagFilterDialog = builder.create();
+
+        applyTagFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyTagFilter();
+                tagFilterDialog.dismiss();
+            }
+        });
+
+        clearTagFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearTagFilter();
+                tagFilterDialog.dismiss();
+            }
+        });
+
+        tagFilterDialog.show();
+    }
+
+    private void applyTagFilter() {
+        selectedTags = tagAdapter.getSelectedTags();
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+
+        for (Item item : originalList) {
+            if (item.getTags().containsAll(selectedTags)) {
+                filteredList.add(item);
+            }
+        }
+
+        itemAdapter.updateItemList(filteredList);
+    }
+
+//    private void applyTagFilter() {
+//        selectedTags = tagAdapter.getTags();
+//        ArrayList<Item> originalList = item_list.getList();
+//        ArrayList<Item> filteredList = new ArrayList<>();
+//
+//        for (Item item : originalList) {
+//            if (containsAnySelectedTag(item.getTags(), selectedTags)) {
+//                filteredList.add(item);
+//            }
+//        }
+//
+//        itemAdapter.updateItemList(filteredList);
+//    }
+//
+//    private boolean containsAnySelectedTag(List<Tag> itemTags, List<Tag> selectedTags) {
+//        for (Tag selectedTag : selectedTags) {
+//            for (Tag itemTag : itemTags) {
+//                if (itemTag.equals(selectedTag)) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+
+    private void clearTagFilter() {
+        // Clear the tag filter and show the original list
+        itemAdapter.updateItemList(item_list.getList());
+    }
 
     private void applyMakeFilter(String makeFilter) {
         ArrayList<Item> originalList = item_list.getList();
@@ -548,6 +651,31 @@ public class HomeFragment extends Fragment {
             return item1.getDescription().compareToIgnoreCase(item2.getDescription());
         }
     };
+
+
+
+
+    Comparator<Item> TagComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            // Assuming getTags() returns a List<String> for tags
+            ArrayList<Tag> tags1 = item1.getTags();
+            ArrayList<Tag> tags2 = item2.getTags();
+
+            // Compare the tags lexicographically
+            int minSize = Math.min(tags1.size(), tags2.size());
+            for (int i = 0; i < minSize; i++) {
+                int tagComparison = tags1.get(i).compareTo(tags2.get(i));
+                if (tagComparison != 0) {
+                    return tagComparison;
+                }
+            }
+
+            // If all common tags are the same, compare based on the number of tags
+            return Integer.compare(tags1.size(), tags2.size());
+        }
+    };
+
 
     /**
      * Comparator for sorting items based on their "value" attribute.
