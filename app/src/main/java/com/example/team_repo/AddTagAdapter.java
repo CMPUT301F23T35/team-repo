@@ -86,14 +86,17 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
     public void onBindViewHolder(@NonNull AddTagAdapter.TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tvTag.setText(tag.getTagString());
-        holder.tagCheckBox.setChecked(tag.isSelected());
+        holder.tagCheckBox.setOnCheckedChangeListener(null);  // clear the listener first
+        holder.tagCheckBox.setChecked(tag.isSelected());  // set current status
 
         holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                // update tag selected status
-                tag.setSelected(isChecked);
-
+                int currentPosition = holder.getAdapterPosition();
+                if (currentPosition != RecyclerView.NO_POSITION) {
+                    // update tag selected status
+                    tagList.get(currentPosition).setSelected(isChecked);
+                }
             }
         });
 

@@ -34,7 +34,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * MainActivity handles the initialization of information, bottom navigation bar,
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     private CollectionReference itemsRef;
     private CollectionReference userRef;
     private DocumentReference userDocRef;
+    private ItemDetailFragment itemDetailFragment;
 
     private String userId;
 
@@ -226,21 +230,31 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
      */
     private void hideAllFragment(FragmentTransaction fragmentTransaction) {
         // if a fragment has been defined, hide it
+        if (itemDetailFragment != null) {
+            fragmentTransaction.hide(itemDetailFragment);
+            homeFragment = null;
+        }
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
+            homeFragment = null;
         }
         if (addFragment != null) {
             fragmentTransaction.hide(addFragment);
+            addFragment = null;
         }
         if (cameraFragment != null) {
             fragmentTransaction.hide(cameraFragment);
+            cameraFragment = null;  // release the camera
         }
         if (tagFragment != null) {
             fragmentTransaction.hide(tagFragment);
+            tagFragment = null;
         }
         if (profileFragment != null) {
             fragmentTransaction.hide(profileFragment);
+            profileFragment = null;
         }
+
 
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof ScanFragment) {
@@ -340,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Add an item to the database
      *
-     * @param item
+     * @param item an item to be added
      */
     public void addItemToDB(Item item) {
         // add the item to the database
@@ -484,29 +498,48 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     }
 
     /**
-     * delete a tag from db
+     * delete a tag from DB, and remove the tag from all items that contain the tag
      *
-     * @param tag tag to be deleted
+     * @param tagToRemove tag to be deleted
      */
-    public void removeTagFromDB(Tag tag) {
-        userDocRef.collection("tags").document(tag.getTagString())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void removeTagFromDB(final Tag tagToRemove) {
+        // Query all items that contain the tag
+        db.collection("users").document(userId).collection("items")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        // handle success
-                        Log.d("logDB", "Tag successfully deleted!");
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // for each item, get a list of tags hashmap
+                            List<HashMap<String, Object>> currentTags = (List<HashMap<String, Object>>) documentSnapshot.get("tags");
+                            if (currentTags != null) {
+                                // Iterate and remove the tag if it matches
+                                Iterator<HashMap<String, Object>> iterator = currentTags.iterator();
+                                while (iterator.hasNext()) {
+                                    HashMap<String, Object> tagMap = iterator.next();
+                                    Tag tag = new Tag((String) tagMap.get("tagString"));
+                                    if (tag.equals(tagToRemove)) {
+                                        iterator.remove();
+                                    }
+                                }
+                                // Update the item's tags
+                                documentSnapshot.getReference().update("tags", currentTags);
+                            }
+
+                        }
+
+                        // Now, delete the tag itself from the tags collection
+                        userDocRef.collection("tags").document(tagToRemove.getTagString())
+                                .delete();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // query failed
-                        Log.w("logDB", "Error deleting tag", e);
+                        Log.w("logDB", "Error querying items with tag", e);
                     }
                 });
     }
-
 
     //getters and setters of username, email, password and header's bitmap_profile
 
@@ -560,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Change user's password
      *
-     * @param password
+     * @param password new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -588,7 +621,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * return the itemlist for the home page
      *
-     * @return
+     * @return itemlist
      */
     public ItemList getAdd_item_list() {
         return add_item_list;
@@ -638,11 +671,11 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
      */
     public void showItemDetailFragment(Item item) {
         // Create a new fragment instance and pass the item to it
-        ItemDetailFragment fragment = ItemDetailFragment.newInstance(item);
+        itemDetailFragment = ItemDetailFragment.newInstance(item);
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, itemDetailFragment)
                 .addToBackStack(null)
                 .commit();
 
@@ -658,7 +691,7 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Notify the adapter that the dataset has changed
      *
-     * @param item
+     * @param item the item to be updated
      */
     @Override
     public void onItemUpdated(Item item) {
@@ -730,5 +763,14 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                 .commit();
 
     }
+
+
+
+
+
+
+
+
+
 
 }
