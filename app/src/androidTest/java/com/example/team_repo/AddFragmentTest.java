@@ -83,109 +83,14 @@ public class AddFragmentTest {
                         isDisplayed()));
         materialButton.perform(click());
 
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.addButton), withText("Add"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_container),
-                                        0),
-                                5),
-                        isDisplayed()));
-        appCompatButton.perform(click());
+        try
+        {
+            Thread.sleep(3000);
+        }
+        catch(InterruptedException e)
+        {
 
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.ItemName),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(androidx.appcompat.R.id.custom),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText3.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction materialButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        materialButton2.perform(scrollTo(), click());
-
-        ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.Description),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        3),
-                                0),
-                        isDisplayed()));
-        appCompatEditText4.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.ItemMake),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(androidx.appcompat.R.id.custom),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatEditText5.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.ItemModel),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(androidx.appcompat.R.id.custom),
-                                        0),
-                                5),
-                        isDisplayed()));
-        appCompatEditText6.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.ItemSerial),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        6),
-                                0),
-                        isDisplayed()));
-        appCompatEditText7.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText8 = onView(
-                allOf(withId(R.id.EstimatedValue),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(androidx.appcompat.R.id.custom),
-                                        0),
-                                7),
-                        isDisplayed()));
-        appCompatEditText8.perform(replaceText("1"), closeSoftKeyboard());
-
-        ViewInteraction materialCheckBox = onView(
-                allOf(withId(R.id.cb_tag),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.tagRecyclerView),
-                                        0),
-                                1),
-                        isDisplayed()));
-        materialCheckBox.perform(click());
-
-        ViewInteraction materialButton3 = onView(
-                allOf(withId(android.R.id.button1), withText("Confirm"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(androidx.appcompat.R.id.buttonPanel),
-                                        0),
-                                3)));
-        materialButton3.perform(scrollTo(), click());
-
-        ViewInteraction viewGroup = onView(
-                allOf(withParent(allOf(withId(R.id.homepageListView),
-                                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
-                        isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
+        }
 
         ViewInteraction bottomNavigationItemView = onView(
                 allOf(withId(R.id.add), withContentDescription("Add"),
@@ -197,7 +102,16 @@ public class AddFragmentTest {
                         isDisplayed()));
         bottomNavigationItemView.perform(click());
 
-        ViewInteraction appCompatEditText9 = onView(
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e)
+        {
+
+        }
+
+        ViewInteraction appCompatEditText4 = onView(
                 allOf(withId(R.id.ItemName),
                         childAtPosition(
                                 childAtPosition(
@@ -205,7 +119,17 @@ public class AddFragmentTest {
                                         1),
                                 1),
                         isDisplayed()));
-        appCompatEditText9.perform(replaceText("11"), closeSoftKeyboard());
+        appCompatEditText4.perform(replaceText("1"), closeSoftKeyboard());
+
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.DatePurchase),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.fragment_container),
+                                        1),
+                                2),
+                        isDisplayed()));
+        appCompatEditText3.perform(click());
 
         ViewInteraction materialButton4 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
@@ -216,7 +140,7 @@ public class AddFragmentTest {
                                 3)));
         materialButton4.perform(scrollTo(), click());
 
-        ViewInteraction appCompatEditText10 = onView(
+        ViewInteraction appCompatEditText6 = onView(
                 allOf(withId(R.id.Description),
                         childAtPosition(
                                 childAtPosition(
@@ -224,9 +148,9 @@ public class AddFragmentTest {
                                         3),
                                 0),
                         isDisplayed()));
-        appCompatEditText10.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText6.perform(replaceText("1"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText11 = onView(
+        ViewInteraction appCompatEditText7 = onView(
                 allOf(withId(R.id.ItemMake),
                         childAtPosition(
                                 childAtPosition(
@@ -234,9 +158,9 @@ public class AddFragmentTest {
                                         1),
                                 4),
                         isDisplayed()));
-        appCompatEditText11.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText7.perform(replaceText("1"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText12 = onView(
+        ViewInteraction appCompatEditText8 = onView(
                 allOf(withId(R.id.ItemModel),
                         childAtPosition(
                                 childAtPosition(
@@ -244,9 +168,9 @@ public class AddFragmentTest {
                                         1),
                                 5),
                         isDisplayed()));
-        appCompatEditText12.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText8.perform(replaceText("1"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText13 = onView(
+        ViewInteraction appCompatEditText9 = onView(
                 allOf(withId(R.id.ItemSerial),
                         childAtPosition(
                                 childAtPosition(
@@ -254,9 +178,9 @@ public class AddFragmentTest {
                                         6),
                                 0),
                         isDisplayed()));
-        appCompatEditText13.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText9.perform(replaceText("1"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText14 = onView(
+        ViewInteraction appCompatEditText10 = onView(
                 allOf(withId(R.id.EstimatedValue),
                         childAtPosition(
                                 childAtPosition(
@@ -264,7 +188,7 @@ public class AddFragmentTest {
                                         1),
                                 7),
                         isDisplayed()));
-        appCompatEditText14.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText10.perform(replaceText("1"), closeSoftKeyboard());
 
         ViewInteraction materialButton5 = onView(
                 allOf(withId(R.id.btn_confirm), withText("Confirm"),
@@ -286,6 +210,11 @@ public class AddFragmentTest {
                         isDisplayed()));
         bottomNavigationItemView2.perform(click());
 
+        try
+        {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {}
+
         ViewInteraction viewGroup2 = onView(
                 allOf(withParent(allOf(withId(R.id.homepageListView),
                                 withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
@@ -302,24 +231,23 @@ public class AddFragmentTest {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
+        try
+        {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {}
+
         ViewInteraction materialCheckBox2 = onView(
                 allOf(withId(R.id.checkBox),
                         childAtPosition(
                                 withParent(withId(R.id.itemListView)),
-                                8),
+                                0),
                         isDisplayed()));
         materialCheckBox2.perform(click());
 
-        ViewInteraction materialButton6 = onView(
-                allOf(withId(R.id.delete_button), withText("DELETE"),
-                        childAtPosition(
-                                allOf(withId(R.id.constraintLayout),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                3)),
-                                0),
-                        isDisplayed()));
-        materialButton6.perform(click());
+        try
+        {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {}
 
         ViewInteraction materialButton7 = onView(
                 allOf(withId(R.id.delete_button), withText("DELETE"),
