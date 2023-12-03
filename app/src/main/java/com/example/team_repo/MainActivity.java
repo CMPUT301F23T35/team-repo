@@ -696,10 +696,8 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     Item item = document.toObject(Item.class);
                     item.itemRef = document.getId();
                     itemList.add(item);
-
                 }
                 callback.onCallback(itemList); // Call back with the loaded list
-
 
             } else {
                 callback.onCallback(itemList); // Call back with empty list
