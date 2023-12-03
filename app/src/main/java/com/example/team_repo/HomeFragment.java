@@ -304,6 +304,10 @@ public class HomeFragment extends Fragment {
         dialog.show();
     }
 
+    /**
+     * Displays a dialog for filtering tags.
+     * The dialog allows users to select tags to apply as filters.
+     */
     private void showTagFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_tag_filter, null);
@@ -341,6 +345,11 @@ public class HomeFragment extends Fragment {
         tagFilterDialog.show();
     }
 
+    /**
+     * Applies a tag filter to the list of items and updates the displayed items accordingly.
+     * The method retrieves the selected tags from the tag adapter and filters the original
+     * list of items to display only those that contain all selected tags.
+     */
     private void applyTagFilter() {
         selectedTags = tagAdapter.getSelectedTags();
         ArrayList<Item> originalList = item_list.getList();
@@ -355,36 +364,20 @@ public class HomeFragment extends Fragment {
         itemAdapter.updateItemList(filteredList);
     }
 
-//    private void applyTagFilter() {
-//        selectedTags = tagAdapter.getTags();
-//        ArrayList<Item> originalList = item_list.getList();
-//        ArrayList<Item> filteredList = new ArrayList<>();
-//
-//        for (Item item : originalList) {
-//            if (containsAnySelectedTag(item.getTags(), selectedTags)) {
-//                filteredList.add(item);
-//            }
-//        }
-//
-//        itemAdapter.updateItemList(filteredList);
-//    }
-//
-//    private boolean containsAnySelectedTag(List<Tag> itemTags, List<Tag> selectedTags) {
-//        for (Tag selectedTag : selectedTags) {
-//            for (Tag itemTag : itemTags) {
-//                if (itemTag.equals(selectedTag)) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-
+    /**
+     * Clears the applied tag filter and displays the original list of items.
+     * This method updates the item adapter to show the entire list of items without any filtering.
+     */
     private void clearTagFilter() {
         // Clear the tag filter and show the original list
         itemAdapter.updateItemList(item_list.getList());
     }
 
+    /**
+     * Applies a make filter to the list of items and updates the displayed items accordingly.
+     *
+     * @param makeFilter The make filter to be applied. If empty, the original list is displayed.
+     */
     private void applyMakeFilter(String makeFilter) {
         ArrayList<Item> originalList = item_list.getList();
         ArrayList<Item> filteredList = new ArrayList<>();
@@ -404,20 +397,17 @@ public class HomeFragment extends Fragment {
 
                 filteredList.addAll(originalList);
                 Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
-//
             }
             itemAdapter.updateItemList(filteredList);
         }
-//        } else {
-//            // If the filter is empty, show the original list
-//            filteredList.addAll(originalList);
-//        }
-
-        // Update the adapter with the filtered list
 
     }
 
-
+    /**
+     * Applies a description filter to the list of items and updates the displayed items accordingly.
+     *
+     * @param descriptionFilter The description filter to be applied. If empty, the original list is displayed.
+     */
     private void applyDescriptionFilter(String descriptionFilter) {
         ArrayList<Item> originalList = item_list.getList();
         ArrayList<Item> filteredList = new ArrayList<>();
@@ -428,31 +418,22 @@ public class HomeFragment extends Fragment {
                 if (item.getDescription().toLowerCase().contains(descriptionFilter.toLowerCase())) {
                     filteredList.add(item);
                     check = true;
-
                 }
-
             }
 
             if (check != true){
-
                 filteredList.addAll(originalList);
                 Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
-//
             }
             itemAdapter.updateItemList(filteredList);
         }
-//        } else {
-//            // If the filter is empty, show the original list
-//            filteredList.addAll(originalList);
-//        }
-
-        // Update the adapter with the filtered list
-
     }
 
 
-    // Method to show the date filter dialog
-// Inside your HomeFragment class
+    /**
+     * Displays a date filter dialog allowing users to select a start date.
+     * Upon selecting the start date, the method shows the end date picker dialog.
+     */
     private void showDateFilterDialog() {
         DatePickerDialog.OnDateSetListener startDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -474,6 +455,11 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /**
+     * Displays an end date picker dialog allowing users to select an end date.
+     * Upon selecting the end date, the method updates the end date calendar
+     * and performs filtering based on the selected date range.
+     */
     private void showEndDatePickerDialog() {
         DatePickerDialog.OnDateSetListener endDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -494,32 +480,12 @@ public class HomeFragment extends Fragment {
                 endDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-//    private void filterItemsByDateRange() {
-//        ArrayList<Item> originalList = item_list.getList();
-//        ArrayList<Item> filteredList = new ArrayList<>();
-//
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-//
-//        for (Item item : originalList) {
-//            try {
-//                Date itemDate = sdf.parse(item.getPurchase_date());
-//                Date startDate = startDateCalendar.getTime();
-//                Date endDate = endDateCalendar.getTime();
-//
-//                if (itemDate != null && (itemDate.equals(startDate) || itemDate.equals(endDate) ||
-//                        (itemDate.after(startDate) && itemDate.before(endDate)))) {
-//                    filteredList.add(item);
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        itemAdapter.updateItemList(filteredList);
-//        // Notify the adapter that the data has changed
-//        itemAdapter.notifyDataSetChanged();
-//    }
 
+    /**
+     * Filters the list of items based on the selected date range and updates the displayed items accordingly.
+     * The method compares the purchase date of each item with the selected start and end dates,
+     * and includes items that fall within this date range.
+     */
     private void filterItemsByDateRange() {
         ArrayList<Item> originalList = item_list.getList();
         ArrayList<Item> filteredList = new ArrayList<>();
@@ -566,9 +532,12 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /**
+     * Filters the list of items based on the selected date range and updates the displayed items accordingly.
+     * The method compares the purchase date of each item with the selected start and end dates,
+     * and includes items that fall within this date range.
+     */
     private void clearFilter() {
-
-
         startDateCalendar = Calendar.getInstance();
         endDateCalendar = Calendar.getInstance();
         // Get the original list from Firebase
@@ -653,8 +622,9 @@ public class HomeFragment extends Fragment {
     };
 
 
-
-
+    /**
+     * Comparator for sorting items based on their "tag" attribute.
+     */
     Comparator<Item> TagComparator = new Comparator<Item>() {
         @Override
         public int compare(Item item1, Item item2) {
