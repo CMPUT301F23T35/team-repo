@@ -129,8 +129,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
-        // set the checkbox showing current checked status
-        checkbox.setChecked(item.checked);
+
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

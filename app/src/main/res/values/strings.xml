@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">team_repo</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="homepage_list_and_value">List of Items\nTotal value: $</string>
     <string name="homepage_total_value">0.00</string>
     <string name="select">Select</string>
@@ -33,6 +31,7 @@
     <string name="tags_ascending">Tags Ascending</string>
     <string name="tags_descending">Tags Descending</string>
     <string name="filter_by">Filter By</string>
+
     <string name="scan_image_desc_instructions">Choose a photo to be scanned for a barcode.\nThis barcode should load a description to input as the item\'s description.</string>
     <string name="scan_image_sn_instructions">Choose a photo to be scanned for a serial number.</string>
     <string name="scanned_item_desc_header">Scanned Item Description From Barcode:</string>

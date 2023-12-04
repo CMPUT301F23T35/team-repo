@@ -80,9 +80,6 @@ public class AddFragment extends Fragment{
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
 
-        ItemDescriptionCameraButton = view.findViewById(R.id.ItemDescriptionCameraButton);
-        ItemSerialCameraButton = view.findViewById(R.id.ItemSerialCameraButton);
-
         // set the layout manager of the recycler view
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         tagRecyclerView.setLayoutManager(layoutManager);
@@ -184,11 +181,14 @@ public class AddFragment extends Fragment{
 
         AddFragment currentFragment = this;
 
+        // Create listeners for when the user clicks one of the scan buttons on the fragment
+        ItemDescriptionCameraButton = view.findViewById(R.id.ItemDescriptionCameraButton);
+        ItemSerialCameraButton = view.findViewById(R.id.ItemSerialCameraButton);
         ItemDescriptionCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment(0, currentFragment);
+                    ((MainActivity) view.getContext()).showScanFragment(true, currentFragment);
                 }
             }
         });
@@ -197,7 +197,7 @@ public class AddFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if (view.getContext() instanceof MainActivity) {
-                    ((MainActivity) view.getContext()).showScanFragment(1, currentFragment);
+                    ((MainActivity) view.getContext()).showScanFragment(false, currentFragment);
                 }
             }
         });
@@ -278,11 +278,18 @@ public class AddFragment extends Fragment{
         }
     }
 
-    public void setScannedInformation(int position, String text) {
+    /**
+     * From ScanFragment, call this method after the user scans for a serial number or description.
+     * This method will input the scanned information into the respective EditText box.
+     * @param scan_for_description: a boolean value representing whether or not a description was scanned for
+     *                            If null, change nothing.
+     * @param text the text that was scanned
+     */
+    public void setScannedInformation(boolean scan_for_description, String text) {
         if (text != null) {
-            if (position == 0) {
+            if (scan_for_description) {
                 Description.setText(text);
-            } else if (position == 1) {
+            } else {
                 ItemSerial.setText(text);
             }
         }
