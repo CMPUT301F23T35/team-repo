@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -195,6 +196,7 @@ public class SelectActivityTest {
             Thread.sleep(1000);
         } catch (InterruptedException e) {}
 
+        // goto select page
         ViewInteraction bottomNavigationItemView3 = onView(
                 allOf(withId(R.id.home), withContentDescription("Home"),
                         childAtPosition(
@@ -219,6 +221,7 @@ public class SelectActivityTest {
             Thread.sleep(1000);
         } catch (InterruptedException e) {}
 
+        //select items
         ViewInteraction materialCheckBox = onView(
                 allOf(withId(R.id.checkBox),
                         hasSibling(withText("1")),
@@ -231,7 +234,7 @@ public class SelectActivityTest {
                         isDisplayed()));
         materialCheckBox2.perform(click());
 
-
+        // select tag
         ViewInteraction materialCheckBox4 = onView(
                 allOf(withId(R.id.cb_tag),
                         childAtPosition(
@@ -253,6 +256,7 @@ public class SelectActivityTest {
                         isDisplayed()));
         materialButton7.perform(click());
 
+        // back to home fragment
         ViewInteraction appCompatImageButton2 = onView(
                 allOf(childAtPosition(
                                 allOf(withId(R.id.select_toolbar),
@@ -277,6 +281,7 @@ public class SelectActivityTest {
                 .atPosition(0);
         constraintLayout2.perform(click());
 
+        // check if tag added
         ViewInteraction textView = onView(
                 allOf(withId(R.id.tv_item_tag_content), withText("tag1"),
                         withParent(withParent(withId(R.id.detail_tags_recycler_view))),
@@ -293,32 +298,22 @@ public class SelectActivityTest {
                         isDisplayed()));
         appCompatImageButton3.perform(click());
 
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.itemName), withText("1"),
-                        withParent(withParent(withId(R.id.homepageListView))),
-                        isDisplayed()));
-        textView2.check(matches(withText("1")));
+        appCompatButton.perform(click());
+        materialCheckBox.perform(click());
+        materialCheckBox2.perform(click());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.selectItemsButton), withText("Select"),
+        ViewInteraction materialButton2 = onView(
+                allOf(withId(R.id.delete_button), withText("DELETE"),
                         childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_container),
-                                        3),
-                                3),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-
-        ViewInteraction appCompatImageButton4 = onView(
-                allOf(childAtPosition(
-                                allOf(withId(R.id.select_toolbar),
+                                allOf(withId(R.id.constraintLayout),
                                         childAtPosition(
                                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                0)),
-                                1),
+                                                3)),
+                                0),
                         isDisplayed()));
-        appCompatImageButton4.perform(click());
+        materialButton2.perform(click());
 
+        materialCheckBox.check(doesNotExist());
     }
 
     private static Matcher<View> childAtPosition(
