@@ -58,6 +58,7 @@ public class ScanFragment extends Fragment {
     public static ScanFragment newInstance(boolean scan_for_description, AlertDialog dialog) {
         ScanFragment myFragment = new ScanFragment();
         myFragment.previous_dialog = dialog;
+        myFragment.addFragment = null;
         myFragment.scan_for_description = scan_for_description;
 
         return myFragment;
@@ -70,6 +71,7 @@ public class ScanFragment extends Fragment {
      */
     public static ScanFragment newInstance(boolean scan_for_description, AddFragment addFragment) {
         ScanFragment myFragment = new ScanFragment();
+        myFragment.previous_dialog = null;
         myFragment.addFragment = addFragment;
         myFragment.scan_for_description = scan_for_description;
 
@@ -109,6 +111,9 @@ public class ScanFragment extends Fragment {
             public void onClick(View v) {
                 toolbarLinearLayout.setVisibility(original_visibility);
                 getActivity().onBackPressed();
+                if (previous_dialog != null) {
+                    previous_dialog.show();
+                }
             }
         });
 
