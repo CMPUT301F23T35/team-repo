@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="You may edit the text after scanning. Please Press on the edit button and then the confirm button to reflect the changes on the Description page. Also, the barcode should be searchable on barcodelookup.com" />
+                android:text="You may edit the text after scanning, and then press the confirm button to reflect the changes on the previous page.\n\nIf you are scanning for a barcode, the barcode should be searchable on barcodelookup.com." />
             <Button
                 android:id="@+id/btn_confirm"
                 android:layout_width="wrap_content"
