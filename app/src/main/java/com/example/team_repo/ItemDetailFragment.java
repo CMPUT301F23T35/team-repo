@@ -320,66 +320,67 @@ public class ItemDetailFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap bitmap = null;
-            if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
-                if (data != null && data.getData() != null) {
-                    // Handle gallery image selection
-                    Uri selectedImageUri = data.getData();
-                    bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
 
-                    // save the bitmap to firebase storage
-                    // ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
-                    String currentTime = String.valueOf(System.currentTimeMillis());
-                    String newFileName = mItem.getItemID() + "/" + currentTime;
-                    ImageUtils.uploadImageToFirebaseStorage(bitmap, newFileName);
-                    imageNameList.add(currentTime + ".jpg");
-                    Toast.makeText(getContext(), "New image added.", Toast.LENGTH_SHORT).show();
-                }
-            } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
-                // Handle camera image capture
-                Uri capturedImageUri = photoUtility.getImageUri();
-                bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
+        if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                // Handle gallery image selection
+                Uri selectedImageUri = data.getData();
+                bitmap = photoUtility.handleImageOnActivityResult(selectedImageUri);
 
                 // save the bitmap to firebase storage
                 // ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
-                // generate a unique file name using current time stamp
                 String currentTime = String.valueOf(System.currentTimeMillis());
                 String newFileName = mItem.getItemID() + "/" + currentTime;
-                imageNameList.add(currentTime + ".jpg");
                 ImageUtils.uploadImageToFirebaseStorage(bitmap, newFileName);
+                imageNameList.add(currentTime + ".jpg");
                 Toast.makeText(getContext(), "New image added.", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == PhotoUtility.REQUEST_CODE_TAKE && resultCode == Activity.RESULT_OK) {
+            // Handle camera image capture
+            Uri capturedImageUri = photoUtility.getImageUri();
+            bitmap = photoUtility.handleImageOnActivityResult(capturedImageUri);
 
-            if (bitmap != null) {
-                // itemImageView.setImageBitmap(bitmap);
-                // add the new image to the view pager
-                ImageView imageView = new ImageView(getContext());
-                imageView.setImageBitmap(bitmap);
+            // save the bitmap to firebase storage
+            // ImageUtils.uploadImageToFirebaseStorage(bitmap, mItem.getItemID());
+            // generate a unique file name using current time stamp
+            String currentTime = String.valueOf(System.currentTimeMillis());
+            String newFileName = mItem.getItemID() + "/" + currentTime;
+            imageNameList.add(currentTime + ".jpg");
+            ImageUtils.uploadImageToFirebaseStorage(bitmap, newFileName);
+            Toast.makeText(getContext(), "New image added.", Toast.LENGTH_SHORT).show();
+        }
 
-                // if there is no image before, remove the placeholder image
-                if (noImage) {
-                    imageViewList.remove(0);
-                    noImage = false;
-                }
+        if (bitmap != null) {
+            // itemImageView.setImageBitmap(bitmap);
+            // add the new image to the view pager
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageBitmap(bitmap);
 
-                imageViewList.add(imageView);
-                viewPagerAdapter.notifyDataSetChanged();
+            // if there is no image before, remove the placeholder image
+            if (noImage) {
+                imageViewList.remove(0);
+                noImage = false;
+            }
 
-                int position = imageViewList.size() - 1;
-                imageViewPager.setCurrentItem(position);
+            imageViewList.add(imageView);
+            viewPagerAdapter.notifyDataSetChanged();
 
-                // Create a unique filename based on the current timestamp
-                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String imageFileName = "JPEG_" + timestamp + "_";
+            int position = imageViewList.size() - 1;
+            imageViewPager.setCurrentItem(position);
 
-                // Save the bitmap to a file and get the path using ImageUtils
-                String imagePath = ImageUtils.saveBitmapToFile(requireContext(), bitmap, imageFileName);
+            // Create a unique filename based on the current timestamp
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String imageFileName = "JPEG_" + timestamp + "_";
 
-                if (imagePath != null) {
-                    // Store the image path in the item
-                    mItem.setImagePath(imagePath);
-                }
+            // Save the bitmap to a file and get the path using ImageUtils
+            String imagePath = ImageUtils.saveBitmapToFile(requireContext(), bitmap, imageFileName);
+
+            if (imagePath != null) {
+                // Store the image path in the item
+                mItem.setImagePath(imagePath);
             }
         }
+    }
 
 
 
