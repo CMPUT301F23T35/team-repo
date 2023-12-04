@@ -3,7 +3,7 @@ package com.example.team_repo;
 
 import android.app.DatePickerDialog;
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -203,6 +203,7 @@ public class ItemDetailFragment extends Fragment {
                                         imageView.setImageBitmap(bitmap);
                                         imageViewList.add(imageView);
                                     }
+                                    noImage = false;
                                 }
 
                                 viewPagerAdapter = new ViewPagerAdapter(imageViewList);
@@ -213,6 +214,7 @@ public class ItemDetailFragment extends Fragment {
                 }
             }
         });
+
 
 
         view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
@@ -233,7 +235,14 @@ public class ItemDetailFragment extends Fragment {
                 // delete from database
                 ((MainActivity) getActivity()).deleteItemFromDB(mItem);
                 // Inside a Fragment or Activity
-                Toast.makeText(getContext(), "Item has been deleted, Return to the Home Page", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Item has been deleted", Toast.LENGTH_SHORT).show();
+                // pause for 700ms
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getActivity().onBackPressed();  // return to the home page
             }
         });
 
@@ -568,7 +577,7 @@ public class ItemDetailFragment extends Fragment {
                 EstimatedValue.setText("");
 
                 // give a message to show that the item is added successfully
-                Toast.makeText(getActivity(), "Item added successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Item changed successfully!", Toast.LENGTH_SHORT).show();
 
 
         });
@@ -585,7 +594,7 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0, dialog);
                     dialog.dismiss();
                 }
             }
@@ -595,7 +604,7 @@ public class ItemDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1, dialog);
                     dialog.dismiss();
                 }
             }

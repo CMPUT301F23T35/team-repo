@@ -2,10 +2,12 @@ package com.example.team_repo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -32,7 +34,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * MainActivity handles the initialization of information, bottom navigation bar,
@@ -493,29 +498,48 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     }
 
     /**
-     * delete a tag from db
+     * delete a tag from DB, and remove the tag from all items that contain the tag
      *
-     * @param tag tag to be deleted
+     * @param tagToRemove tag to be deleted
      */
-    public void removeTagFromDB(Tag tag) {
-        userDocRef.collection("tags").document(tag.getTagString())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void removeTagFromDB(final Tag tagToRemove) {
+        // Query all items that contain the tag
+        db.collection("users").document(userId).collection("items")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        // handle success
-                        Log.d("logDB", "Tag successfully deleted!");
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // for each item, get a list of tags hashmap
+                            List<HashMap<String, Object>> currentTags = (List<HashMap<String, Object>>) documentSnapshot.get("tags");
+                            if (currentTags != null) {
+                                // Iterate and remove the tag if it matches
+                                Iterator<HashMap<String, Object>> iterator = currentTags.iterator();
+                                while (iterator.hasNext()) {
+                                    HashMap<String, Object> tagMap = iterator.next();
+                                    Tag tag = new Tag((String) tagMap.get("tagString"));
+                                    if (tag.equals(tagToRemove)) {
+                                        iterator.remove();
+                                    }
+                                }
+                                // Update the item's tags
+                                documentSnapshot.getReference().update("tags", currentTags);
+                            }
+
+                        }
+
+                        // Now, delete the tag itself from the tags collection
+                        userDocRef.collection("tags").document(tagToRemove.getTagString())
+                                .delete();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // query failed
-                        Log.w("logDB", "Error deleting tag", e);
+                        Log.w("logDB", "Error querying items with tag", e);
                     }
                 });
     }
-
 
     //getters and setters of username, email, password and header's bitmap_profile
 
@@ -705,10 +729,8 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
                     Item item = document.toObject(Item.class);
                     item.itemRef = document.getId();
                     itemList.add(item);
-
                 }
                 callback.onCallback(itemList); // Call back with the loaded list
-
 
             } else {
                 callback.onCallback(itemList); // Call back with empty list
@@ -720,11 +742,23 @@ public class MainActivity extends AppCompatActivity implements ItemDetailFragmen
     /**
      * Transfer to scan fragment
      */
-    public void showScanFragment(int position) {
+    public void showScanFragment(int position, AlertDialog dialog) {
         // Replace whatever is in the fragment_container view with ScanFragment,
         // and add the transaction to the back stack
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance(position))
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position, dialog))
+                .addToBackStack(null)
+                .commit();
+
+    }
+    /**
+     * Transfer to scan fragment
+     */
+    public void showScanFragment(int position, AddFragment addFragment) {
+        // Replace whatever is in the fragment_container view with ScanFragment,
+        // and add the transaction to the back stack
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, ScanFragment.newInstance(position, addFragment))
                 .addToBackStack(null)
                 .commit();
 

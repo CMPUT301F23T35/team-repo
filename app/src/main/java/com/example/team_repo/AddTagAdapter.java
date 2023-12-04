@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The AddTagAdapter class extends RecyclerView.Adapter.
  * It is used to display a list of tags for selecting.
@@ -29,10 +31,22 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
         return tagList;
     }
 
+
+    public ArrayList<Tag> getSelectedTags() {
+        ArrayList<Tag> selectedTags = new ArrayList<>();
+        for (Tag tag : tagList) {
+            if (tag.isSelected()) {
+                selectedTags.add(tag);
+            }
+        }
+        return selectedTags;
+    }
     /**
      * Change the list of tags
      * @param tagList
      */
+
+
     public void setTagList(ArrayList<Tag> tagList) {
         this.tagList = tagList;
     }
@@ -72,14 +86,17 @@ public class AddTagAdapter extends RecyclerView.Adapter<AddTagAdapter.TagViewHol
     public void onBindViewHolder(@NonNull AddTagAdapter.TagViewHolder holder, int position) {
         Tag tag = tagList.get(position);
         holder.tvTag.setText(tag.getTagString());
-        holder.tagCheckBox.setChecked(tag.isSelected());
+        holder.tagCheckBox.setOnCheckedChangeListener(null);  // clear the listener first
+        holder.tagCheckBox.setChecked(tag.isSelected());  // set current status
 
         holder.tagCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                // update tag selected status
-                tag.setSelected(isChecked);
-
+                int currentPosition = holder.getAdapterPosition();
+                if (currentPosition != RecyclerView.NO_POSITION) {
+                    // update tag selected status
+                    tagList.get(currentPosition).setSelected(isChecked);
+                }
             }
         });
 

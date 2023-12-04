@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -49,6 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -72,6 +74,9 @@ public class HomeFragment extends Fragment {
 
 
     private ItemViewModel itemViewModel;
+
+    private Calendar startDateCalendar;
+    private Calendar endDateCalendar;
 
     /**
      * Creates the view for the home page fragment.
@@ -114,6 +119,10 @@ public class HomeFragment extends Fragment {
 
         // Display profile photo
         profile_picture = view.findViewById(R.id.homepageProfilePicture);
+
+
+        startDateCalendar = Calendar.getInstance();
+        endDateCalendar = Calendar.getInstance();
 
         // check the firebase storage, set the profile picture
         ImageUtils.downloadImageFromFirebaseStorage(((MainActivity) getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
@@ -171,6 +180,14 @@ public class HomeFragment extends Fragment {
         final AlertDialog dialog = builder.create();
 
         RadioGroup sortOptions = dialogView.findViewById(R.id.sortOptions);
+        EditText searchEditText = dialogView.findViewById(R.id.searchEditText);
+
+
+        EditText makeFilterEditText = dialogView.findViewById(R.id.makeFilterEditText);
+        Button applyFilterButton = dialogView.findViewById(R.id.applyFilterButton);
+        Button clearFilterButton = dialogView.findViewById(R.id.clearFilterButton);
+        Button filterByDateButton = dialogView.findViewById(R.id.filterByDateButton);
+
 
         // Add a listener for the "Sort" button in the dialog
         Button btnSort = dialogView.findViewById(R.id.btnSort);
@@ -187,6 +204,8 @@ public class HomeFragment extends Fragment {
                 RadioButton radio_button_ValueDesc = sortOptions.findViewById(R.id.radioValueDesc);
                 RadioButton radio_button_Description = sortOptions.findViewById(R.id.radioDescripAsc);
                 RadioButton radio_button_DescriptionDesc = sortOptions.findViewById(R.id.radioDescripDesc);
+                RadioButton radio_button_TagAsc = sortOptions.findViewById(R.id.radioTagAsc);
+                RadioButton radio_button_TagDesc = sortOptions.findViewById(R.id.radioTagDesc);
 
                 if(selectedId == radio_button_make.getId()){
                 handleSorting(radio_button_make.getId(), selectedId,MakeComparator,true);
@@ -219,11 +238,323 @@ public class HomeFragment extends Fragment {
                     handleSorting(radio_button_DateDesc.getId(), selectedId,dateComparator,false);
                     dialog.dismiss();
                 }
+
+                if(selectedId == radio_button_TagDesc.getId()){
+                    handleSorting(radio_button_TagDesc.getId(), selectedId,TagComparator,false);
+                    dialog.dismiss();
                 }
+                if(selectedId == radio_button_TagAsc.getId()){
+                    handleSorting(radio_button_TagAsc.getId(), selectedId,TagComparator,true);
+                    dialog.dismiss();
+                }
+
+                }
+        });
+
+        applyFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyMakeFilter(makeFilterEditText.getText().toString().trim());
+                dialog.dismiss();
+            }
+        });
+
+        applyFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyDescriptionFilter(searchEditText.getText().toString().trim());
+
+
+                dialog.dismiss();
+            }
+        });
+
+        clearFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearFilter();
+                dialog.dismiss();
+            }
+        });
+
+
+        filterByDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateFilterDialog();
+                dialog.dismiss();
+            }
+        });
+
+
+        Button filterByTagButton = dialogView.findViewById(R.id.filterByTagButton);
+        filterByTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTagFilterDialog();
+                dialog.dismiss();
+            }
         });
 
         dialog.show();
     }
+
+    /**
+     * Displays a dialog for filtering tags.
+     * The dialog allows users to select tags to apply as filters.
+     */
+    private void showTagFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_tag_filter, null);
+        builder.setView(dialogView);
+
+        // Initialize tag list and adapter
+        tagList = ((MainActivity) getActivity()).getTagList();
+        tagAdapter = new AddTagAdapter(getContext(), tagList);
+
+        RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
+        tagRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        tagRecyclerView.setAdapter(tagAdapter);
+
+        Button applyTagFilterButton = dialogView.findViewById(R.id.applyTagFilterButton);
+        Button clearTagFilterButton = dialogView.findViewById(R.id.clearTagFilterButton);
+
+        AlertDialog tagFilterDialog = builder.create();
+
+        applyTagFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyTagFilter();
+                tagFilterDialog.dismiss();
+            }
+        });
+
+        clearTagFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearTagFilter();
+                tagFilterDialog.dismiss();
+            }
+        });
+
+        tagFilterDialog.show();
+    }
+
+    /**
+     * Applies a tag filter to the list of items and updates the displayed items accordingly.
+     * The method retrieves the selected tags from the tag adapter and filters the original
+     * list of items to display only those that contain all selected tags.
+     */
+    private void applyTagFilter() {
+        selectedTags = tagAdapter.getSelectedTags();
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+
+        for (Item item : originalList) {
+            if (item.getTags().containsAll(selectedTags)) {
+                filteredList.add(item);
+            }
+        }
+
+        itemAdapter.updateItemList(filteredList);
+    }
+
+    /**
+     * Clears the applied tag filter and displays the original list of items.
+     * This method updates the item adapter to show the entire list of items without any filtering.
+     */
+    private void clearTagFilter() {
+        // Clear the tag filter and show the original list
+        itemAdapter.updateItemList(item_list.getList());
+    }
+
+    /**
+     * Applies a make filter to the list of items and updates the displayed items accordingly.
+     *
+     * @param makeFilter The make filter to be applied. If empty, the original list is displayed.
+     */
+    private void applyMakeFilter(String makeFilter) {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+        boolean check = false;
+
+        if (!makeFilter.isEmpty()) {
+            for (Item item : originalList) {
+                if (item.getMake().toLowerCase().contains(makeFilter.toLowerCase())) {
+                    filteredList.add(item);
+                    check = true;
+
+                }
+
+            }
+
+            if (check != true){
+
+                filteredList.addAll(originalList);
+                Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
+            }
+            itemAdapter.updateItemList(filteredList);
+        }
+
+    }
+
+    /**
+     * Applies a description filter to the list of items and updates the displayed items accordingly.
+     *
+     * @param descriptionFilter The description filter to be applied. If empty, the original list is displayed.
+     */
+    private void applyDescriptionFilter(String descriptionFilter) {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+        boolean check = false;
+
+        if (!descriptionFilter.isEmpty()) {
+            for (Item item : originalList) {
+                if (item.getDescription().toLowerCase().contains(descriptionFilter.toLowerCase())) {
+                    filteredList.add(item);
+                    check = true;
+                }
+            }
+
+            if (check != true){
+                filteredList.addAll(originalList);
+                Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
+            }
+            itemAdapter.updateItemList(filteredList);
+        }
+    }
+
+
+    /**
+     * Displays a date filter dialog allowing users to select a start date.
+     * Upon selecting the start date, the method shows the end date picker dialog.
+     */
+    private void showDateFilterDialog() {
+        DatePickerDialog.OnDateSetListener startDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                startDateCalendar.set(Calendar.YEAR, year);
+                startDateCalendar.set(Calendar.MONTH, month);
+                startDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                // Show the end date picker dialog after selecting the start date
+                showEndDatePickerDialog();
+            }
+        };
+
+        // Show the start date picker dialog
+        new DatePickerDialog(requireContext(), startDateSetListener,
+                startDateCalendar.get(Calendar.YEAR),
+                startDateCalendar.get(Calendar.MONTH),
+                startDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+
+    /**
+     * Displays an end date picker dialog allowing users to select an end date.
+     * Upon selecting the end date, the method updates the end date calendar
+     * and performs filtering based on the selected date range.
+     */
+    private void showEndDatePickerDialog() {
+        DatePickerDialog.OnDateSetListener endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                endDateCalendar.set(Calendar.YEAR, year);
+                endDateCalendar.set(Calendar.MONTH, month);
+                endDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                // Perform filtering based on the selected date range
+                filterItemsByDateRange();
+            }
+        };
+
+        // Show the end date picker dialog
+        new DatePickerDialog(requireContext(), endDateSetListener,
+                endDateCalendar.get(Calendar.YEAR),
+                endDateCalendar.get(Calendar.MONTH),
+                endDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+
+    /**
+     * Filters the list of items based on the selected date range and updates the displayed items accordingly.
+     * The method compares the purchase date of each item with the selected start and end dates,
+     * and includes items that fall within this date range.
+     */
+    private void filterItemsByDateRange() {
+        ArrayList<Item> originalList = item_list.getList();
+        ArrayList<Item> filteredList = new ArrayList<>();
+
+        for (Item item : originalList) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Date itemDate = sdf.parse(item.getPurchase_date());
+                Date startDate = startDateCalendar.getTime();
+                Date endDate = endDateCalendar.getTime();
+
+                Calendar itemCalendar = Calendar.getInstance();
+                itemCalendar.setTime(itemDate);
+
+                // Set the time fields to zero to compare only dates
+                itemCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                itemCalendar.set(Calendar.MINUTE, 0);
+                itemCalendar.set(Calendar.SECOND, 0);
+                itemCalendar.set(Calendar.MILLISECOND, 0);
+
+                startDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                startDateCalendar.set(Calendar.MINUTE, 0);
+                startDateCalendar.set(Calendar.SECOND, 0);
+                startDateCalendar.set(Calendar.MILLISECOND, 0);
+
+                endDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                endDateCalendar.set(Calendar.MINUTE, 0);
+                endDateCalendar.set(Calendar.SECOND, 0);
+                endDateCalendar.set(Calendar.MILLISECOND, 0);
+
+                if ((itemCalendar.equals(startDateCalendar) || itemCalendar.equals(endDateCalendar) ||
+                        (itemCalendar.after(startDateCalendar) && itemCalendar.before(endDateCalendar)))) {
+                    filteredList.add(item);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        itemAdapter.updateItemList(filteredList);
+        // Notify the adapter that the data has changed
+        itemAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * Filters the list of items based on the selected date range and updates the displayed items accordingly.
+     * The method compares the purchase date of each item with the selected start and end dates,
+     * and includes items that fall within this date range.
+     */
+    private void clearFilter() {
+        startDateCalendar = Calendar.getInstance();
+        endDateCalendar = Calendar.getInstance();
+        // Get the original list from Firebase
+        ((MainActivity) getActivity()).getItemListFromDB(new MainActivity.ItemListCallback() {
+            @Override
+            public void onCallback(ItemList originalItemList) {
+                ArrayList<Item> originalList = originalItemList.getList();
+
+                // Update the adapter with the original list
+                itemAdapter.updateItemList(originalList);
+
+                // Use 'previousItems' list as needed
+                // ...
+
+                // Notify the user or perform any other actions
+                Toast.makeText(getActivity(), "Filter cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
 
     // Method to handle sorting based on the selected option
     /**
@@ -284,6 +615,32 @@ public class HomeFragment extends Fragment {
             return item1.getDescription().compareToIgnoreCase(item2.getDescription());
         }
     };
+
+
+    /**
+     * Comparator for sorting items based on their "tag" attribute.
+     */
+    Comparator<Item> TagComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item item1, Item item2) {
+            // Assuming getTags() returns a List<String> for tags
+            ArrayList<Tag> tags1 = item1.getTags();
+            ArrayList<Tag> tags2 = item2.getTags();
+
+            // Compare the tags lexicographically
+            int minSize = Math.min(tags1.size(), tags2.size());
+            for (int i = 0; i < minSize; i++) {
+                int tagComparison = tags1.get(i).compareTo(tags2.get(i));
+                if (tagComparison != 0) {
+                    return tagComparison;
+                }
+            }
+
+            // If all common tags are the same, compare based on the number of tags
+            return Integer.compare(tags1.size(), tags2.size());
+        }
+    };
+
 
     /**
      * Comparator for sorting items based on their "value" attribute.
@@ -386,6 +743,10 @@ public class HomeFragment extends Fragment {
         final RecyclerView tagRecyclerView = dialogView.findViewById(R.id.tagRecyclerView);
 
         tagList = ((MainActivity)getActivity()).getTagList();
+        // set all tags to unselected
+        for (Tag tag : tagList) {
+            tag.setSelected(false);
+        }
 
         tagAdapter = new AddTagAdapter(getContext(), tagList);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -498,7 +859,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(0);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(0, dialog);
                     dialog.dismiss();
                 }
             }
@@ -507,7 +868,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (dialogView.getContext() instanceof MainActivity) {
-                    ((MainActivity) dialogView.getContext()).showScanFragment(1);
+                    ((MainActivity) dialogView.getContext()).showScanFragment(1, dialog);
                     dialog.dismiss();
                 }
             }

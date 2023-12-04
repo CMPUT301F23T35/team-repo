@@ -125,4 +125,5 @@ public class ItemListTest {
         assertFalse(my_list.getList().contains(item2));
         assertEquals(my_list.getTotalValue(), 0.00, 0.01);
     }
+
 }
