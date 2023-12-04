@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">team_repo</string>
-
-    <string name="API_key">tzfbik9nqzz774dqafkdsnmbjeldjs</string>
-
     <string name="homepage_list_and_value">List of Items\nTotal value: $</string>
     <string name="homepage_total_value">0.00</string>
     <string name="select">Select</string>

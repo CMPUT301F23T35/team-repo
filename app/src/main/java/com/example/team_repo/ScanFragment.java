@@ -277,17 +277,24 @@ public class ScanFragment extends Fragment {
                     photo_utility.setImageUri(data.getData());
                 }
                 Bitmap bitmap = photo_utility.handleImageOnActivityResult(photo_utility.getImageUri());
-                if (bitmap != null) {
-                    scanned_photo.setImageBitmap(bitmap);
-                    if (scan_for_description) {
-                        scanBarcode(bitmap);
-                    }
-                    else {
-                        scanSerialNumber(bitmap);
-                    }
-                }
+                setScannedImage(bitmap);
             }
         }
     }
 
+    /**
+     * Set the scanned image to the given bitmap, and try scanning the image
+     * @param bitmap the bitmap of the image
+     */
+    public void setScannedImage(Bitmap bitmap) {
+        if (bitmap != null) {
+            scanned_photo.setImageBitmap(bitmap);
+            if (scan_for_description) {
+                scanBarcode(bitmap);
+            }
+            else {
+                scanSerialNumber(bitmap);
+            }
+        }
+    }
 }
