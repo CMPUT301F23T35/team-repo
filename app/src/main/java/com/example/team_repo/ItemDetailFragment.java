@@ -192,7 +192,7 @@ public class ItemDetailFragment extends Fragment {
                         public void run() {
                             imageNameList = imageNames;
                             Context context = getContext(); // check if current context is alive
-                            if (context != null) {
+                            if (context != null && bitmaps != null) {
                                 if (bitmaps.isEmpty()) {
                                     ImageView imageView = new ImageView(context);
                                     imageView.setImageResource(R.drawable.baseline_image_not_supported_24);
