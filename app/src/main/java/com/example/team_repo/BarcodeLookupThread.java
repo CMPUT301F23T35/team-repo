@@ -30,7 +30,7 @@ public class BarcodeLookupThread implements Runnable {
         try {
             // Using the specified barcode raw value, look up matching products and obtain a product list.
             // Note: the API only allows a limited number of look-ups per month.
-            //       R.string.API_key may need to be replaced if too many look-ups are done.
+            //       the api_key may need to be replaced if too many look-ups are done.
             String api_key = "tzfbik9nqzz774dqafkdsnmbjeldjs";
             URL url = new URL("https://api.barcodelookup.com/v3/products?barcode=" + barcode_raw_value + "&formatted=y&key=" + api_key);
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
