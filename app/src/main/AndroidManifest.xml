@@ -12,9 +12,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Package visibility for Android 11+ (API level 30+) -->
     <queries>
         <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE" />
+            <action android:name="android.media.action.IMAGE_CAPTURE" /> <!-- required for barcode lookup -->
         </intent>
     </queries>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"

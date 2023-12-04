@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -15,6 +17,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -138,6 +144,87 @@ public class ImageUtils {
     // Interface for callback when bitmap is ready
     public interface OnBitmapReadyListener {
         void onBitmapReady(Bitmap bitmap);
+    }
+
+    public static void downloadItemImages(String itemID, OnBitmapsReadyListener listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("images/" + itemID);
+
+        storageRef.listAll().addOnSuccessListener(listResult -> {
+            List<Bitmap> bitmaps = new ArrayList<>();
+            List<String> imageNames = new ArrayList<>();
+            // If there are no images, immediately call onBitmapsReady with an empty list
+            if (listResult.getItems().isEmpty()) {
+                listener.onBitmapsReady(bitmaps, imageNames);
+                return;
+            }
+
+            CountDownLatch latch = new CountDownLatch(listResult.getItems().size());
+
+            for (StorageReference itemRef : listResult.getItems()) {
+                itemRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    bitmaps.add(bitmap);
+                    imageNames.add(itemRef.getName());
+                    latch.countDown();
+                }).addOnFailureListener(exception -> {
+                    latch.countDown();
+                });
+            }
+
+            // Wait for all the downloads to complete on a background thread
+            new Thread(() -> {
+                try {
+                    latch.await();
+                    // This operation needs to be done on the main thread because it affects the UI
+                    new Handler(Looper.getMainLooper()).post(() -> listener.onBitmapsReady(bitmaps, imageNames));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    listener.onBitmapsReady(null, null);
+                }
+            }).start();
+
+        }).addOnFailureListener(exception -> {
+            listener.onBitmapsReady(null, null);
+        });
+    }
+
+    public static void downloadFirstImage(String itemID, OnFirstBitmapReadyListener listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("images/" + itemID);
+
+        // List all images in the itemID folder
+        storageRef.listAll().addOnSuccessListener(listResult -> {
+            if (listResult.getItems().isEmpty()) {
+                // No images found, return null
+                listener.onFirstBitmapReady(null);
+            } else {
+                // Get the first image in the list
+                StorageReference firstImageRef = listResult.getItems().get(0);
+                firstImageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                    // Convert bytes to bitmap and return
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    listener.onFirstBitmapReady(bitmap);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    listener.onFirstBitmapReady(null);
+                });
+            }
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            listener.onFirstBitmapReady(null);
+        });
+    }
+
+    // Interface for callback when first bitmap is ready
+    public interface OnFirstBitmapReadyListener {
+        void onFirstBitmapReady(Bitmap bitmap);
+    }
+
+
+    // Interface for callback when all bitmaps are ready
+    public interface OnBitmapsReadyListener {
+        void onBitmapsReady(List<Bitmap> bitmaps, List<String> imageNames);
     }
 
     /**

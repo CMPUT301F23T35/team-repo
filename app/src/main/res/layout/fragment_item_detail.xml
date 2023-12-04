@@ -6,31 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ItemDetailFragment">
 
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/item_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/homepage_item_background_color"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/vp_itemImage"
         app:navigationIcon="@android:drawable/ic_menu_revert"
         app:title="Item Detail"
         app:titleTextColor="@color/white" />
 
-    <ImageView
-        android:id="@+id/itemImageView"
-        android:layout_width="132dp"
-        android:layout_height="130dp"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_itemImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintWidth_percent="0.6"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/item_image"
+        android:clipToPadding="false"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/takePhotoButton"
+        app:layout_constraintTop_toBottomOf="@+id/item_toolbar" />
 
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <!-- Item Date -->
 
     <TextView
         android:id="@+id/itemNameTextView"
@@ -44,9 +50,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/itemDateTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
         tools:text="Item Name" />
 
     <TextView
@@ -55,11 +60,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/itemValueTextView"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameTextView"
+        app:layout_constraintBottom_toTopOf="@+id/itemValueTextView"
+        android:layout_marginBottom="20dp"
         tools:text="Date" />
 
     <!-- Item Value -->
@@ -69,11 +74,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/itemDescriptionTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemDateTextView"
+        android:layout_marginBottom="20dp"
         tools:text="Value" />
 
     <!-- Item Description -->
@@ -83,11 +88,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/itemMakeTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemValueTextView"
+        android:layout_marginBottom="20dp"
         tools:text="Description" />
 
     <!-- Item Make -->
@@ -97,11 +102,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/itemModelTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemDescriptionTextView"
+        android:layout_marginBottom="20dp"
         tools:text="Make" />
 
     <!-- Item Model -->
@@ -111,11 +116,11 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintBottom_toTopOf="@+id/itemSerialNumberTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemMakeTextView"
+        android:layout_marginBottom="20dp"
         tools:text="Model" />
 
     <!-- Item Serial Number -->
@@ -125,33 +130,20 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/itemCommentTextView"
+        android:textSize="23sp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_tags"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemModelTextView"
         tools:text="Serial Number" />
 
-    <!-- Item Comment -->
-    <TextView
-        android:id="@+id/itemCommentTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberTextView"
-        tools:text="Comment" />
 
     <LinearLayout
+        android:id="@+id/ll_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/editButton"
-        app:layout_constraintTop_toBottomOf="@+id/itemCommentTextView"
+
         >
 
         <!-- The RecyclerView showing item tags -->
@@ -162,13 +154,13 @@
             android:layout_gravity="center_vertical"
             android:text="Tags: "
             android:layout_marginStart="5dp"
-            android:textSize="20sp" />
+            android:textSize="23sp" />
 
         <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_tags_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:orientation="horizontal" />
 
 
@@ -184,7 +176,7 @@
         android:id="@+id/editButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="6dp"
         android:backgroundTint="@color/homepage_item_background_color"
         android:text="@string/edit"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -196,7 +188,7 @@
         android:id="@+id/deleteButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="6dp"
         android:backgroundTint="#E53935"
         android:text="@string/delete"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -209,9 +201,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose Photo"
-        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/takePhotoButton"
+        app:layout_constraintTop_toBottomOf="@+id/vp_itemImage"
         app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
 
     <!-- Take Photo Button -->
@@ -220,9 +212,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Take Photo"
-        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
         app:layout_constraintStart_toEndOf="@+id/editImageButton"
         app:layout_constraintEnd_toStartOf="@+id/deleteImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/vp_itemImage"
         app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
 
     <!-- Delete Photo Button -->
@@ -231,9 +223,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete Photo"
-        app:layout_constraintTop_toBottomOf="@+id/itemImageView"
         app:layout_constraintStart_toEndOf="@+id/takePhotoButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vp_itemImage"
         app:layout_constraintBottom_toTopOf="@+id/itemNameTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -73,23 +73,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         CheckBox checkbox = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
-        if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
-            Bitmap bitmap = ImageUtils.convertImagePathToBitmap(item.getImagePath());
-            item_image.setImageBitmap(bitmap);
-        } else {
-            // download image from firebase storage
-            ImageUtils.downloadImageFromFirebaseStorage(item.getItemID().toString(), new ImageUtils.OnBitmapReadyListener() {
-                @Override
-                public void onBitmapReady(Bitmap bitmap) {
-                    if (bitmap != null){
-                    item_image.setImageBitmap(bitmap);
-                    } else {
-                        item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
-                    }
-                }
-            });
+        // download image from firebase storage
+        ImageUtils.downloadFirstImage(item.getItemID(), new ImageUtils.OnFirstBitmapReadyListener() {
 
-        }
+            @Override
+            public void onFirstBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    item_image.setImageBitmap(bitmap);
+                } else {
+                    item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+                }
+            }
+        });
+
+
 
         // Set the item's name, make, value, and purchase date with checks for length
         item_name.setText(item.getName().length() <= 12 ? item.getName() : item.getName().substring(0, 11) + "...");
@@ -132,8 +129,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
-        // set the checkbox showing current checked status
-        checkbox.setChecked(item.checked);
+
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,5 +149,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     public Item getItem(int position) {
         return item_list.get(position);
     }
+
+    public void updateItemList(ArrayList<Item> newList) {
+        clear();  // Clear the existing items in the adapter
+        addAll(newList);  // Add the new items to the adapter
+        notifyDataSetChanged();  // Notify the adapter that the data has changed
+    }
+
 
 }
