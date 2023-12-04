@@ -185,6 +185,7 @@ public class HomeFragment extends Fragment {
 
         EditText makeFilterEditText = dialogView.findViewById(R.id.makeFilterEditText);
         Button applyFilterButton = dialogView.findViewById(R.id.applyFilterButton);
+        Button applyFilterButton2 = dialogView.findViewById(R.id.applyFilterButton2);
         Button clearFilterButton = dialogView.findViewById(R.id.clearFilterButton);
         Button filterByDateButton = dialogView.findViewById(R.id.filterByDateButton);
 
@@ -259,7 +260,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        applyFilterButton.setOnClickListener(new View.OnClickListener() {
+        applyFilterButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 applyDescriptionFilter(searchEditText.getText().toString().trim());
@@ -418,7 +419,7 @@ public class HomeFragment extends Fragment {
 
             if (check != true){
                 filteredList.addAll(originalList);
-                Toast.makeText(getActivity(), "No such Make exists", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No such Description exists", Toast.LENGTH_SHORT).show();
             }
             itemAdapter.updateItemList(filteredList);
         }
