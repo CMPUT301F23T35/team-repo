@@ -5,8 +5,6 @@ import static android.app.PendingIntent.getActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,55 +21,57 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
+import java.util.List;
+
+/**
+ * The fragment for scanning a serial number or barcode.
+ */
 public class ScanFragment extends Fragment {
-    private PhotoUtility photoUtility;
-    private Button cameraButton;  // press to open camera to set photo
-    private Button galleryButton;  // select from gallery to set photo
-    private Button deleteButton;  // delete photo
-    private Button changeButton;  // delete photo
-    private ImageView scannedPhoto;
+    private PhotoUtility photo_utility;
+    private Button confirm_button;
+    private ImageView scanned_photo;
     private EditText scanned_string_textview;
-    private String scanned_string = null;
-    static private int position;
+
+    static private boolean scan_for_description; // true if user is scanning for a description
+
+    // If user called ScanFragment from a dialog, fragment will be null, and vice versa.
     static private AlertDialog previous_dialog = null;
-    static private int previous_fragment_id = 0;
+    static private AddFragment addFragment = null;
 
     /**
-     * Constructor
-     * @param position the position of the clicked icon.
-     *                 If position = 0, user clicked to scan for description (from barcode).
-     *                 If position = 1, user clicked to scan for serial number.
-     *                 TODO : make position something else (e.g. DESCRIPTION or SERIAL)
-     * @param dialog the dialog that the user used to navigate to the scan fragment
+     * Constructor when ScanFragment was called from a dialog.
+     * @param scan_for_description:  a boolean value representing whether or not a description is to be scanned for
+     * @param dialog the dialog that the user used to navigate to the scan fragment.
      */
-    public static ScanFragment newInstance(int position, AlertDialog dialog) {
+    public static ScanFragment newInstance(boolean scan_for_description, AlertDialog dialog) {
         ScanFragment myFragment = new ScanFragment();
-        myFragment.position = position;
         myFragment.previous_dialog = dialog;
+        myFragment.scan_for_description = scan_for_description;
 
         return myFragment;
     }
 
     /**
-     * Constructor WHEN ADDFRANKFNRGOISRNGVJSAK
-     * @param position the position of the clicked icon.
-     *                 If position = 0, user clicked to scan for description.
-     *                 If position = 1, user clicked to scan for barcode.
+     * Constructor when ScanFragment was called from AddFragment.
+     * @param scan_for_description:  a boolean value representing whether or not a description is to be scanned for
+     * @param addFragment the AddFragment that the user used to navigate to the scan fragment.
      */
-    public static ScanFragment newInstance(int position, int previous_fragment_id) {
+    public static ScanFragment newInstance(boolean scan_for_description, AddFragment addFragment) {
         ScanFragment myFragment = new ScanFragment();
-        myFragment.position = position;
-        myFragment.previous_fragment_id = previous_fragment_id;
+        myFragment.addFragment = addFragment;
+        myFragment.scan_for_description = scan_for_description;
 
         return myFragment;
     }
@@ -79,25 +79,12 @@ public class ScanFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
-        LinearLayout toolbarLinearLayout = getActivity().findViewById(R.id.select_toolbar);
-        int original_visibility = toolbarLinearLayout.getVisibility();
-        toolbarLinearLayout.setVisibility(View.GONE);
-
-        Toolbar toolbar = view.findViewById(R.id.item_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toolbarLinearLayout.setVisibility(original_visibility);
-                getActivity().onBackPressed();
-            }
-        });
-
+        // Initialize fragment depending on whether or not user is scanning for a description
         TextView scanImageInstructions = view.findViewById(R.id.scanImageInstructions);
         TextView scannedStringHeader = view.findViewById(R.id.scannedStringHeader);
-        if (position == 0) {
+        if (scan_for_description) {
             scanImageInstructions.setText(R.string.scan_image_desc_instructions);
             scannedStringHeader.setText(R.string.scanned_item_desc_header);
         }
@@ -108,28 +95,46 @@ public class ScanFragment extends Fragment {
 
         scanned_string_textview = view.findViewById(R.id.itemScannedString);
 
-        photoUtility = new PhotoUtility(this);
+        // Keep track of whether or not the toolbar at the top of the screen was visible in the previous fragment.
+        // ScanFragment will have the toolbar hidden.
+        // When it's time to exit ScanFragment, restore the top toolbar to its original visibility.
+        LinearLayout toolbarLinearLayout = requireActivity().findViewById(R.id.select_toolbar);
+        int original_visibility = toolbarLinearLayout.getVisibility();
+        toolbarLinearLayout.setVisibility(View.GONE);
 
-        cameraButton = view.findViewById(R.id.btn_camera);
-        galleryButton = view.findViewById(R.id.btn_gallery);
-        deleteButton = view.findViewById(R.id.btn_delete);
-        scannedPhoto = view.findViewById(R.id.scannedImageView);
-
-        cameraButton.setOnClickListener(v -> {
-            photoUtility.takePhoto();
+        // Go back when user clicks the back button of the top toolbar.
+        Toolbar toolbar = view.findViewById(R.id.item_toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolbarLinearLayout.setVisibility(original_visibility);
+                getActivity().onBackPressed();
+            }
         });
 
-        galleryButton.setOnClickListener(v -> {
-            photoUtility.choosePhoto();
+        // Implement camera features
+        photo_utility = new PhotoUtility(this);
+        Button camera_button = view.findViewById(R.id.btn_camera);
+        Button gallery_button = view.findViewById(R.id.btn_gallery);
+        Button delete_button = view.findViewById(R.id.btn_delete);
+        scanned_photo = view.findViewById(R.id.scannedImageView);
+
+        camera_button.setOnClickListener(v -> {
+            photo_utility.takePhoto();
         });
 
-        deleteButton.setOnClickListener(v -> {
-            photoUtility.deletePhoto(scannedPhoto, R.drawable.baseline_image_not_supported_24);
+        gallery_button.setOnClickListener(v -> {
+            photo_utility.choosePhoto();
+        });
+
+        delete_button.setOnClickListener(v -> {
+            photo_utility.deletePhoto(scanned_photo, R.drawable.baseline_image_not_supported_24);
             scanned_string_textview.setText(null);
         });
 
-        changeButton = view.findViewById(R.id.btn_change);
-        changeButton.setOnClickListener(new View.OnClickListener() {
+        // If user confirms that they want to use what they scanned for their item
+        confirm_button = view.findViewById(R.id.btn_confirm);
+        confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toolbarLinearLayout.setVisibility(original_visibility);
@@ -137,54 +142,106 @@ public class ScanFragment extends Fragment {
                 sendInformationBack();
             }
         });
-
         return view;
     }
 
-    /**......... continue writing comments
-     * If the user navigated to ScanFragment with a dialog, re-open the dialog.
-     * If the user navigated to ScanFragment from AddFragment, go back to the fragment.
+    /**
+     * Send the scanned information back to the location that ScanFragment was called from.
      */
-    public void sendInformationBack() {
-        scanned_string = scanned_string_textview.getText().toString();
-        EditText box_to_replace = null;
+    private void sendInformationBack() {
+        String scanned_string = scanned_string_textview.getText().toString();
+        EditText box_to_write_in = null;
+
+        // If ScanFragment was called from a dialog, reopen the dialog and insert new information.
         if (previous_dialog != null) {
-            if (position == 0) {
-                box_to_replace = previous_dialog.findViewById(R.id.Description);
+            if (scan_for_description) {
+                box_to_write_in = previous_dialog.findViewById(R.id.Description);
             }
-            else if (position == 1) {
-                box_to_replace = previous_dialog.findViewById(R.id.ItemSerial);
+            else {
+                box_to_write_in = previous_dialog.findViewById(R.id.ItemSerial);
             }
 
             if (scanned_string != null) {
-                box_to_replace.setText(scanned_string);
+                box_to_write_in.setText(scanned_string);
             }
 
             previous_dialog.show();
         }
-
-        else if (previous_fragment_id != 0) {
-            // TODO
-            /*Fragment previous_fragment = getActivity().getSupportFragmentManager().findFragmentById(previous_fragment_id);
-            if (position == 0) {
-                box_to_replace = previous_fragment.getView().findViewById(R.id.Description);
-            }
-            else if (position == 1) {
-                box_to_replace = previous_fragment.getView().findViewById(R.id.ItemSerial);
-            }
-
-            if (scanned_string != null) {
-                box_to_replace.setText(scanned_string);
-            }*/
+        // If ScanFragment was called from AddFragment, send information to AddFragment.
+        else if (addFragment != null) {
+            addFragment.setScannedInformation(scan_for_description, scanned_string);
         }
     }
 
-    private void scanBarcode(Bitmap bitmap) {
-        // TODO
+    /**
+     * If there was any problem with scanning, show an error.
+     */
+    private void showError() {
+        scanned_string_textview.setText(null);
+        Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
     }
 
-    public void scanSerialNumber(Bitmap bitmap) {
-        changeButton.setEnabled(false);
+    /**
+     * If user chose to scan for a description and inputted an image, scan the image for barcode.
+     * The barcode raw value will be taken to look up a description of the item if it exists.
+     * @param bitmap - the bitmap of the image to be scanned
+     */
+    private void scanBarcode(Bitmap bitmap) {
+        // Disable button while scanning is occurring
+        confirm_button.setEnabled(false);
+
+        // Process the image for a barcode
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        BarcodeScanner scanner = BarcodeScanning.getClient();
+        scanner.process(image)
+                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                    @Override
+                    public void onSuccess(List<Barcode> barcodes) {
+                        // If the scanner worked but was not able to find any barcode
+                        if (barcodes.size() == 0) {
+                            showError();
+                        }
+                        // If the scanner worked and was able to find a barcode
+                        else {
+                            Barcode barcode = barcodes.get(0);
+                            String raw_value = barcode.getRawValue();
+
+                            try {
+                                // Send the raw value to a thread that looks up the barcode description.
+                                BarcodeLookupThread lookup_thread = new BarcodeLookupThread(raw_value);
+                                Thread thread = new Thread(lookup_thread);
+                                thread.start();
+                                thread.join();  // do not process anything in the main thread until the lookup thread finishes
+
+                                String scanned_description = lookup_thread.getDescription();
+                                scanned_string_textview.setText(scanned_description);
+                            }
+                            catch (Exception e) {
+                                showError();
+                            }
+                        }
+                        confirm_button.setEnabled(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    // If the scanner did not work
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showError();
+                        confirm_button.setEnabled(true);
+                    }
+                });
+    }
+
+    /**
+     * If user chose to scan for a serial number and inputted an image, scan the image for text.
+     * @param bitmap - the bitmap of the image to be scanned
+     */
+    private void scanSerialNumber(Bitmap bitmap) {
+        // Disable button while scanning is occurring
+        confirm_button.setEnabled(false);
+
+        // Process image for text
         InputImage image = InputImage.fromBitmap(bitmap, 0);
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         recognizer.process(image)
@@ -192,14 +249,14 @@ public class ScanFragment extends Fragment {
                     @Override
                     public void onSuccess(Text text) {
                         scanned_string_textview.setText(text.getText());
-                        changeButton.setEnabled(true);
+                        confirm_button.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        scanned_string_textview.setText(null);
-                        Toast.makeText(getContext(), "Unable to scan image. Try again.", Toast.LENGTH_SHORT).show();
+                        showError();
+                        confirm_button.setEnabled(true);
                     }
                 });
     }
@@ -217,14 +274,17 @@ public class ScanFragment extends Fragment {
         if (requestCode == PhotoUtility.getRequestCodeTake() || requestCode == PhotoUtility.getRequestCodeChoose()) {
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == PhotoUtility.REQUEST_CODE_CHOOSE && data != null) {
-                    photoUtility.setImageUri(data.getData());
+                    photo_utility.setImageUri(data.getData());
                 }
-                Bitmap bitmap = photoUtility.handleImageOnActivityResult(photoUtility.getImageUri());
+                Bitmap bitmap = photo_utility.handleImageOnActivityResult(photo_utility.getImageUri());
                 if (bitmap != null) {
-                    scannedPhoto.setImageBitmap(bitmap);
-                    Toast.makeText(getContext(), "Scanning...", Toast.LENGTH_SHORT).show();
-                    if (position == 0) {scanBarcode(bitmap);}
-                    if (position == 1) {scanSerialNumber(bitmap);}
+                    scanned_photo.setImageBitmap(bitmap);
+                    if (scan_for_description) {
+                        scanBarcode(bitmap);
+                    }
+                    else {
+                        scanSerialNumber(bitmap);
+                    }
                 }
             }
         }
