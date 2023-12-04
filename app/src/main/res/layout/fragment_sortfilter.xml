@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/Sortby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort By:"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/sortOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioValueAscending"
+            android:layout_width="241dp"
+            android:layout_height="wrap_content"
+            android:text="Item Value (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioValueDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Value (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioDescripAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Description (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioDescripDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Description(Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioMakeAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Make (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radiomakeDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Make (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioDateAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Date (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioDateDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Date (Descending)" />
+
+        <RadioButton
+            android:id="@+id/radioTagAsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Tag (Ascending)" />
+
+        <RadioButton
+            android:id="@+id/radioTagDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Tag (Descending)" />
+
+
+
+        <!-- Add more RadioButtons for other sorting options -->
+
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/btnSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort"/>
+
+
+    <EditText
+        android:id="@+id/makeFilterEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sortOptions"
+        android:layout_marginTop="16dp"
+        android:hint="Enter Make for Filtering" />
+
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by description"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <Button
+        android:id="@+id/filterByTagButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter by Tag"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Add the button to apply the make filter -->
+        <Button
+            android:id="@+id/filterByDateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter by Date" />
+
+        <Button
+            android:id="@+id/applyFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/makeFilterEditText"
+            android:layout_marginTop="8dp"
+            android:text="Apply Filter" />
+
+        <Button
+            android:id="@+id/clearFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/applyFilterButton"
+            android:layout_marginTop="8dp"
+            android:text="Clear Filter" />
+
+
+    </LinearLayout>
+
+</ScrollView>
+
