@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/rounded_corners_bg"
     android:orientation="vertical"
+
     android:padding="16dp">
 
     <TextView
         android:id="@+id/top_app_bar"
-        android:layout_width="wrap_content"
+        android:layout_width ="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="5dp"
         android:text="Add a New Item"
+        android:layout_gravity="center_horizontal"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_marginVertical="5dp"
+        android:textStyle="bold"
+        />
 
     <EditText
         android:id="@+id/ItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/white_rounded_corner"
+        android:hint="Enter an Item Name"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/white_rounded_corner"
-        android:gravity="center"
-        android:hint="Enter an Item Name"
-        android:inputType="text"
+        android:textSize="25sp"
         android:padding="5dp"
-        android:textSize="25sp" />
+        android:gravity="center"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/DatePurchase"
@@ -38,11 +40,11 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="10dp"
         android:background="@drawable/white_rounded_corner"
+        android:textSize="25sp"
+        android:padding="5dp"
         android:gravity="center"
         android:hint="Date of Purchase (YYYY-MM-DD)"
-        android:inputType="text"
-        android:padding="5dp"
-        android:textSize="25sp" />
+        android:inputType="text" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -52,14 +54,14 @@
             android:id="@+id/Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Enter the Description"
+            android:textSize="25sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:background="@drawable/white_rounded_corner"
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="10dp"
-            android:background="@drawable/white_rounded_corner"
-            android:gravity="center"
-            android:hint="Enter the Description"
-            android:inputType="text"
-            android:padding="5dp"
-            android:textSize="25sp" />
+            android:inputType="text" />
 
         <ImageButton
             android:id="@+id/ItemDescriptionCameraButton"
@@ -77,27 +79,27 @@
         android:id="@+id/ItemMake"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter Make"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/white_rounded_corner"
-        android:gravity="center"
-        android:hint="Enter Make"
-        android:inputType="text"
-        android:padding="5dp"
-        android:textSize="25sp" />
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/ItemModel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter Model"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/white_rounded_corner"
-        android:gravity="center"
-        android:hint="Enter Model"
-        android:inputType="text"
-        android:padding="5dp"
-        android:textSize="25sp" />
+        android:inputType="text" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -107,14 +109,14 @@
             android:id="@+id/ItemSerial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Enter Serial Number"
+            android:textSize="25sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:background="@drawable/white_rounded_corner"
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="10dp"
-            android:background="@drawable/white_rounded_corner"
-            android:gravity="center"
-            android:hint="Enter Serial Number"
-            android:inputType="text"
-            android:padding="5dp"
-            android:textSize="25sp" />
+            android:inputType="text" />
 
         <ImageButton
             android:id="@+id/ItemSerialCameraButton"
@@ -132,14 +134,14 @@
         android:id="@+id/EstimatedValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter Estimated Value"
+        android:textSize="25sp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/white_rounded_corner"
-        android:gravity="center"
-        android:hint="Enter Estimated Value"
-        android:inputType="numberDecimal"
-        android:padding="5dp"
-        android:textSize="25sp" />
+        android:inputType="numberDecimal" />
 
     <!-- The RecyclerView showing all added tags -->
 
@@ -147,10 +149,10 @@
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="center"
         android:layout_margin="16dp"
         android:background="@drawable/small_white_rounded_corner"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal" />
 
     <Button
@@ -158,8 +160,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
+        android:layout_marginTop="10dp"
         android:text="Confirm" />
 
 
