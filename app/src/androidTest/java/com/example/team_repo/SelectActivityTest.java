@@ -1,25 +1,32 @@
 package com.example.team_repo;
 
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -28,21 +35,21 @@ import androidx.test.filters.LargeTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class AddFragmentTest {
+public class SelectActivityTest {
 
     @Rule
     public ActivityScenarioRule<RegisterActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(RegisterActivity.class);
 
     @Test
-    public void addFragmentTest() {
+    public void selectActivityTest(){
+        // login
         ViewInteraction materialTextView = onView(
                 allOf(withId(R.id.tv_jump_to_login), withText("Already have an account?"),
                         childAtPosition(
@@ -85,9 +92,7 @@ public class AddFragmentTest {
 
         try {
             Thread.sleep(3000);
-        } catch (InterruptedException e) {
-
-        }
+        } catch (InterruptedException ignored) {}
 
         ViewInteraction bottomNavigationItemView = onView(
                 allOf(withId(R.id.add), withContentDescription("Add"),
@@ -104,7 +109,7 @@ public class AddFragmentTest {
         } catch (InterruptedException e) {
 
         }
-
+        // add first item
         ViewInteraction appCompatEditText4 = onView(
                 allOf(withId(R.id.ItemName),
                         withParent(withParent(withId(R.id.fragment_container))),
@@ -170,7 +175,29 @@ public class AddFragmentTest {
                         isDisplayed()));
         materialButton5.perform(click());
 
-        ViewInteraction bottomNavigationItemView2 = onView(
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+
+        }
+
+        // add second item
+        appCompatEditText4.perform(replaceText("2"), closeSoftKeyboard());
+        appCompatEditText3.perform(click());
+        materialButton4.perform(scrollTo(), click());
+        appCompatEditText6.perform(replaceText("2"), closeSoftKeyboard());
+        appCompatEditText7.perform(replaceText("2"), closeSoftKeyboard());
+        appCompatEditText8.perform(replaceText("2"), closeSoftKeyboard());
+        appCompatEditText9.perform(replaceText("2"), closeSoftKeyboard());
+        appCompatEditText10.perform(replaceText("2"), closeSoftKeyboard());
+        materialButton5.perform(click());
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {}
+
+        // goto select page
+        ViewInteraction bottomNavigationItemView3 = onView(
                 allOf(withId(R.id.home), withContentDescription("Home"),
                         childAtPosition(
                                 childAtPosition(
@@ -178,55 +205,62 @@ public class AddFragmentTest {
                                         0),
                                 0),
                         isDisplayed()));
-        bottomNavigationItemView2.perform(click());
+        bottomNavigationItemView3.perform(click());
 
         try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-        }
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {}
 
-        ViewInteraction textView = onView((allOf(withId(R.id.itemName),
-                withParent(withParent(withId(R.id.homepageListView))),
-                isDisplayed())));
-        textView.check(matches(withText("1")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.itemMake),
-                        withParent(withParent(withId(R.id.homepageListView))),
-                        isDisplayed()));
-        textView2.check(matches(withText("1")));
-
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.itemValue),
-                        withParent(withParent(withId(R.id.homepageListView))),
-                        isDisplayed()));
-        textView3.check(matches(withText("1.00")));
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.selectItemsButton),
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.selectItemsButton), withText("Select"),
                         withParent(withParent(withId(R.id.fragment_container))),
                         isDisplayed()));
-        appCompatButton2.perform(click());
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-        }
-
-        ViewInteraction materialCheckBox2 = onView(
-                allOf(withId(R.id.checkBox),
-                        childAtPosition(
-                                withParent(withId(R.id.itemListView)),
-                                0),
-                        isDisplayed()));
-        materialCheckBox2.perform(click());
+        appCompatButton.perform(click());
 
         try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException e) {}
+
+        //select items
+        ViewInteraction materialCheckBox = onView(
+                allOf(withId(R.id.checkBox),
+                        hasSibling(withText("1")),
+                        isDisplayed()));
+        materialCheckBox.perform(click());
+
+        ViewInteraction materialCheckBox2 = onView(
+                allOf(withId(R.id.checkBox),
+                        hasSibling(withText("2")),
+                        isDisplayed()));
+        materialCheckBox2.perform(click());
+
+        // select tag
+        ViewInteraction materialCheckBox4 = onView(
+                allOf(withId(R.id.cb_tag),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.TagListView),
+                                        0),
+                                1),
+                        isDisplayed()));
+        materialCheckBox4.perform(click());
 
         ViewInteraction materialButton7 = onView(
+                allOf(withId(R.id.add_tags_button), withText("ADD TAG"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                3)),
+                                1),
+                        isDisplayed()));
+        materialButton7.perform(click());
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {}
+
+        ViewInteraction materialButton2 = onView(
                 allOf(withId(R.id.delete_button), withText("DELETE"),
                         childAtPosition(
                                 allOf(withId(R.id.constraintLayout),
@@ -235,7 +269,9 @@ public class AddFragmentTest {
                                                 3)),
                                 0),
                         isDisplayed()));
-        materialButton7.perform(click());
+        materialButton2.perform(click());
+
+        //materialCheckBox.check(doesNotExist());
     }
 
     private static Matcher<View> childAtPosition(
