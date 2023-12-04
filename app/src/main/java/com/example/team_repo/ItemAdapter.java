@@ -6,15 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates the views for an item list and its items.
@@ -22,16 +21,18 @@ import java.util.List;
 public class ItemAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> item_list;
     private Context context;
+    private boolean showCheckbox;
 
     /**
      * Initializes the item adapter.
      * @param context the current context of the app
      * @param item_list the item list to create the views for
      */
-    public ItemAdapter(Context context, ArrayList<Item> item_list) {
+    public ItemAdapter(Context context, ArrayList<Item> item_list, boolean showCheckbox) {
         super(context, 0, item_list);
         this.context = context;
         this.item_list = item_list;
+        this.showCheckbox = showCheckbox;
     }
 
     /**
@@ -54,6 +55,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(context).inflate(R.layout.item_list_content, parent, false);
         }
 
+        if (showCheckbox) {
+            view.findViewById(R.id.checkBox).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        }
     
         // Get the current item to create the view for
         final Item item = item_list.get(position);
@@ -64,14 +70,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView item_make = view.findViewById(R.id.itemMake);
         TextView item_value = view.findViewById(R.id.itemValue);
         TextView item_purchase_date = view.findViewById(R.id.itemPurchaseDate);
+        CheckBox checkbox = view.findViewById(R.id.checkBox);
 
         // Set the ImageView to the item's photo (or a default image)
-        if (item.getImagePath() != null && !item.getImagePath().isEmpty()) {
-            Bitmap bitmap = ImageUtils.convertImagePathToBitmap(item.getImagePath());
-            item_image.setImageBitmap(bitmap);
-        } else {
-            item_image.setImageResource(R.drawable.baseline_image_not_supported_24); // Placeholder image
-        }
+        // download image from firebase storage
+        ImageUtils.downloadFirstImage(item.getItemID(), new ImageUtils.OnFirstBitmapReadyListener() {
+
+            @Override
+            public void onFirstBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    item_image.setImageBitmap(bitmap);
+                } else {
+                    item_image.setImageResource(R.drawable.baseline_image_not_supported_24);
+                }
+            }
+        });
+
+
 
         // Set the item's name, make, value, and purchase date with checks for length
         item_name.setText(item.getName().length() <= 12 ? item.getName() : item.getName().substring(0, 11) + "...");
@@ -79,7 +94,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         item_value.setText(String.format("%.2f", item.getValue()).length() <= 15 ?
                 String.format("%.2f", item.getValue()) :
                 String.format("%.2f", item.getValue()).substring(0, 14) + "...");
-        item_purchase_date.setText(item.getDate()); // Assuming getDate() returns a String
+        item_purchase_date.setText(item.getPurchase_date()); // Assuming getDate() returns a String
 
 
         // Set the onClickListener for the entire item view
@@ -90,6 +105,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                 // which replaces the current fragment with ItemDetailFragment
                 if (context instanceof MainActivity) {
                     ((MainActivity) context).showItemDetailFragment(item);
+
                 }
             }
         });
@@ -109,10 +125,30 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         else {
             item_value.setText(String.format("%.2f", item.getValue()).substring(0, 14) + "...");
         }
-
-        String date = item.getDate();
+        
+        String date = item.getPurchase_date();
         item_purchase_date.setText(date);
 
+        // set the checkbox showing current checked status
+        checkbox.setChecked(item.checked);
+        checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.checked = checkbox.isChecked();
+            }
+        });
 
         return view;
-    }}
+    }
+
+    /**
+     * Return an item at the given position in item list
+     * @param position Position of the item whose data we want within the adapter's
+     * data set.
+     * @return an item object at the given position
+     */
+    public Item getItem(int position) {
+        return item_list.get(position);
+    }
+
+}

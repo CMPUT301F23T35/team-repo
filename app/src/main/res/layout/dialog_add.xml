@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/rounded_corners_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:orientation="vertical"
 
     android:padding="16dp">
@@ -19,31 +19,30 @@
         android:layout_marginVertical="5dp"
         android:textStyle="bold"
         />
-
     <EditText
         android:id="@+id/ItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/white_rounded_corner"
         android:hint="Enter an Item Name"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
-        android:textSize="25sp"
-        android:padding="5dp"
+        android:textSize="23sp"
+        android:padding="2dp"
         android:gravity="center"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="5dp"
         android:inputType="text" />
 
     <EditText
         android:id="@+id/DatePurchase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
-        android:background="@drawable/white_rounded_corner"
-        android:textSize="25sp"
-        android:padding="5dp"
+        android:hint="Enter the Date of Purchase"
+        android:textSize="23sp"
+        android:padding="2dp"
         android:gravity="center"
-        android:hint="Date of Purchase (YYYY-MM-DD)"
+        android:background="@drawable/white_rounded_corner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="5dp"
         android:inputType="text" />
 
     <FrameLayout
@@ -55,12 +54,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter the Description"
-            android:textSize="25sp"
-            android:padding="5dp"
+            android:textSize="23sp"
+            android:padding="2dp"
             android:gravity="center"
             android:background="@drawable/white_rounded_corner"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:inputType="text" />
 
         <ImageButton
@@ -70,22 +69,23 @@
             android:layout_gravity="right"
             android:background="@color/white"
             android:translationX="-30dp"
-            android:translationY="20dp"
+            android:translationY="10dp"
             app:srcCompat="@drawable/ic_camera_black" />
 
     </FrameLayout>
+
 
     <EditText
         android:id="@+id/ItemMake"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Make"
-        android:textSize="25sp"
-        android:padding="5dp"
+        android:textSize="23sp"
+        android:padding="2dp"
         android:gravity="center"
         android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
         android:inputType="text" />
 
     <EditText
@@ -93,12 +93,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Model"
-        android:textSize="25sp"
-        android:padding="5dp"
+        android:textSize="23sp"
+        android:padding="2dp"
         android:gravity="center"
         android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
         android:inputType="text" />
 
     <FrameLayout
@@ -110,12 +110,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Serial Number"
-            android:textSize="25sp"
-            android:padding="5dp"
+            android:textSize="23sp"
+            android:padding="2dp"
             android:gravity="center"
             android:background="@drawable/white_rounded_corner"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:inputType="text" />
 
         <ImageButton
@@ -125,22 +125,23 @@
             android:layout_gravity="right"
             android:background="@color/white"
             android:translationX="-30dp"
-            android:translationY="20dp"
+            android:translationY="10dp"
             app:srcCompat="@drawable/ic_camera_black" />
 
     </FrameLayout>
+
 
     <EditText
         android:id="@+id/EstimatedValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Estimated Value"
-        android:textSize="25sp"
-        android:padding="5dp"
+        android:textSize="23sp"
+        android:padding="2dp"
         android:gravity="center"
         android:background="@drawable/white_rounded_corner"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="5dp"
         android:inputType="numberDecimal" />
 
     <!-- The RecyclerView showing all added tags -->
@@ -148,21 +149,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="58dp"
         android:layout_margin="16dp"
         android:background="@drawable/small_white_rounded_corner"
         android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="horizontal" />
-
-    <Button
-        android:id="@+id/btn_confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="10dp"
-        android:text="Confirm" />
-
 
 </LinearLayout>

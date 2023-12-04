@@ -100,18 +100,4 @@
 <!--=======-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/selectItemsButton" />-->
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#18BEBF"
-        android:text="Edit"
-        app:layout_constraintBottom_toBottomOf="@+id/selectItemsButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.78"
-        app:layout_constraintStart_toStartOf="@+id/sortFilterItemsButton"
-        app:layout_constraintTop_toBottomOf="@+id/homepageCardView"
-        app:layout_constraintVertical_bias="1.0" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

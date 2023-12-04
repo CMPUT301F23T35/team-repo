@@ -17,6 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * ProfileFragment is a Fragment responsible for displaying and managing user profile information.
+ * It allows users to view and edit their username, email, and password, and manage their profile
+ * picture by taking a new photo, selecting one from the gallery, or deleting the current photo.
+ * It also interacts with Firebase for storing and retrieving profile pictures.
+ */
 public class ProfileFragment extends Fragment {
 
     private ImageView profilePagePicture;  // avatar
@@ -30,6 +36,15 @@ public class ProfileFragment extends Fragment {
 
     private PhotoUtility photoUtility;
 
+    /**
+     * Creates the view for the Profile Fragment.
+     * Initializes UI components, sets up listeners, and populates fields with existing user data.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container The parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The created view for the Profile Fragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -41,6 +56,18 @@ public class ProfileFragment extends Fragment {
         mPassword = view.findViewById(R.id.profile_password);
         saveChanges = view.findViewById(R.id.btn_save_changes);
         profilePagePicture = view.findViewById(R.id.profilePagePicture);
+        // check the firebase storage, set the profile picture
+        ImageUtils.downloadImageFromFirebaseStorage(((MainActivity)getActivity()).getEmail(), new ImageUtils.OnBitmapReadyListener() {
+            @Override
+            public void onBitmapReady(Bitmap bitmap) {
+                if (bitmap != null){
+                    profilePagePicture.setImageBitmap(bitmap);
+                } else {
+                    profilePagePicture.setImageResource(R.drawable.default_profile_image);
+                }
+            }
+        });
+
         cameraButton = view.findViewById(R.id.btn_camera);
         galleryButton = view.findViewById(R.id.btn_gallery);
         deleteButton = view.findViewById(R.id.btn_delete);
@@ -61,6 +88,9 @@ public class ProfileFragment extends Fragment {
         deleteButton.setOnClickListener(v -> {
             photoUtility.deletePhoto(profilePagePicture, R.drawable.default_profile_image);
             ((MainActivity)getActivity()).setBitmap_profile(null);
+            // delete from the firebase storage
+            ImageUtils.deleteImageFromFirebaseStorage(((MainActivity)getActivity()).getEmail());  // Delete the image from Firebase Storage
+
         });
 
         // Save changes button listener
@@ -78,6 +108,9 @@ public class ProfileFragment extends Fragment {
                 ((MainActivity)getActivity()).setEmail(email);
                 ((MainActivity)getActivity()).setPassword(password);
 
+                // update the values in the database
+                ((MainActivity)getActivity()).updateProfileToDB();
+
                 // Show a success message
                 Toast.makeText(getContext(), "Profile successfully updated!", Toast.LENGTH_SHORT).show();
             }
@@ -86,7 +119,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    // Handle camera or gallery result
+    /**
+     * Handles the result of image selection from the gallery or capture from the camera.
+     *
+     * @param requestCode The request code that was specified when launching the activity.
+     * @param resultCode The result code returned by the activity.
+     * @param data An Intent that carries the result data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -99,12 +138,21 @@ public class ProfileFragment extends Fragment {
                 if (bitmap != null) {
                     profilePagePicture.setImageBitmap(bitmap);
                     ((MainActivity)getActivity()).setBitmap_profile(bitmap);
+                    // upload image to firebase storage
+                    ImageUtils.uploadImageToFirebaseStorage(bitmap, ((MainActivity)getActivity()).getEmail());
                 }
             }
         }
     }
 
-    // Handle permission result
+    /**
+     * Handles the result of permission requests.
+     *
+     * @param requestCode The request code passed in requestPermissions(android.app.Activity, String[], int)
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     PackageManager.PERMISSION_GRANTED or PackageManager.PERMISSION_DENIED. Never null.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
