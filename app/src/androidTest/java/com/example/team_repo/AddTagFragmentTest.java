@@ -109,7 +109,7 @@ public class AddTagFragmentTest {
                                         1),
                                 2),
                         isDisplayed()));
-        appCompatEditText3.perform(replaceText("tag1"), closeSoftKeyboard());
+        appCompatEditText3.perform(replaceText("tag2"), closeSoftKeyboard());
 
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.btn_addTag), withText("Add"),
@@ -122,17 +122,17 @@ public class AddTagFragmentTest {
         materialButton3.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.tv_tag_content), withText("tag1"),
+                allOf(withId(R.id.tv_tag_content), withText("tag2"),
                         withParent(withParent(withId(R.id.tagRecyclerView))),
                         isDisplayed()));
-        textView.check(matches(withText("tag1")));
+        textView.check(matches(withText("tag2")));
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.btn_tag_delete),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.tagRecyclerView),
-                                        0),
+                                        1),
                                 1),
                         isDisplayed()));
         appCompatImageButton.perform(click());
